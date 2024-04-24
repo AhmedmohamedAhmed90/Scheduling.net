@@ -7,14 +7,9 @@ namespace ReactApp1.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public ProductController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         [HttpGet(Name = "GetProducts")]
         public async Task<IActionResult> Products()
@@ -62,7 +57,7 @@ namespace ReactApp1.Server.Controllers
                 }
                 throw;
             }
-            return NoContent();
+            return Ok(product);
         }
         [HttpDelete("{id}", Name = "DeleteProduct")]
         public async Task<IActionResult> DeleteProduct(int id)
@@ -74,7 +69,7 @@ namespace ReactApp1.Server.Controllers
             }
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(product);
         }
         private bool ProductExists(int id)
         {

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ReactApp1.Server.Data;
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(options =>
+{
+    options.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
