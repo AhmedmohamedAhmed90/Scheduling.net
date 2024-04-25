@@ -16,24 +16,52 @@ import {
   Avatar,
   Text,
   useDisclosure,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  useToast,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "./types/Product";
 import axios from "axios";
 import ProductSkeleton from "./components/ProductSkeleton";
 import ProductForm from "./components/ProductForm";
+import { useState } from "react";
 
 function App() {
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { isPending, error, data } = useQuery({
+  const [product, setProduct] = useState<Product | null>(null);
+  const { refetch, isPending, error, data } = useQuery({
     queryKey: ["Get All Products"],
     queryFn: () => axios.get("/api/Product").then((res) => res.data),
   });
 
+  const getProduct = async (id: number) => {
+    const response = await axios.get(`/api/Product/${id}`);
+    setProduct(response.data);
+  };
+
+  const deleteProduct = async (id: number) => {
+    await axios.delete(`/api/Product/${id}`);
+    toast({
+      title: "Product Deleted",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+    refetch();
+  };
+
   if (isPending) return ProductSkeleton();
 
-  if (error) return ProductSkeleton();
+  if (error) return "Error";
+
   return (
     <Box shadow="md" borderWidth="1px" rounded="md" m="32">
       <Flex
@@ -43,7 +71,15 @@ function App() {
         justifyContent={"space-between"}
       >
         <Heading fontSize={20}>Product List</Heading>
-        <Button colorScheme="blue" leftIcon={<AddIcon />} onClick={onOpen}>
+        <Button
+          mt={5}
+          colorScheme="blue"
+          leftIcon={<AddIcon />}
+          onClick={() => {
+            setProduct(null);
+            onOpen();
+          }}
+        >
           Add Product
         </Button>
       </Flex>
@@ -74,8 +110,36 @@ function App() {
                 <Td isNumeric>{product.price}</Td>
                 <Td>
                   <HStack gap={3}>
-                    <EditIcon color={"blue"} boxSize={22} />
-                    <DeleteIcon color={"red"} boxSize={22} />
+                    <EditIcon
+                      color={"blue"}
+                      boxSize={22}
+                      onClick={async () => {
+                        await getProduct(product.id!);
+                        onOpen();
+                      }}
+                    />
+                    <Popover>
+                      <PopoverTrigger>
+                        <DeleteIcon color={"red"} boxSize={22} />
+                      </PopoverTrigger>
+                      <PopoverContent>
+                        <PopoverArrow />
+                        <PopoverCloseButton />
+                        <PopoverHeader>Confirmation!</PopoverHeader>
+                        <PopoverBody>
+                          Are you sure you want to delete this?
+                        </PopoverBody>
+                        <PopoverFooter>
+                          <Button
+                            float={"right"}
+                            colorScheme="red"
+                            onClick={() => deleteProduct(product.id!)}
+                          >
+                            Delete
+                          </Button>
+                        </PopoverFooter>
+                      </PopoverContent>
+                    </Popover>
                     <ViewIcon color={"green"} boxSize={22} />
                   </HStack>
                 </Td>
@@ -89,7 +153,16 @@ function App() {
           No products found
         </Heading>
       )}
-      {isOpen && <ProductForm isOpen={isOpen} onClose={onClose} />}
+      {isOpen && (
+        <ProductForm
+          isOpen={isOpen}
+          editProduct={product}
+          onClose={() => {
+            refetch();
+            onClose();
+          }}
+        />
+      )}
     </Box>
   );
 }

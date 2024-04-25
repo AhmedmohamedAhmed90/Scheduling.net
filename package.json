@@ -2,10 +2,10 @@
   "name": "reactapp1",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
+    "migration": "cd reactapp1.Server && dotnet ef migrations remove && dotnet ef migrations add Initial && dotnet ef database update",
     "dev": "cd reactapp1.Server && dotnet watch run"
   },
-  "author": "",
+  "author": "MElkmeshi",
   "license": "ISC"
 }
