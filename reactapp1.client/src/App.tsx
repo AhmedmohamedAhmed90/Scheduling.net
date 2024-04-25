@@ -181,7 +181,6 @@ function App() {
       {isOpenDetail && (
         <ViewDetail
           isOpen={isOpenDetail}
-          onOpen={onOpenDetail}
           onClose={onCloseDetail}
           product={productDeatil!}
         />

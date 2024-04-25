@@ -17,18 +17,13 @@ import { Product } from "../types/Product";
 
 type Props = {
   isOpen: boolean;
-  onOpen: () => void;
   onClose: () => void;
   product: Product;
 };
 
-const ViewDetail = ({ isOpen, onOpen, onClose, product }: Props) => {
+const ViewDetail = ({ isOpen, onClose, product }: Props) => {
   return (
     <>
-      {JSON.stringify(product)}
-      <Button colorScheme="teal" onClick={onOpen}>
-        Open
-      </Button>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
@@ -47,10 +42,9 @@ const ViewDetail = ({ isOpen, onOpen, onClose, product }: Props) => {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
+            <Button colorScheme="red" mr={3} onClick={onClose}>
+              Close
             </Button>
-            <Button colorScheme="blue">Save</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
