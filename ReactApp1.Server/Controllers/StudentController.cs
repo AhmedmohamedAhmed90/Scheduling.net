@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ReactApp1.Server.Data;
 using ReactApp1.Server.Models;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 //using Microsoft.AspNetCore.Identity;
 
@@ -50,6 +50,14 @@ public IActionResult Students()
 // }
 
 
+private string GenerateRandomNumbers(int length)
+        {
+            Random random = new Random();
+            const string chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
 
 [HttpPost (Name ="CreateStudents")]
 public async Task<ActionResult> CreateStudents([FromForm] Student student)
@@ -57,6 +65,15 @@ public async Task<ActionResult> CreateStudents([FromForm] Student student)
     if (ModelState.IsValid)
     {
         // student.Password = _passwordHasher.HashPassword(student, student.Password);
+       // Generate a username (student name + 4 random numbers)
+        string username = student.Name.Replace(" ", "") + GenerateRandomNumbers(4);
+
+        // Generate a password (6 random numbers)
+        string password = GenerateRandomNumbers(6);
+
+        // Assign the generated username and password to the student
+        student.Username = username;
+        student.Password = password;
         
         _dbContext.Set<Student>().Add(student);
         await _dbContext.SaveChangesAsync();
@@ -89,7 +106,7 @@ public IActionResult GetStudent(int id)
 }
 
 
-[HttpPut("{id}",Name ="EditStudent")]
+[HttpPut("{id}",Name ="EditStudents")]
 [Consumes("application/x-www-form-urlencoded")]
 public async Task<IActionResult> EditStudents(string id, [FromForm] Student updatedStudent)
 {
@@ -112,6 +129,47 @@ public async Task<IActionResult> EditStudents(string id, [FromForm] Student upda
             existingStudent.Year = updatedStudent.Year;
             existingStudent.Faculty = updatedStudent.Faculty;
             existingStudent.Email = updatedStudent.Email;
+
+            // Save changes to the database
+            ///momken nsheel de 3ady
+            _dbContext.Update(existingStudent);
+            await _dbContext.SaveChangesAsync();
+
+            // Redirect to the product list page after successful editing
+            return Ok(existingStudent);
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+        {
+            // Handle concurrency exceptions if needed
+            throw;
+        }
+    }
+
+    // If model state is not valid, return to the edit form with the same product data
+    return BadRequest();
+}
+
+
+
+[HttpPut("{id}",Name ="EditStudent")]
+[Consumes("application/x-www-form-urlencoded")]
+public async Task<IActionResult> EditStudent(string id, [FromForm] Student updatedStudent)
+{
+    if (ModelState.IsValid)
+    {
+        try
+        {
+            // Retrieve the existing product from the database
+            var existingStudent = _dbContext.Set<Student>().Find(updatedStudent.Id);
+
+            if (existingStudent == null)
+            {
+               return BadRequest(); // Or handle the case where the product is not found
+            }
+
+           
+            existingStudent.Username=updatedStudent.Username;
+            existingStudent.Password=updatedStudent.Password;
 
             // Save changes to the database
             ///momken nsheel de 3ady
