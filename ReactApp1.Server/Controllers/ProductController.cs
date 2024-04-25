@@ -7,9 +7,9 @@ namespace ReactApp1.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController(AppDbContext context) : ControllerBase
+    public class ProductController(ApplicationDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context = context;
+        private readonly ApplicationDbContext _context = context;
 
         [HttpGet(Name = "GetProducts")]
         public async Task<IActionResult> Products()

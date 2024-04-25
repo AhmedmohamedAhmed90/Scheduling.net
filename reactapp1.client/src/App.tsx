@@ -1,4 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 import "./App.css";
 import {
   TableContainer,
@@ -15,20 +15,25 @@ import {
   HStack,
   Avatar,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "./types/Product";
 import axios from "axios";
+import ProductSkeleton from "./components/ProductSkeleton";
+import ProductForm from "./components/ProductForm";
 
 function App() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const { isPending, error, data } = useQuery({
     queryKey: ["Get All Products"],
     queryFn: () => axios.get("/api/Product").then((res) => res.data),
   });
 
-  if (isPending) return "Loading...";
+  if (isPending) return ProductSkeleton();
 
-  if (error) return "An error has occurred: " + error.message;
+  if (error) return ProductSkeleton();
   return (
     <Box shadow="md" borderWidth="1px" rounded="md" m="32">
       <Flex
@@ -37,8 +42,8 @@ function App() {
         px={5}
         justifyContent={"space-between"}
       >
-        <Heading>Product List</Heading>
-        <Button colorScheme="blue" leftIcon={<AddIcon />}>
+        <Heading fontSize={20}>Product List</Heading>
+        <Button colorScheme="blue" leftIcon={<AddIcon />} onClick={onOpen}>
           Add Product
         </Button>
       </Flex>
@@ -60,7 +65,7 @@ function App() {
                 <Td isNumeric>{product.id}</Td>
                 <Td>
                   <HStack>
-                    <Avatar name={product.name} />
+                    <Avatar size={"sm"} name={product.name} />
                     <Text>{product.name}</Text>
                   </HStack>
                 </Td>
@@ -68,8 +73,11 @@ function App() {
                 <Td>{product.isInStore ? "Yes" : "No"}</Td>
                 <Td isNumeric>{product.price}</Td>
                 <Td>
-                  <Button colorScheme="blue">Edit</Button>
-                  <Button colorScheme="red">Delete</Button>
+                  <HStack gap={3}>
+                    <EditIcon color={"blue"} boxSize={22} />
+                    <DeleteIcon color={"red"} boxSize={22} />
+                    <ViewIcon color={"green"} boxSize={22} />
+                  </HStack>
                 </Td>
               </Tr>
             ))}
@@ -81,6 +89,7 @@ function App() {
           No products found
         </Heading>
       )}
+      {isOpen && <ProductForm isOpen={isOpen} onClose={onClose} />}
     </Box>
   );
 }
