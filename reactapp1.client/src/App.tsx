@@ -32,10 +32,18 @@ import axios from "axios";
 import ProductSkeleton from "./components/ProductSkeleton";
 import ProductForm from "./components/ProductForm";
 import { useState } from "react";
+import ViewDetail from "./components/ViewDetail";
 
 function App() {
   const toast = useToast();
+  const [productDeatil, setProductDetail] = useState<Product | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenDetail,
+    onOpen: onOpenDetail,
+    onClose: onCloseDetail,
+  } = useDisclosure();
+
   const [product, setProduct] = useState<Product | null>(null);
   const { refetch, isPending, error, data } = useQuery({
     queryKey: ["Get All Products"],
@@ -140,7 +148,14 @@ function App() {
                         </PopoverFooter>
                       </PopoverContent>
                     </Popover>
-                    <ViewIcon color={"green"} boxSize={22} />
+                    <ViewIcon
+                      onClick={async () => {
+                        setProductDetail(product);
+                        onOpenDetail();
+                      }}
+                      color={"green"}
+                      boxSize={22}
+                    />
                   </HStack>
                 </Td>
               </Tr>
@@ -161,6 +176,14 @@ function App() {
             refetch();
             onClose();
           }}
+        />
+      )}
+      {isOpenDetail && (
+        <ViewDetail
+          isOpen={isOpenDetail}
+          onOpen={onOpenDetail}
+          onClose={onCloseDetail}
+          product={productDeatil!}
         />
       )}
     </Box>
