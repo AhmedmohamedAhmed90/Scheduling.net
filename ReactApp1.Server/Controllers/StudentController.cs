@@ -49,8 +49,8 @@ public IActionResult Students()
 //     return View("CreateStudent"); // Assuming your view is named "CreateProduct.cshtml"
 // }
 
-
-private string GenerateRandomNumbers(int length)
+[ApiExplorerSettings(IgnoreApi = true)]
+protected string GenerateRandomNumbers(int length)
         {
             Random random = new Random();
             const string chars = "0123456789";
@@ -85,7 +85,8 @@ public async Task<ActionResult> CreateStudents([FromForm] Student student)
     else
     {
         // If model state is not valid, return to the form
-        return BadRequest();
+        //return BadRequest();
+        return Ok("problem");
     }
 }
 
@@ -149,47 +150,45 @@ public async Task<IActionResult> EditStudents(string id, [FromForm] Student upda
     return BadRequest();
 }
 
-
-
-[HttpPut("{id}",Name ="EditStudent")]
+[HttpPut("{id}/password", Name = "EditStudentPassword")]
 [Consumes("application/x-www-form-urlencoded")]
-public async Task<IActionResult> EditStudent(string id, [FromForm] Student updatedStudent)
+public async Task<IActionResult> EditStudentPassword(string id, [FromForm] string password)
 {
     if (ModelState.IsValid)
     {
         try
         {
-            // Retrieve the existing product from the database
-            var existingStudent = _dbContext.Set<Student>().Find(updatedStudent.Id);
+            
+            if (!int.TryParse(id, out int studentId))
+            {
+                return BadRequest("Invalid student ID");
+            }
+
+            
+            var existingStudent = await _dbContext.Set<Student>().FindAsync(studentId);
 
             if (existingStudent == null)
             {
-               return BadRequest(); // Or handle the case where the product is not found
+                return BadRequest("Student not found");
             }
 
-           
-            existingStudent.Username=updatedStudent.Username;
-            existingStudent.Password=updatedStudent.Password;
+            existingStudent.Password = password;
 
-            // Save changes to the database
-            ///momken nsheel de 3ady
             _dbContext.Update(existingStudent);
             await _dbContext.SaveChangesAsync();
 
-            // Redirect to the product list page after successful editing
             return Ok(existingStudent);
         }
         catch (Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
         {
-            // Handle concurrency exceptions if needed
+           
             throw;
         }
     }
 
-    // If model state is not valid, return to the edit form with the same product data
+    
     return BadRequest();
 }
-
 
 
 [HttpDelete("{id}",Name ="DeleteStudent")]
