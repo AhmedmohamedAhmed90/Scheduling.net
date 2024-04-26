@@ -9,6 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+// Configure HttpClient
+// builder.Services.AddHttpClient("MyApiClient", client =>
+// {
+//     client.BaseAddress = new Uri("https://prod-68.westeurope.logic.azure.com");
+//     // You can set other HttpClient configurations here, such as timeout settings or default headers
+// });
+
 var app = builder.Build();
 
 app.UseDefaultFiles();

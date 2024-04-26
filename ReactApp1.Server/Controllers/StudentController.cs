@@ -5,6 +5,11 @@ using ReactApp1.Server.Models;
 using System.Net.Mail;  
 using System.Net;
 using Exception = System.Exception;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
+using System.Net.Http;
 //using System.Diagnostics;
 
 //using Microsoft.AspNetCore.Identity;
@@ -97,41 +102,41 @@ protected string GenerateRandomNumbers(int length)
 //     }
 // }
 
-[ApiExplorerSettings(IgnoreApi = true)]
-public async Task SendEmailAsync(string receiver, string subject, string username, string password)
-{
-    try
-    {
-        if (ModelState.IsValid)
-        {
-            var senderEmail = new MailAddress("melkmeshi@wakeb.ly", "Melk_Meshi");
-            var receiverEmail = new MailAddress(receiver);
-            var emailSubject = subject;
-            var emailBody = $"Your username is: {username}\nYour password is: {password}";
+// [ApiExplorerSettings(IgnoreApi = true)]
+// public async Task SendEmailAsync(string receiver, string subject, string username, string password)
+// {
+//     try
+//     {
+//         if (ModelState.IsValid)
+//         {
+//             var senderEmail = new MailAddress("melkmeshi@wakeb.ly", "Melk_Meshi");
+//             var receiverEmail = new MailAddress(receiver);
+//             var emailSubject = subject;
+//             var emailBody = $"Your username is: {username}\nYour password is: {password}";
 
-            var smtp = new SmtpClient
-            {
-                Host = "ls45.server.ly",
-                Port = 465,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(senderEmail.Address, "MohElk13241?")
-            };
+//             var smtp = new SmtpClient
+//             {
+//                 Host = "ls45.server.ly",
+//                 Port = 465,
+//                 EnableSsl = true,
+//                 DeliveryMethod = SmtpDeliveryMethod.Network,
+//                 UseDefaultCredentials = false,
+//                 Credentials = new NetworkCredential(senderEmail.Address, "MohElk13241")
+//             };
 
-            using var message = new MailMessage(senderEmail, receiverEmail)
-            {
-                Subject = emailSubject,
-                Body = emailBody
-            };
-            await smtp.SendMailAsync(message);
-        }
-    }
-    catch (Exception)
-    {
-        ViewBag.Error = "Some Error";
-    }
-}
+//             using var message = new MailMessage(senderEmail, receiverEmail)
+//             {
+//                 Subject = emailSubject,
+//                 Body = emailBody
+//             };
+//             await smtp.SendMailAsync(message);
+//         }
+//     }
+//     catch (Exception)
+//     {
+//         ViewBag.Error = "Some Error";
+//     }
+// }
 
 
 
@@ -157,13 +162,30 @@ public async Task<ActionResult> CreateStudents([FromForm] Student student)
         await _dbContext.SaveChangesAsync();
 
         // Send email to the student
-        try{
+    //     try{
 
-        await SendEmailAsync(studentEmail, "your university account's username and password", username, password);
+    //    // await SendEmailAsync(studentEmail, "your university account's username and password", username, password);
 
-        }catch(Exception ex){
-            return Ok("problem:"+ex.Message);
-        }
+    //     }catch(Exception ex){
+    //         return Ok("problem:"+ex.Message);
+    //     }
+     // Send email to the student
+    var payload = new
+            {
+                email = student.Email,
+                subject = "Your credentials for the University Account",
+                body = $"Username: {username}\nPassword: {password}"
+            };
+
+    // Use HttpClient to send the request
+    using (var client = new HttpClient())
+    {
+        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
+        response.EnsureSuccessStatusCode();
+        Console.WriteLine(await response.Content.ReadAsStringAsync());
+    }
+
                
             return Ok(student);
     }
