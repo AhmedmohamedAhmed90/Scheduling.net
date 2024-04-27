@@ -155,8 +155,8 @@ public async Task<ActionResult> CreateStudents([FromForm] Student student)
         string studentEmail= student.Email.ToString();
 
         // Assign the generated username and password to the student
-        student.Username = username;
-        student.Password = password;
+        student.UserName = username;
+        student.PasswordHash  = password;
         
         _dbContext.Set<Student>().Add(student);
         await _dbContext.SaveChangesAsync();
@@ -279,7 +279,7 @@ public async Task<IActionResult> EditStudentPassword(string id, [FromForm] strin
                 return BadRequest("Student not found");
             }
 
-            existingStudent.Password = password;
+            existingStudent.PasswordHash  = password;
 
             _dbContext.Update(existingStudent);
             await _dbContext.SaveChangesAsync();
