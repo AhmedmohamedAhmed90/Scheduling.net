@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ReactApp1.Server.Models
 {
-    public class Student
+    public class Student : IdentityUser
     {
      [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; } // Unique and auto-incrementing ID

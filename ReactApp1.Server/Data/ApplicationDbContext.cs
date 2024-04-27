@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using ReactApp1.Server.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ReactApp1.Server.Data
 {
 
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+     public class ApplicationDbContext : IdentityDbContext<Student>
     {
-
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Student> Students { get; set; }
+       public ApplicationDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+    {
+       
     }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Student> Students { get; set; }
+    }
+   
 }
