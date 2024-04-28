@@ -8,6 +8,7 @@ using ReactApp1.Server.Data;
 using ReactApp1.Server.Dtos;
 using ReactApp1.Server.Models;
 
+
 namespace ReactApp1.Server.Controllers
 {
     [Route("api/account")]
@@ -33,9 +34,9 @@ namespace ReactApp1.Server.Controllers
                 {
                     UserName=registerDto.Username,
                     Email=registerDto.Email,
-                    PasswordHash=registerDto.Password
+                    
                 };
-            var createUser = await  visitor.CreateAsync(student);
+            var createUser = await  visitor.CreateAsync(student , registerDto.Password);
             if(createUser.Succeeded){
                  var Result = await visitor.AddToRoleAsync(student , "User");
                  if(Result.Succeeded){
