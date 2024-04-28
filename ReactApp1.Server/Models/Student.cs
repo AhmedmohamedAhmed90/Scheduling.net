@@ -7,7 +7,7 @@ namespace ReactApp1.Server.Models
     {
       
 
-        [Key]
+      [Key]
         public override string Id { get; set; }
 
         // Other additional properties specific to Student entity
