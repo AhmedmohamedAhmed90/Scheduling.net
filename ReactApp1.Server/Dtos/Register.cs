@@ -8,6 +8,8 @@ namespace ReactApp1.Server.Dtos
 {
     public class Register
     { 
+         [StringLength(50)] 
+        public string Name { get; set; }
         [Required]
         public String? Username {get; set;}
         [Required]
@@ -15,5 +17,16 @@ namespace ReactApp1.Server.Dtos
         public string? Email { get; set; }
         [Required]
         public String? Password { get; set; }
+        [StringLength(100)] 
+        public string Address { get; set; }
+
+        [Range(0, 150)] // Example range for age
+        public int Age { get; set; }
+
+        [StringLength(50)] 
+        public string Year { get; set; }
+
+        [StringLength(50)] 
+        public string Faculty { get; set; }
     }
 }

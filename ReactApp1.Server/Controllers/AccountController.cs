@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using ReactApp1.Server.Data;
 using ReactApp1.Server.Dtos;
+using ReactApp1.Server.Interfaces;
 using ReactApp1.Server.Models;
 
 
@@ -16,9 +18,11 @@ namespace ReactApp1.Server.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<Student> visitor;
-        public AccountController(UserManager<Student> userManager)
+        private readonly ITokenService _TokenService;
+        public AccountController(UserManager<Student> userManager ,ITokenService TokenService )
         {
             visitor=userManager;
+            _TokenService=TokenService;
     
         }
 
@@ -34,14 +38,25 @@ namespace ReactApp1.Server.Controllers
                 {
                     UserName=registerDto.Username,
                     Email=registerDto.Email,
-                    
+                    Faculty=registerDto.Faculty,
+                    Address=registerDto.Address,
+                    Age = registerDto.Age,
+                    Year=registerDto.Year,
+                    Name=registerDto.Name
+                     
                 };
             var createUser = await  visitor.CreateAsync(student , registerDto.Password);
             if(createUser.Succeeded){
                  var Result = await visitor.AddToRoleAsync(student , "User");
                  if(Result.Succeeded){
-                  return Ok("User Created");
-                 }
+                  return Ok(
+                    new NewUser{
+                        UserName=student.UserName,
+                        Email = student.Email,
+                        Token = _TokenService.CreateToken(student)
+                    }
+                  );
+                }
                 else{
                     return StatusCode(500 ,Result.Errors);
                  }

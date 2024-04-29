@@ -232,10 +232,10 @@ public async Task<IActionResult> EditStudents(string id, [FromForm] Student upda
 
             // Update the existing product with the changes
             existingStudent.Name = updatedStudent.Name;
-            existingStudent.Address = updatedStudent.Address;
-            existingStudent.Age = updatedStudent.Age;
-            existingStudent.Year = updatedStudent.Year;
-            existingStudent.Faculty = updatedStudent.Faculty;
+           // existingStudent.Address = updatedStudent.Address;
+           // existingStudent.Age = updatedStudent.Age;
+            //existingStudent.Year = updatedStudent.Year;
+            //existingStudent.Faculty = updatedStudent.Faculty;
             existingStudent.Email = updatedStudent.Email;
 
             // Save changes to the database

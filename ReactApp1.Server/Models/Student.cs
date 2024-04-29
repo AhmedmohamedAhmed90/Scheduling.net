@@ -5,21 +5,21 @@ namespace ReactApp1.Server.Models
 {
     public class Student : IdentityUser
     {
-      
-
-      [Key]
-        public override string Id { get; set; }
-
-        // Other additional properties specific to Student entity
-        [StringLength(50)] 
+         [StringLength(50)] 
         public string Name { get; set; }
 
+        [StringLength(100)] 
         public string Address { get; set; }
 
-        public string Age { get; set; }
+        [Range(0, 150)] // Example range for age
+        public int Age { get; set; }
 
+        [StringLength(50)] 
         public string Year { get; set; }
 
+        [StringLength(50)] 
         public string Faculty { get; set; }
     }
+
+    
 }

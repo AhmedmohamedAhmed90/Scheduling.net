@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ReactApp1.Server.Data;
+using ReactApp1.Server.Interfaces;
 using ReactApp1.Server.Models;
+using ReactApp1.Server.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -20,6 +22,8 @@ builder.Services.AddIdentity<Student,IdentityRole>(options =>{
    options.Password.RequiredLength=12;  // restrictions for the password
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
+
+builder.Services.AddScoped<ITokenService , TokenService>();
 
 builder.Services.AddAuthentication(options=>{
     options.DefaultAuthenticateScheme=
