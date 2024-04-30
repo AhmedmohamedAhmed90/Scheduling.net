@@ -14,6 +14,8 @@ namespace ReactApp1.Server.Data
     }
     public DbSet<Product> Products { get; set; }
     public DbSet<Student> Students { get; set; }
+    public DbSet<University> Universities { get; set; }
+    public DbSet<Faculty> Faculties { get; set; }
     protected override void OnModelCreating(ModelBuilder Builder)
     {
       base.OnModelCreating(Builder);
