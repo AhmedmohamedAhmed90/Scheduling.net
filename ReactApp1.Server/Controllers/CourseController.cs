@@ -71,7 +71,6 @@ namespace ReactApp1.Server.Controllers
 
             return Ok(course);
         }
-
 [HttpPut("{id}", Name = "UpdateCourse")]
 public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course course)
 {
@@ -90,6 +89,13 @@ public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course c
     existingCourse.Title = course.Title;
     existingCourse.Description = course.Description;
     existingCourse.InstructorId = instructorId;
+
+    // Update CourseInstructor
+    var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
+    if (courseInstructor != null)
+    {
+        courseInstructor.InstructorsId = instructorId;
+    }
 
     try
     {
@@ -110,21 +116,36 @@ public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course c
 }
 
 
+
         [HttpDelete("{id}", Name = "DeleteCourse")]
-        public async Task<IActionResult> DeleteCourse(int id)
-        {
-            var course = await _dbContext.Courses.FindAsync(id);
-            if (course == null)
-            {
-                return BadRequest("Course not found");
-            }
+public async Task<IActionResult> DeleteCourse(int id)
+{
+    var course = await _dbContext.Courses.FindAsync(id);
+    if (course == null)
+    {
+        return BadRequest("Course not found");
+    }
 
-            _dbContext.Courses.Remove(course);
-            await _dbContext.SaveChangesAsync();
+    // Remove CourseInstructor entry
+    var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
+    if (courseInstructor != null)
+    {
+        _dbContext.CourseInstructors.Remove(courseInstructor);
+    }
 
-            return Ok("Course deleted");
-        }
+    // Remove related Groups
+    var groups = await _dbContext.Groups.Where(g => g.CourseId == id).ToListAsync();
+    _dbContext.Groups.RemoveRange(groups);
 
+    _dbContext.Courses.Remove(course);
+    await _dbContext.SaveChangesAsync();
+
+    return Ok("Course deleted");
+}
+
+
+
+        [ApiExplorerSettings(IgnoreApi = true)]
         private bool CourseExists(int id)
         {
             return _dbContext.Courses.Any(e => e.Id == id);

@@ -22,6 +22,11 @@ namespace ReactApp1.Server.Data
     public DbSet<Course> Courses { get; set; }
     
     public DbSet<CourseInstructor> CourseInstructors { get; set; }
+    
+    public DbSet<Group> Groups { get; set; }
+
+    
+    public DbSet<Lecture> Lectures { get; set; }
     protected override void OnModelCreating(ModelBuilder Builder)
     {
       base.OnModelCreating(Builder);
