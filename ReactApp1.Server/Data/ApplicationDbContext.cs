@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using ReactApp1.Server.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using reactapp1.Server.Models;
 
 namespace ReactApp1.Server.Data
 {
@@ -16,6 +17,11 @@ namespace ReactApp1.Server.Data
     public DbSet<Student> Students { get; set; }
     public DbSet<University> Universities { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
+    public DbSet<Instructor> Instructors { get; set; }
+    
+    public DbSet<Course> Courses { get; set; }
+    
+    public DbSet<CourseInstructor> CourseInstructors { get; set; }
     protected override void OnModelCreating(ModelBuilder Builder)
     {
       base.OnModelCreating(Builder);

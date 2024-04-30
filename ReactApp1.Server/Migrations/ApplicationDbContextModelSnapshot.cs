@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f4a13525-6b26-4db4-98a3-6b7844b821f9",
+                            Id = "d0a7fb49-d723-4b3c-b3fa-3b6785eb7816",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f03a285f-2e64-4a69-b9b3-33bc8a1841e0",
+                            Id = "06f6bf62-65d7-45f9-b696-0190c7b53d4c",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -249,7 +249,7 @@ namespace ReactApp1.Server.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Instructor");
+                    b.ToTable("Instructors");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Lecture", b =>

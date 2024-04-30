@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class universityedit3 : Migration
+    public partial class universityedit5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -229,7 +229,7 @@ namespace ReactApp1.Server.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Instructor",
+                name: "Instructors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -240,9 +240,9 @@ namespace ReactApp1.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Instructor", x => x.Id);
+                    table.PrimaryKey("PK_Instructors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instructor_Faculties_FacultyId",
+                        name: "FK_Instructors_Faculties_FacultyId",
                         column: x => x.FacultyId,
                         principalTable: "Faculties",
                         principalColumn: "Id",
@@ -265,9 +265,9 @@ namespace ReactApp1.Server.Migrations
                 {
                     table.PrimaryKey("PK_Course", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Course_Instructor_InstructorId",
+                        name: "FK_Course_Instructors_InstructorId",
                         column: x => x.InstructorId,
-                        principalTable: "Instructor",
+                        principalTable: "Instructors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -324,8 +324,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "39fd496e-3940-4076-94c9-ff0e7a8c6398", null, "User", "USER" },
-                    { "b272a370-dd98-4c4d-a2c3-eb514f2238ee", null, "Admin", "ADMIN" }
+                    { "06f6bf62-65d7-45f9-b696-0190c7b53d4c", null, "User", "USER" },
+                    { "d0a7fb49-d723-4b3c-b3fa-3b6785eb7816", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -381,8 +381,8 @@ namespace ReactApp1.Server.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Instructor_FacultyId",
-                table: "Instructor",
+                name: "IX_Instructors_FacultyId",
+                table: "Instructors",
                 column: "FacultyId");
 
             migrationBuilder.CreateIndex(
@@ -428,7 +428,7 @@ namespace ReactApp1.Server.Migrations
                 name: "Course");
 
             migrationBuilder.DropTable(
-                name: "Instructor");
+                name: "Instructors");
 
             migrationBuilder.DropTable(
                 name: "Faculties");
