@@ -13,6 +13,7 @@ import {
 import HomePage from "./pages/HomePage.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import { StoreProvider } from "./Store.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -46,7 +47,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <StoreProvider>
+          <RouterProvider router={router} />
+        </StoreProvider>
       </QueryClientProvider>
     </ChakraProvider>
   </React.StrictMode>
