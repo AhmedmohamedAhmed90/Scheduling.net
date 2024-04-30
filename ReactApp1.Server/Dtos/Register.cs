@@ -8,7 +8,7 @@ namespace ReactApp1.Server.Dtos
 {
     public class Register
     { 
-         [StringLength(50)] 
+        [StringLength(50)] 
         public string Name { get; set; }
         [Required]
         public String? Username {get; set;}

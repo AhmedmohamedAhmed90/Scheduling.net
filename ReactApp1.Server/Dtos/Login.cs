@@ -8,7 +8,7 @@ namespace ReactApp1.Server.Dtos
 {
     public class Login
     {
-         [Required]
+        [Required]
         public String? Username {get; set;}
         [Required]
         public String? Password { get; set; }
