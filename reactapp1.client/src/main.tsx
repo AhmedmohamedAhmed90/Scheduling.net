@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import HomePage from "./pages/HomePage.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
     <Route>
       <Route index={true} path="/" element={<HomePage />} />
       <Route path="/product" element={<ProductPage />} />
+      <Route path="/login" element={<LoginPage />} />
       {/* <Route path="" element={<ProtectedRoute />}>
         <Route path="/shipping" element={<ShippingAddressPage />} />
         <Route path="/payment" element={<PaymentMethodPage />} />
