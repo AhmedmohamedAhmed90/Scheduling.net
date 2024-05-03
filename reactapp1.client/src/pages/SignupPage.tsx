@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-function LoginPage() {
+function SignupPage() {
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
 
@@ -26,7 +26,7 @@ function LoginPage() {
       borderColor={borderColor}
     >
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Sign In
+        Sign up
       </Heading>
       <FormControl id="email" isRequired>
         <FormLabel>Email</FormLabel>
@@ -37,16 +37,16 @@ function LoginPage() {
         <Input type="password" placeholder="Enter your password" />
       </FormControl>
       <Button mt={8} colorScheme="blue" width="full" type="submit">
-        Login
+        Sign in
       </Button>
       <Text mt={4} textAlign="center">
-        Don't have an account?{" "}
-        <Link color="teal.500" href="/signup">
-          Sign up
+        Alreay Have An account?{" "}
+        <Link color="teal.500" href="/login">
+          Sign in
         </Link>
       </Text>
     </Box>
   );
 }
 
-export default LoginPage;
+export default SignupPage;
