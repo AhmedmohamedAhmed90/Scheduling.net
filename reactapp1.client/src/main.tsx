@@ -25,6 +25,7 @@ const router = createBrowserRouter(
       <Route path="/product" element={<ProductPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
+      
       {/* <Route path="" element={<ProtectedRoute />}>
         <Route path="/shipping" element={<ShippingAddressPage />} />
         <Route path="/payment" element={<PaymentMethodPage />} />

@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d0a7fb49-d723-4b3c-b3fa-3b6785eb7816",
+                            Id = "eb2b9f5e-9497-43cd-a404-564cd8f443d8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "06f6bf62-65d7-45f9-b696-0190c7b53d4c",
+                            Id = "8549bdf1-91c3-42c8-bf21-ddce1a3abe01",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -186,7 +186,42 @@ namespace ReactApp1.Server.Migrations
 
                     b.HasIndex("InstructorId");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("ReactApp1.Server.Models.Exception", b =>
+                {
+                    b.Property<int>("ExceptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId1")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("ExceptionId");
+
+                    b.HasIndex("StudentId1");
+
+                    b.ToTable("Exceptions");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Faculty", b =>
@@ -226,7 +261,7 @@ namespace ReactApp1.Server.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Group");
+                    b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Instructor", b =>
@@ -285,7 +320,7 @@ namespace ReactApp1.Server.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Lecture");
+                    b.ToTable("Lectures");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Product", b =>
@@ -424,6 +459,29 @@ namespace ReactApp1.Server.Migrations
                     b.ToTable("Universities");
                 });
 
+            modelBuilder.Entity("reactapp1.Server.Models.CourseInstructor", b =>
+                {
+                    b.Property<int>("CoursesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstructorsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CoursesId", "InstructorsId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("InstructorId");
+
+                    b.ToTable("CourseInstructors");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -486,6 +544,15 @@ namespace ReactApp1.Server.Migrations
                     b.Navigation("Instructor");
                 });
 
+            modelBuilder.Entity("ReactApp1.Server.Models.Exception", b =>
+                {
+                    b.HasOne("ReactApp1.Server.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId1");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("ReactApp1.Server.Models.Faculty", b =>
                 {
                     b.HasOne("ReactApp1.Server.Models.University", "University")
@@ -528,6 +595,25 @@ namespace ReactApp1.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("reactapp1.Server.Models.CourseInstructor", b =>
+                {
+                    b.HasOne("ReactApp1.Server.Models.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReactApp1.Server.Models.Instructor", "Instructor")
+                        .WithMany()
+                        .HasForeignKey("InstructorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Course", b =>

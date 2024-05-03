@@ -14,6 +14,7 @@ namespace ReactApp1.Server.Data
        
     }
     public DbSet<Product> Products { get; set; }
+    public DbSet<Models.Exception> Exceptions { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<University> Universities { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
@@ -24,8 +25,6 @@ namespace ReactApp1.Server.Data
     public DbSet<CourseInstructor> CourseInstructors { get; set; }
     
     public DbSet<Group> Groups { get; set; }
-
-    
     public DbSet<Lecture> Lectures { get; set; }
     protected override void OnModelCreating(ModelBuilder Builder)
     {
@@ -44,6 +43,7 @@ namespace ReactApp1.Server.Data
            }
       };
       Builder.Entity<IdentityRole>().HasData(roles);
+      Builder.Entity<CourseInstructor>().HasKey(e=> new {e.CoursesId,e.InstructorsId});
       
     }
    }
