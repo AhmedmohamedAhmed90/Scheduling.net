@@ -7,6 +7,6 @@ namespace ReactApp1.Server.Models
         public required string Name { get; set; }
         public required string Address { get; set; }
         public required string PhoneNumber { get; set; }
-        public ICollection<Faculty> Faculties { get; } = [];
+        public ICollection<Faculty>? Faculties { get; } = [];
     }
 }
