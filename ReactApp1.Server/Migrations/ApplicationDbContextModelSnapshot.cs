@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb2b9f5e-9497-43cd-a404-564cd8f443d8",
+                            Id = "eef8dabd-b0ef-4223-aa54-ff6b887499f1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8549bdf1-91c3-42c8-bf21-ddce1a3abe01",
+                            Id = "399ae0db-7fc6-4f33-885b-99642b39161b",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -468,6 +468,9 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int>("InstructorId")
