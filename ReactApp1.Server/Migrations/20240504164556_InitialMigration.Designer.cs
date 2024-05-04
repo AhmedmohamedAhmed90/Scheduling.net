@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReactApp1.Server.Data;
 
@@ -10,9 +11,11 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504164556_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8b836aa3-d80a-477f-b7a6-91c441a84c2f",
+                            Id = "eb1eb780-aec1-4a4f-aa92-8da75c34e174",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9d3f6361-bff0-47e0-a536-f95c954457ca",
+                            Id = "c4d74962-4875-4cc4-a283-8ba3025e7214",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -211,12 +214,15 @@ namespace ReactApp1.Server.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("StudentId")
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentId1")
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("ExceptionId");
 
-                    b.HasIndex("StudentId");
+                    b.HasIndex("StudentId1");
 
                     b.ToTable("Exceptions");
                 });
@@ -547,8 +553,8 @@ namespace ReactApp1.Server.Migrations
             modelBuilder.Entity("ReactApp1.Server.Models.Exception", b =>
                 {
                     b.HasOne("ReactApp1.Server.Models.Student", "Student")
-                        .WithMany("Exception")
-                        .HasForeignKey("StudentId");
+                        .WithMany()
+                        .HasForeignKey("StudentId1");
 
                     b.Navigation("Student");
                 });
@@ -634,11 +640,6 @@ namespace ReactApp1.Server.Migrations
             modelBuilder.Entity("ReactApp1.Server.Models.Instructor", b =>
                 {
                     b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("ReactApp1.Server.Models.Student", b =>
-                {
-                    b.Navigation("Exception");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.University", b =>

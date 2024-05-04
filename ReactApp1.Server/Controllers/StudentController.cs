@@ -198,7 +198,7 @@ public async Task<ActionResult> CreateStudents([FromForm] Student student)
 }
 
 [HttpGet("{id}", Name = "GetStudent")]
-public IActionResult GetStudent(int id)
+public IActionResult GetStudent(String id)
 {
     var student = _dbContext.Set<Student>().Find(id);
 

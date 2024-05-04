@@ -5,6 +5,7 @@ namespace ReactApp1.Server.Models
 {
     public class Student : IdentityUser
     {
+        
          [StringLength(50)] 
         public string Name { get; set; }
 
@@ -19,6 +20,9 @@ namespace ReactApp1.Server.Models
 
         [StringLength(50)] 
         public string Faculty { get; set; }
+
+        public ICollection<Exception> Exception { get; } = [];
+     
     }
 
     
