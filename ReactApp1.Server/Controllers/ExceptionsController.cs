@@ -19,18 +19,39 @@ public class ExceptionsController : ControllerBase
     }
 
     // Submit an exception request
-    [HttpPost]
-    public async Task<IActionResult> SubmitException([FromBody] Models.Exception exception)
+    [HttpPost(Name = "CreateException")]
+    public async Task<IActionResult> SubmitException(int exceptionId, string studentId , string reason ,string description,string status , string priority)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+         var Exception = await _context.Students.FindAsync(studentId);
 
-        _context.Exceptions.Add(exception);
+         if(studentId == null){
+             return BadRequest("Group not found");
+         }
+          var Exceptions = new Models.Exception
+            {
+                ExceptionId=exceptionId,
+                StudentId = studentId,
+                Reason = reason , 
+                Description = description,
+                Priority = priority ,
+                Status = status
+            };
+
+        _context.Exceptions.Add(Exceptions);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetExceptionById), new { id = exception.ExceptionId }, exception);
+        return Ok (
+            new Models.Exception
+            {
+                ExceptionId=exceptionId,
+                StudentId = studentId,
+                Reason = reason , 
+                Description = description,
+                Priority = priority ,
+                Status = status
+            }
+
+        );
     }
 
     // Get an exception by ID
