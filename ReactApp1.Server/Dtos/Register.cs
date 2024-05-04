@@ -10,12 +10,12 @@ namespace ReactApp1.Server.Dtos
     { 
         [StringLength(50)] 
         public string Name { get; set; }
-        [Required]
+        // [Required]
         public String? Username {get; set;}
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
-        [Required]
+        // [Required]
         public String? Password { get; set; }
         [StringLength(100)] 
         public string Address { get; set; }
