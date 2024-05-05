@@ -4,13 +4,20 @@ interface StoreProviderProps {
   children: React.ReactNode;
 }
 
+const userInfo = JSON.parse(localStorage.getItem("userInfo")!);
+
 const initialState = {
-  username: "",
-  email: "",
-  token: "",
+  username: userInfo?.username ? (userInfo.username as string) : "",
+  email: userInfo?.email ? (userInfo.email as string) : "",
+  token: userInfo?.token ? (userInfo.token as string) : "",
+  universityID: userInfo?.universityID ? (userInfo.universityID as number) : 0,
 };
 
 export type StoreAction =
+  | {
+      type: "SET_UNIVERSITYID";
+      payload: number;
+    }
   | {
       type: "LOGIN";
       payload: typeof initialState;
@@ -29,14 +36,23 @@ export const Store = createContext<{
 });
 
 function reducer(state: typeof initialState, { type, payload }: StoreAction) {
+  let newState = state; // Use newState to handle state updates
+
   switch (type) {
+    case "SET_UNIVERSITYID":
+      newState = { ...state, universityID: payload };
+      break;
     case "LOGIN":
-      return { ...state, ...payload };
+      newState = { ...state, ...payload };
+      break;
     case "LOGOUT":
-      return { ...initialState };
+      newState = { ...initialState };
+      break;
     default:
-      return state;
+      newState = state;
   }
+  localStorage.setItem("userInfo", JSON.stringify(newState));
+  return newState;
 }
 
 export const StoreProvider = ({ children }: StoreProviderProps) => {

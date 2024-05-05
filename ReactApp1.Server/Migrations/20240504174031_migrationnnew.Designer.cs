@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReactApp1.Server.Data;
 
@@ -10,9 +11,11 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504174031_migrationnnew")]
+    partial class migrationnnew
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eb2b9f5e-9497-43cd-a404-564cd8f443d8",
+                            Id = "8b836aa3-d80a-477f-b7a6-91c441a84c2f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8549bdf1-91c3-42c8-bf21-ddce1a3abe01",
+                            Id = "9d3f6361-bff0-47e0-a536-f95c954457ca",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -212,7 +215,6 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("StudentId")
-                        .IsRequired()
                         .HasColumnType("varchar(255)");
 
                     b.HasKey("ExceptionId");
@@ -549,9 +551,7 @@ namespace ReactApp1.Server.Migrations
                 {
                     b.HasOne("ReactApp1.Server.Models.Student", "Student")
                         .WithMany("Exception")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
                 });

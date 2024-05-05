@@ -21,7 +21,7 @@ namespace ReactApp1.Server.Data
     public DbSet<Instructor> Instructors { get; set; }
     
     public DbSet<Course> Courses { get; set; }
-    
+  
     public DbSet<CourseInstructor> CourseInstructors { get; set; }
     
     public DbSet<Group> Groups { get; set; }
@@ -44,6 +44,7 @@ namespace ReactApp1.Server.Data
       };
       Builder.Entity<IdentityRole>().HasData(roles);
       Builder.Entity<CourseInstructor>().HasKey(e=> new {e.CoursesId,e.InstructorsId});
+      
       
     }
    }

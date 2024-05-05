@@ -1,5 +1,4 @@
 import { AddIcon, DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
-import "../App.css";
 import {
   TableContainer,
   Table,
