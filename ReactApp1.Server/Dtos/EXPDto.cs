@@ -7,10 +7,10 @@ namespace ReactApp1.Server.Dtos
 {
     public class EXPDto
     {
-        public  string? studentId;
-        public string? reason;
-        public string? description;
-        public string? status;
-        public string? priority;
+        public  string? studentId { get; set; }
+        public string? reason { get; set; }
+        public string? description { get; set; }
+        public string? status { get; set; }
+        public string? priority { get; set; }
     }
 }
