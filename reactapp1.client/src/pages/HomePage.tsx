@@ -8,6 +8,9 @@ function HomePage() {
         <li>
           <Link to={"/product"}>product</Link>
         </li>
+        <li>
+          <Link to={"/sendexception"}>form</Link>
+        </li>
       </ul>
     </div>
   );
