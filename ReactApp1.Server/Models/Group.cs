@@ -8,7 +8,7 @@ namespace ReactApp1.Server.Models
         public required string Code { get; set; }
 
         public int CourseId { get; set; }
-        public Course Course { get; set; } = null!;
-        public ICollection<Lecture> Lectures { get; } = [];
+        public Course? Course { get; set; } = null!;
+        public ICollection<Lecture>? Lectures { get; } = [];
     }
 }
