@@ -26,16 +26,28 @@ namespace ReactApp1.Server.Controllers
             return Ok(groups);
         }
 
-        [HttpGet("{id}", Name = "GetGroup")]
-        public async Task<ActionResult<Group>> GetGroup(int id)
-        {
-            var group = await _dbContext.Groups.FindAsync(id);
-            if (group == null)
-            {
-                return NotFound("Group not found");
-            }
-            return Ok(group);
-        }
+       [HttpGet("{code}", Name = "GetGroup")]
+public async Task<ActionResult<object>> GetGroup(string code)
+{
+    var group = await _dbContext.Groups
+        .Include(g => g.Course)
+        .FirstOrDefaultAsync(g => g.Code == code);
+
+    if (group == null)
+    {
+        return NotFound("Group not found");
+    }
+
+    var result = new
+    {
+        groupId = group.Id,
+        courseId = group.CourseId,
+        group = group
+    };
+
+    return Ok(result);
+}
+
 
         [HttpPost(Name = "CreateGroup")]
         public async Task<IActionResult> CreateGroup(string code, int courseId)
@@ -58,7 +70,7 @@ namespace ReactApp1.Server.Controllers
             return Ok(group);
         }
 
-        [HttpPut("{id}", Name = "UpdateGroup")]
+        [HttpPut("{id}/{courseId}", Name = "UpdateGroup")]
         public async Task<IActionResult> UpdateGroup(int id, int courseId, Group group)
         {
             if (id != group.Id)

@@ -20,23 +20,42 @@ namespace ReactApp1.Server.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet(Name = "GetCourses")]
-        public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
+       [HttpGet("{instructorId}",Name = "GetCourses")]
+          public async Task<ActionResult<IEnumerable<object>>> GetCoursesByInstructor(int instructorId)
+          {
+             var courses = await _dbContext.Courses
+             .Include(c => c.Instructor)
+             .Where(c => c.InstructorId == instructorId)
+             .Select(c => new
         {
-            var courses = await _dbContext.Courses.ToListAsync();
-            return Ok(courses);
-        }
+            CourseId = c.Id,
+            Course = c
+        })
+        .ToListAsync();
 
-        [HttpGet("{id}", Name = "GetCourse")]
-        public async Task<ActionResult<Course>> GetCourse(int id)
-        {
-            var course = await _dbContext.Courses.FindAsync(id);
-            if (course == null)
-            {
-                return NotFound("Course not found");
-            }
-            return Ok(course);
-        }
+             return Ok(courses);
+          }
+
+      [HttpGet(Name = "GetCourse")]
+public async Task<ActionResult<object>> GetCourse(string groupCode)
+{
+    var course = await _dbContext.Courses
+        .Include(c => c.Groups)
+        .FirstOrDefaultAsync(c => c.Groups.Any(g => g.Code == groupCode));
+
+    if (course == null)
+    {
+        return NotFound("Course not found");
+    }
+
+      var result = new
+    {
+        CourseId = course.Id,
+        Course = course
+    };
+
+    return Ok(result);
+}
 
         [HttpPost(Name = "CreateCourse")]
         public async Task<IActionResult> CreateCourse(string code, string title, string description, int instructorId)
@@ -71,10 +90,10 @@ namespace ReactApp1.Server.Controllers
 
             return Ok(course);
         }
-[HttpPut("{id}", Name = "UpdateCourse")]
-public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course course)
+[HttpPut("{id}/{instructorId}", Name = "UpdateCourse")]
+public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course courseUpdate)
 {
-    if (id != course.Id)
+    if (id != courseUpdate.Id)
     {
         return BadRequest("Invalid course ID");
     }
@@ -85,17 +104,51 @@ public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course c
         return NotFound("Course not found");
     }
 
-    existingCourse.Code = course.Code;
-    existingCourse.Title = course.Title;
-    existingCourse.Description = course.Description;
-    existingCourse.InstructorId = instructorId;
+    if (existingCourse.InstructorId != instructorId)
+    {
+        return BadRequest("Invalid instructor ID for the course");
+    }
 
-    // Update CourseInstructor
+    existingCourse.Code = courseUpdate.Code;
+    existingCourse.Title = courseUpdate.Title;
+    existingCourse.Description = courseUpdate.Description;
+    existingCourse.InstructorId=instructorId;
+
+    try
+    {
+        await _dbContext.SaveChangesAsync();
+        return Ok(existingCourse);
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!CourseExists(id))
+        {
+            return BadRequest("Course not found");
+        }
+        else
+        {
+            throw;
+        }
+    }
+}
+
+
+[HttpPut("{id}/{instructorId}UpdateInstructor", Name = "UpdateCourseInstructor")]
+public async Task<IActionResult> UpdateCourseInstructor(int id, int instructorId)
+{
+    var existingCourse = await _dbContext.Courses.FindAsync(id);
+    if (existingCourse == null)
+    {
+        return NotFound("Course not found");
+    }
+
     var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
     if (courseInstructor != null)
     {
         courseInstructor.InstructorsId = instructorId;
     }
+
+    existingCourse.InstructorId = instructorId;
 
     try
     {
@@ -126,14 +179,14 @@ public async Task<IActionResult> DeleteCourse(int id)
         return BadRequest("Course not found");
     }
 
-    // Remove CourseInstructor entry
+    
     var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
     if (courseInstructor != null)
     {
         _dbContext.CourseInstructors.Remove(courseInstructor);
     }
 
-    // Remove related Groups
+   
     var groups = await _dbContext.Groups.Where(g => g.CourseId == id).ToListAsync();
     _dbContext.Groups.RemoveRange(groups);
 

@@ -8,8 +8,8 @@ namespace ReactApp1.Server.Models
         public required string EndTime { get; set; }
         public required string Day { get; set; }
         public required string Room { get; set; }
-        public int GroupId { get; set; }
-        public Group Group { get; set; } = null!;
+        public int? GroupId { get; set; }
+        public Group? Group { get; set; } = null!;
 
 
     }

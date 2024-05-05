@@ -26,47 +26,64 @@ namespace ReactApp1.Server.Controllers
             return Ok(faculties);
         }
 
-        [HttpGet("{id}", Name = "GetFaculty")]
-        public async Task<ActionResult<Faculty>> GetFaculty(int id)
+        [HttpGet("{universityId}/{facultyName}", Name = "GetFacultyByNameInUniversity")]
+      public async Task<ActionResult<Faculty>> GetFacultyByNameInUniversity(int universityId, string facultyName)
+      {
+          var faculty = await _dbContext.Faculties
+          .Include(f => f.University)
+          .FirstOrDefaultAsync(f => f.UniversityId == universityId && f.Name == facultyName);
+
+         if (faculty == null)
         {
-            var faculty = await _dbContext.Faculties.FindAsync(id);
-            if (faculty == null)
-            {
-                return NotFound("Faculty not found");
-            }
-            return Ok(faculty);
+          return NotFound("Faculty not found in the specified university");
         }
 
-        [HttpPut("{id}", Name = "UpdateFaculty")]
-        public async Task<IActionResult> UpdateFaculty(int id, Faculty faculty)
-        {
-            if (id != faculty.Id)
-            {
-                return BadRequest("Invalid faculty ID");
-            }
-
-            _dbContext.Entry(faculty).State = EntityState.Modified;
-
-            try
-            {
-                await _dbContext.SaveChangesAsync();
-                return Ok(faculty);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FacultyExists(id))
-                {
-                    return BadRequest("Faculty not found");
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-[HttpPost(Name = "CreateFaculty")]
-public async Task<IActionResult> CreateFaculty(int universityId, Faculty faculty)
+         return Ok(new
+    {
+        facultyId = faculty.Id,
+        facultyName = faculty.Name,
+        uniId = faculty.UniversityId,
+        universitydata = faculty.University,
+    });
+       }
+       [HttpPut("{universityId}/{id}", Name = "UpdateFaculty")]
+public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty faculty)
 {
+    if (id != faculty.Id)
+    {
+        return BadRequest("Invalid faculty ID");
+    }
+
+    if (universityId != faculty.UniversityId)
+    {
+        return BadRequest("Invalid university ID");
+    }
+
+    _dbContext.Entry(faculty).State = EntityState.Modified;
+
+    try
+    {
+        await _dbContext.SaveChangesAsync();
+        return Ok(faculty);
+    }
+    catch (DbUpdateConcurrencyException)
+    {
+        if (!FacultyExists(id))
+        {
+            return BadRequest("Faculty not found");
+        }
+        else
+        {
+            throw;
+        }
+    }
+}
+
+
+[HttpPost("{universityId}",Name = "CreateFaculty")]
+public async Task<IActionResult> CreateFaculty(int universityId, [FromBody]Faculty faculty)
+{
+     Console.WriteLine("University ID received: " + universityId);
     var university = await _dbContext.Universities.FindAsync(universityId);
     if (university == null)
     {
@@ -81,40 +98,26 @@ public async Task<IActionResult> CreateFaculty(int universityId, Faculty faculty
 }
 
 
-        [HttpDelete("{id}", Name = "DeleteFaculty")]
-        public async Task<IActionResult> DeleteFaculty(int id)
-        {
-            var faculty = await _dbContext.Faculties.FindAsync(id);
-            if (faculty == null)
-            {
-                return BadRequest("Faculty not found");
-            }
+      [HttpDelete("{universityId}/{id}", Name = "DeleteFaculty")]
+public async Task<IActionResult> DeleteFaculty(int universityId, int id)
+{
+    var faculty = await _dbContext.Faculties.FindAsync(id);
+    if (faculty == null)
+    {
+        return BadRequest("Faculty not found");
+    }
 
-            _dbContext.Faculties.Remove(faculty);
-            await _dbContext.SaveChangesAsync();
+    if (faculty.UniversityId != universityId)
+    {
+        return BadRequest("Faculty does not belong to the specified university");
+    }
 
-            return Ok("Faculty deleted");
-        }
+    _dbContext.Faculties.Remove(faculty);
+    await _dbContext.SaveChangesAsync();
 
-        // [HttpPost("AddToUniversity/{universityId}", Name = "AddToUniversity")]
-        // public async Task<IActionResult> AddToUniversity(int universityId, IEnumerable<Faculty> faculties)
-        // {
-        //     var university = await _dbContext.Universities.FindAsync(universityId);
-        //     if (university == null)
-        //     {
-        //         return NotFound("University not found");
-        //     }
-
-        //     foreach (var faculty in faculties)
-        //     {
-        //         faculty.UniversityId = universityId;
-        //         _dbContext.Faculties.Add(faculty);
-        //     }
-
-        //     await _dbContext.SaveChangesAsync();
-
-        //     return Ok("Faculties added to the university successfully");
-        // }
+    return Ok("Faculty deleted");
+}
+      
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private bool FacultyExists(int id)
