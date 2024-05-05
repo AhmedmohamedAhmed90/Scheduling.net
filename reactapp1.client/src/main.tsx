@@ -21,7 +21,7 @@ import CreateInstructor from "./pages/CreateInstructor.tsx";
 import CreateGroup from "./pages/CreateGroup.tsx";
 import CreateFaculty from "./pages/CreateFaculty.tsx";
 import CreateCourse from "./pages/CreateCourse.tsx";
-axios.defaults.baseURL = "http://localhost:5261";
+axios.defaults.baseURL = "http://localhost:5261/api";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
@@ -32,11 +32,11 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/admin/university/create" element={<CreateUniversity />} />
-      <Route path="/admin/lecture/create" element={<CreateLecture />} />
-      <Route path="/admin/instructor/create" element={<CreateInstructor />} />
-      <Route path="/admin/group/create" element={<CreateGroup />} />
       <Route path="/admin/faculty/create" element={<CreateFaculty />} />
+      <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
+      <Route path="/admin/group/create" element={<CreateGroup />} />
+      <Route path="/admin/lecture/create" element={<CreateLecture />} />
       {/* <Route path="" element={<ProtectedRoute />}>
         <Route path="/payment" element={<PaymentMethodPage />} />
         <Route path="/placeorder" element={<PlaceOrderPage />} />
