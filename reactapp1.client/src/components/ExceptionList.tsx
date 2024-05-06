@@ -178,6 +178,12 @@ const ExceptionList: React.FC = () => {
                     </Tooltip>
                   </Flex>
                 )}
+                {exception.status === 'approved' && (
+                  <Text>Requset was approved</Text>
+                )}
+                {exception.status === 'rejected' && (
+                  <Text>Requset was rejected</Text>
+                )}
               </Td>
             </Tr>
           ))}
