@@ -20,6 +20,7 @@ import CreateInstructor from "./pages/CreateInstructor.tsx";
 import CreateFaculty from "./pages/CreateFaculty.tsx";
 import CreateCourse from "./pages/CreateCourse.tsx";
 import SendException from "./components/SendException.tsx";
+import ExceptionList from "./components/ExceptionList.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
       <Route path="/sendexception" element={<SendException />} />
+      <Route path="/adminexceptionspanel" element={<ExceptionList/>} />
       {/* <Route path="" element={<ProtectedRoute />}>
         <Route path="/payment" element={<PaymentMethodPage />} />
         <Route path="/placeorder" element={<PlaceOrderPage />} />

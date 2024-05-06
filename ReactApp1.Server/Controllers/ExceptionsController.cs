@@ -4,7 +4,6 @@ using ReactApp1.Server.Data;
 using ReactApp1.Server.Dtos;
 using ReactApp1.Server.Models;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,24 +19,26 @@ namespace ReactApp1.Server.Controllers
         {
             _context = context;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetExeptions()
-        {
-            return Ok(await _context.Exceptions.AsNoTracking().ToListAsync());
-        }
+
+[HttpGet]
+public async Task<IActionResult> GetExceptions()
+{
+    var exceptions = await _context.Exceptions.ToListAsync();
+
+    return Ok(exceptions);
+}
+
         [HttpPost]
         public async Task<IActionResult> SubmitException([FromBody] EXPDto req)
         {
-            Console.WriteLine(req.studentId);
-            Console.WriteLine(req);
             var student = await _context.Students.FindAsync(req.studentId);
-            Console.WriteLine(student);
 
             if (student == null)
             {
-                return BadRequest("Group not found");
+                return BadRequest("Student not found");
             }
-            var Exceptions = new Models.Exception
+
+            var exception = new Models.Exception
             {
                 StudentId = req.studentId,
                 Reason = req.reason,
@@ -45,19 +46,42 @@ namespace ReactApp1.Server.Controllers
                 Status = "pending"
             };
 
-            _context.Exceptions.Add(Exceptions);
+            _context.Exceptions.Add(exception);
             await _context.SaveChangesAsync();
 
-            return Ok(
-                new Models.Exception
-                {
-                    StudentId = req.studentId,
-                    Reason = req.reason,
-                    Description = req.description
-                }
-
-            );
+            return Ok(exception);
         }
 
+        [HttpPost("{id}/approve")]
+        public async Task<IActionResult> ApproveException(int id)
+        {
+            var exception = await _context.Exceptions.FindAsync(id);
+
+            if (exception == null)
+            {
+                return NotFound();
+            }
+
+            exception.Status = "approved";
+            await _context.SaveChangesAsync();
+
+            return Ok(exception);
+        }
+
+        [HttpPost("{id}/reject")]
+        public async Task<IActionResult> RejectException(int id)
+        {
+            var exception = await _context.Exceptions.FindAsync(id);
+
+            if (exception == null)
+            {
+                return NotFound();
+            }
+
+            exception.Status = "rejected";
+            await _context.SaveChangesAsync();
+
+            return Ok(exception);
+        }
     }
 }
