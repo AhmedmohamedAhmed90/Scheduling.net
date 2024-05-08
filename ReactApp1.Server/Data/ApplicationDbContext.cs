@@ -22,7 +22,7 @@ namespace ReactApp1.Server.Data
     
     public DbSet<Course> Courses { get; set; }
   
-    public DbSet<CourseInstructor> CourseInstructors { get; set; }
+    public DbSet<GroupInstructor> GroupInstructors { get; set; }
     
     public DbSet<Group> Groups { get; set; }
     public DbSet<Lecture> Lectures { get; set; }
@@ -43,9 +43,28 @@ namespace ReactApp1.Server.Data
            }
       };
       Builder.Entity<IdentityRole>().HasData(roles);
-      Builder.Entity<CourseInstructor>().HasKey(e=> new {e.CoursesId,e.InstructorsId});
+      //  Builder.Entity<GroupInstructor>().HasKey(e => e.Id);
+      Builder.Entity<Group>().HasKey(e => e.Id);
       
+       Builder.Entity<Group>()
+        .HasIndex(g => g.Code)  
+        .IsUnique();            
       
+       Builder.Entity<GroupInstructor>()
+        .HasKey(gi => new { gi.GroupsId, gi.InstructorsId });
+
+   Builder.Entity<GroupInstructor>()
+    .HasOne(gi => gi.Group)
+    .WithMany() 
+    .HasForeignKey(gi => gi.GroupsId) 
+    .OnDelete(DeleteBehavior.Cascade);
+
+    Builder.Entity<Course>()
+        .HasMany(c => c.Groups)
+        .WithOne(g => g.Course)
+        .OnDelete(DeleteBehavior.Cascade);
+
+   
     }
    }
    

@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class universityedit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,6 +60,23 @@ namespace ReactApp1.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Courses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Code = table.Column<string>(type: "longtext", nullable: false),
+                    Title = table.Column<string>(type: "longtext", nullable: false),
+                    Description = table.Column<string>(type: "longtext", nullable: false),
+                    Departmeant = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Courses", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -257,7 +274,6 @@ namespace ReactApp1.Server.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false),
-                    Departmeant = table.Column<string>(type: "longtext", nullable: true),
                     FacultyId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -273,63 +289,14 @@ namespace ReactApp1.Server.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Courses",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(type: "longtext", nullable: false),
-                    Title = table.Column<string>(type: "longtext", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: false),
-                    InstructorId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Courses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Courses_Instructors_InstructorId",
-                        column: x => x.InstructorId,
-                        principalTable: "Instructors",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "CourseInstructors",
-                columns: table => new
-                {
-                    CoursesId = table.Column<int>(type: "int", nullable: false),
-                    InstructorsId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    InstructorId = table.Column<int>(type: "int", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseInstructors", x => new { x.CoursesId, x.InstructorsId });
-                    table.ForeignKey(
-                        name: "FK_CourseInstructors_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CourseInstructors_Instructors_InstructorId",
-                        column: x => x.InstructorId,
-                        principalTable: "Instructors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(type: "longtext", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false)
+                    Code = table.Column<string>(type: "varchar(255)", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: true),
+                    InstructorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -338,6 +305,38 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_Groups_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Groups_Instructors_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Instructors",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "GroupInstructors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    GroupsId = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: true),
+                    InstructorsId = table.Column<int>(type: "int", nullable: false),
+                    InstructorId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupInstructors", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GroupInstructors_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_GroupInstructors_Instructors_InstructorId",
+                        column: x => x.InstructorId,
+                        principalTable: "Instructors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -372,8 +371,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "78dc83e5-df01-4cc0-90d8-b00f6649de17", null, "User", "USER" },
-                    { "88e22d3b-9c5e-486a-a1c4-2f8afbb5ea2f", null, "Admin", "ADMIN" }
+                    { "481da472-02ad-4171-b00e-d8b4653c2e5a", null, "User", "USER" },
+                    { "e4fcfe7f-3fa0-44c9-9d42-dd50a782b0e9", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -414,21 +413,6 @@ namespace ReactApp1.Server.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseInstructors_CourseId",
-                table: "CourseInstructors",
-                column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseInstructors_InstructorId",
-                table: "CourseInstructors",
-                column: "InstructorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Courses_InstructorId",
-                table: "Courses",
-                column: "InstructorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Exceptions_StudentId",
                 table: "Exceptions",
                 column: "StudentId");
@@ -439,9 +423,30 @@ namespace ReactApp1.Server.Migrations
                 column: "UniversityId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GroupInstructors_GroupId",
+                table: "GroupInstructors",
+                column: "GroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupInstructors_InstructorId",
+                table: "GroupInstructors",
+                column: "InstructorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_Code",
+                table: "Groups",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_CourseId",
                 table: "Groups",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Groups_InstructorId",
+                table: "Groups",
+                column: "InstructorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Instructors_FacultyId",
@@ -473,10 +478,10 @@ namespace ReactApp1.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CourseInstructors");
+                name: "Exceptions");
 
             migrationBuilder.DropTable(
-                name: "Exceptions");
+                name: "GroupInstructors");
 
             migrationBuilder.DropTable(
                 name: "Lectures");

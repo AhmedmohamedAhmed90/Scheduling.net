@@ -20,23 +20,23 @@ namespace ReactApp1.Server.Controllers
             _dbContext = dbContext;
         }
 
-       [HttpGet("{instructorId}",Name = "GetCourses")]
-          public async Task<ActionResult<IEnumerable<object>>> GetCoursesByInstructor(int instructorId)
-          {
-             var courses = await _dbContext.Courses
-             .Include(c => c.Instructor)
-             .Where(c => c.InstructorId == instructorId)
-             .Select(c => new
-        {
-            CourseId = c.Id,
-            Course = c
-        })
-        .ToListAsync();
+    //    [HttpGet(Name = "GetCourses")]
+    //       public async Task<ActionResult<IEnumerable<object>>> GetCourses()
+    //       {
+    //          var courses = await _dbContext.Courses
+    //          .Include(c => c.Instructor)
+    //          .Where(c => c.InstructorId == instructorId)
+    //          .Select(c => new
+    //     {
+    //         CourseId = c.Id,
+    //         Course = c
+    //     })
+    //     .ToListAsync();
 
-             return Ok(courses);
-          }
+    //          return Ok(courses);
+    //       }
 
-      [HttpGet(Name = "GetCourse")]
+[HttpGet(Name = "GetCourse")]
 public async Task<ActionResult<object>> GetCourse(string groupCode)
 {
     var course = await _dbContext.Courses
@@ -58,40 +58,35 @@ public async Task<ActionResult<object>> GetCourse(string groupCode)
 }
 
         [HttpPost(Name = "CreateCourse")]
-        public async Task<IActionResult> CreateCourse(string code, string title, string description, int instructorId)
+        public async Task<IActionResult> CreateCourse([FromBody]Course course)
         {
-            var instructor = await _dbContext.Instructors.FindAsync(instructorId);
-            if (instructor == null)
-            {
-                return BadRequest("Instructor not found");
-            }
 
-            var course = new Course
-            {
-                Code = code,
-                Title = title,
-                Description = description,
-                InstructorId = instructorId
-            };
+            // var course = new Course
+            // {
+            //     Code = code,
+            //     Title = title,
+            //     Description = description,
+            //     InstructorId = instructorId
+            // };
 
             _dbContext.Courses.Add(course);
 
-            var courseInstructor = new CourseInstructor
-            {
-                CoursesId = course.Id,
-                InstructorsId = instructorId,
-                Course = course,
-                Instructor = instructor
-            };
+            // var courseInstructor = new CourseInstructor
+            // {
+            //     CoursesId = course.Id,
+            //     InstructorsId = instructorId,
+            //     Course = course,
+            //     Instructor = instructor
+            // };
 
-            _dbContext.CourseInstructors.Add(courseInstructor);
+            // _dbContext.CourseInstructors.Add(courseInstructor);
 
             await _dbContext.SaveChangesAsync();
 
             return Ok(course);
         }
-[HttpPut("{id}/{instructorId}", Name = "UpdateCourse")]
-public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course courseUpdate)
+[HttpPut("{id}", Name = "UpdateCourse")]
+public async Task<IActionResult> UpdateCourse(int id, Course courseUpdate)
 {
     if (id != courseUpdate.Id)
     {
@@ -104,15 +99,15 @@ public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course c
         return NotFound("Course not found");
     }
 
-    if (existingCourse.InstructorId != instructorId)
-    {
-        return BadRequest("Invalid instructor ID for the course");
-    }
+    // if (existingCourse.InstructorId != instructorId)
+    // {
+    //     return BadRequest("Invalid instructor ID for the course");
+    // }
 
     existingCourse.Code = courseUpdate.Code;
     existingCourse.Title = courseUpdate.Title;
     existingCourse.Description = courseUpdate.Description;
-    existingCourse.InstructorId=instructorId;
+    existingCourse.Departmeant=courseUpdate.Departmeant;
 
     try
     {
@@ -133,44 +128,44 @@ public async Task<IActionResult> UpdateCourse(int id, int instructorId, Course c
 }
 
 
-[HttpPut("{id}/{instructorId}UpdateInstructor", Name = "UpdateCourseInstructor")]
-public async Task<IActionResult> UpdateCourseInstructor(int id, int instructorId)
-{
-    var existingCourse = await _dbContext.Courses.FindAsync(id);
-    if (existingCourse == null)
-    {
-        return NotFound("Course not found");
-    }
+// [HttpPut("{id}/{instructorId}UpdateInstructor", Name = "UpdateCourseInstructor")]
+// public async Task<IActionResult> UpdateCourseInstructor(int id, int instructorId)
+// {
+//     var existingCourse = await _dbContext.Courses.FindAsync(id);
+//     if (existingCourse == null)
+//     {
+//         return NotFound("Course not found");
+//     }
 
-    var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
-    if (courseInstructor != null)
-    {
-        courseInstructor.InstructorsId = instructorId;
-    }
+//     var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
+//     if (courseInstructor != null)
+//     {
+//         courseInstructor.InstructorsId = instructorId;
+//     }
 
-    existingCourse.InstructorId = instructorId;
+//     existingCourse.InstructorId = instructorId;
 
-    try
-    {
-        await _dbContext.SaveChangesAsync();
-        return Ok(existingCourse);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!CourseExists(id))
-        {
-            return BadRequest("Course not found");
-        }
-        else
-        {
-            throw;
-        }
-    }
-}
+//     try
+//     {
+//         await _dbContext.SaveChangesAsync();
+//         return Ok(existingCourse);
+//     }
+//     catch (DbUpdateConcurrencyException)
+//     {
+//         if (!CourseExists(id))
+//         {
+//             return BadRequest("Course not found");
+//         }
+//         else
+//         {
+//             throw;
+//         }
+//     }
+// }
 
 
 
-        [HttpDelete("{id}", Name = "DeleteCourse")]
+[HttpDelete("{id}", Name = "DeleteCourse")]
 public async Task<IActionResult> DeleteCourse(int id)
 {
     var course = await _dbContext.Courses.FindAsync(id);
@@ -179,21 +174,34 @@ public async Task<IActionResult> DeleteCourse(int id)
         return BadRequest("Course not found");
     }
 
-    
-    var courseInstructor = await _dbContext.CourseInstructors.FirstOrDefaultAsync(ci => ci.CoursesId == id);
-    if (courseInstructor != null)
+    try
     {
-        _dbContext.CourseInstructors.Remove(courseInstructor);
+        
+        var groups = await _dbContext.Groups
+            .Where(g => g.CourseId == id)
+            .ToListAsync();
+
+        var groupIds = groups.Select(g => g.Id).ToList(); 
+        var groupInstructors = await _dbContext.GroupInstructors
+            .Where(gi => groupIds.Contains(gi.GroupsId))
+            .ToListAsync();
+
+        _dbContext.GroupInstructors.RemoveRange(groupInstructors);
+
+        _dbContext.Groups.RemoveRange(groups);
+
+        _dbContext.Courses.Remove(course);
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Course deleted");
     }
-
-   
-    var groups = await _dbContext.Groups.Where(g => g.CourseId == id).ToListAsync();
-    _dbContext.Groups.RemoveRange(groups);
-
-    _dbContext.Courses.Remove(course);
-    await _dbContext.SaveChangesAsync();
-
-    return Ok("Course deleted");
+    catch (System.Exception ex)
+    {
+        
+        Console.WriteLine(ex.ToString());
+        return StatusCode(500, "An error occurred while deleting the course.");
+    }
 }
 
 

@@ -28,8 +28,8 @@ namespace ReactApp1.Server.Controllers
             return Ok(instructors);
         }
 
-        [HttpGet("{UniversityId}", Name = "GetInstructorByUniversityId")]
-        public async Task<ActionResult<object>> GetInstructor(int UniversityId)
+        [HttpGet("{UniversityId}", Name = "GetInstructorsByUniversityId")]
+        public async Task<ActionResult<object>> GetInstructorsByUniversityId(int UniversityId)
         {
 
             var instructor = await _dbContext.Instructors.Include(i => i.Faculty).Where(i => i.Faculty.UniversityId == UniversityId).ToListAsync();
@@ -38,6 +38,7 @@ namespace ReactApp1.Server.Controllers
             {
                 return NotFound("Instructor not found");
             }
+            
 
             return Ok(instructor);
         }
@@ -106,6 +107,11 @@ namespace ReactApp1.Server.Controllers
                 return BadRequest("Instructor does not belong to the specified faculty");
             }
 
+     var groupInstructors = await _dbContext.GroupInstructors
+                                        .Where(gi => gi.InstructorsId == id)
+                                        .ToListAsync();
+
+            _dbContext.GroupInstructors.RemoveRange(groupInstructors);
             _dbContext.Instructors.Remove(instructor);
             await _dbContext.SaveChangesAsync();
 
