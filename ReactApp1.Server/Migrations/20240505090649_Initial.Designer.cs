@@ -11,8 +11,8 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240504183731_migrationsss")]
-    partial class migrationsss
+    [Migration("20240505090649_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5c0cd1d2-f8de-43f5-9fb5-ba3af3e0fa2e",
+                            Id = "ebbba98c-4515-4850-9f4e-6e2b0fd8c3bb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f7f66b12-00dc-402c-88ba-75132c0fb794",
+                            Id = "768c08ad-420d-4fc7-8a3c-6f6d0876434a",
                             Name = "User",
                             NormalizedName = "USER"
                         });

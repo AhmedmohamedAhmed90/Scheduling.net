@@ -213,21 +213,21 @@ namespace ReactApp1.Server.Migrations
                 {
                     ExceptionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<string>(type: "varchar(255)", nullable: false),
                     Reason = table.Column<string>(type: "longtext", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false),
                     Status = table.Column<string>(type: "longtext", nullable: false),
-                    Priority = table.Column<string>(type: "longtext", nullable: false),
-                    StudentId1 = table.Column<string>(type: "varchar(255)", nullable: true)
+                    Priority = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Exceptions", x => x.ExceptionId);
                     table.ForeignKey(
-                        name: "FK_Exceptions_AspNetUsers_StudentId1",
-                        column: x => x.StudentId1,
+                        name: "FK_Exceptions_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -376,8 +376,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "399ae0db-7fc6-4f33-885b-99642b39161b", null, "User", "USER" },
-                    { "eef8dabd-b0ef-4223-aa54-ff6b887499f1", null, "Admin", "ADMIN" }
+                    { "768c08ad-420d-4fc7-8a3c-6f6d0876434a", null, "User", "USER" },
+                    { "ebbba98c-4515-4850-9f4e-6e2b0fd8c3bb", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -433,9 +433,9 @@ namespace ReactApp1.Server.Migrations
                 column: "InstructorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Exceptions_StudentId1",
+                name: "IX_Exceptions_StudentId",
                 table: "Exceptions",
-                column: "StudentId1");
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Faculties_UniversityId",
