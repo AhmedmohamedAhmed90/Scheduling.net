@@ -16,12 +16,12 @@ import LoginPage from "./pages/LoginPage.tsx";
 import { StoreProvider } from "./Store.tsx";
 import SignupPage from "./pages/SignupPage.tsx";
 import CreateUniversity from "./pages/CreateUniversity.tsx";
-import CreateLecture from "./pages/CreateLecture.tsx";
 import CreateInstructor from "./pages/CreateInstructor.tsx";
-import CreateGroup from "./pages/CreateGroup.tsx";
 import CreateFaculty from "./pages/CreateFaculty.tsx";
 import CreateCourse from "./pages/CreateCourse.tsx";
-axios.defaults.baseURL = "http://localhost:5261/api";
+import SendException from "./components/SendException.tsx";
+import ExceptionList from "./components/ExceptionList.tsx";
+axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter(
@@ -35,8 +35,8 @@ const router = createBrowserRouter(
       <Route path="/admin/faculty/create" element={<CreateFaculty />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
-      <Route path="/admin/group/create" element={<CreateGroup />} />
-      <Route path="/admin/lecture/create" element={<CreateLecture />} />
+      <Route path="/sendexception" element={<SendException />} />
+      <Route path="/adminexceptionspanel" element={<ExceptionList/>} />
       {/* <Route path="" element={<ProtectedRoute />}>
         <Route path="/payment" element={<PaymentMethodPage />} />
         <Route path="/placeorder" element={<PlaceOrderPage />} />
