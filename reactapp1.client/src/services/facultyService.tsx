@@ -3,21 +3,24 @@ import { University } from "./universityService";
 export interface Faculty {
   id?: number;
   name: string;
-  universityId: number;
+  universityId?: number;
   university?: University;
 }
 export const addFaculty = async (faculty: Faculty, universityID: number) => {
-  return await axios.post(`/Faculty?universityId=${universityID}`, faculty);
+  return await axios.post(`/api/Faculty/${universityID}`, faculty);
 };
 export const getFaculties = async () => {
-  return await axios.get("/Faculty");
+  return await axios.get("/api/Faculty");
+};
+export const getFacultiesByUniversityId = async (universityID: number) => {
+  return await axios.get(`/api/Faculty/${universityID}`);
 };
 export const getFaculty = async (id: string) => {
-  return await axios.get(`/Faculty/${id}`);
+  return await axios.get(`/api/Faculty/${id}`);
 };
 export const updateFaculty = async (id: string, faculty: Faculty) => {
-  return await axios.put(`/Faculty/${id}`, faculty);
+  return await axios.put(`/api/Faculty/${id}`, faculty);
 };
 export const deleteFaculty = async (id: string) => {
-  return await axios.delete(`/Faculty/${id}`);
+  return await axios.delete(`/api/Faculty/${id}`);
 };

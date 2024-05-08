@@ -22,71 +22,62 @@ namespace ReactApp1.Server.Controllers
         [HttpGet(Name = "GetInstructors")]
         public async Task<ActionResult<IEnumerable<Instructor>>> GetInstructors()
         {
-           var instructors = await _dbContext.Instructors
-        .Include(i => i.Faculty)  
-         .ThenInclude(f => f.University)  
-        .ToListAsync();
+            var instructors = await _dbContext.Instructors
+         .ToListAsync();
 
             return Ok(instructors);
         }
 
-   [HttpGet("{facultyId}/{id}", Name = "GetInstructor")]
-public async Task<ActionResult<object>>  GetInstructor(int facultyId, int id)
-{
-    
-    var instructor = await _dbContext.Instructors
-        .Include(i => i.Faculty)
-         .ThenInclude(f => f.University)   
-        .FirstOrDefaultAsync(i => i.Id == id && i.FacultyId == facultyId);
-
-    if (instructor == null)
-    {
-        return NotFound("Instructor not found");
-    }
-
-     return new
-    {
-        instructorId = instructor.Id,
-        Instructor = instructor
-    };
-}
-
-
-       [HttpPut("{facultyId}/{id}", Name = "UpdateInstructor")]
-public async Task<IActionResult> UpdateInstructor(int facultyId, int id, Instructor instructor)
-{
-    if (id != instructor.Id)
-    {
-        return BadRequest("Invalid instructor ID");
-    }
-
-    if (facultyId != instructor.FacultyId)
-    {
-        return BadRequest("Invalid faculty ID");
-    }
-
-    _dbContext.Entry(instructor).State = EntityState.Modified;
-
-    try
-    {
-        await _dbContext.SaveChangesAsync();
-        return Ok(instructor);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!InstructorExists(id))
+        [HttpGet("{UniversityId}", Name = "GetInstructorByUniversityId")]
+        public async Task<ActionResult<object>> GetInstructor(int UniversityId)
         {
-            return BadRequest("Instructor not found");
-        }
-        else
-        {
-            throw;
-        }
-    }
-}
 
-        [HttpPost("{facultyId}",Name = "CreateInstructor")]
-        public async Task<IActionResult> CreateInstructor(int facultyId,[FromBody] Instructor instructor)
+            var instructor = await _dbContext.Instructors.Include(i => i.Faculty).Where(i => i.Faculty.UniversityId == UniversityId).ToListAsync();
+
+            if (instructor.Count == 0)
+            {
+                return NotFound("Instructor not found");
+            }
+
+            return Ok(instructor);
+        }
+
+
+        [HttpPut("{facultyId}/{id}", Name = "UpdateInstructor")]
+        public async Task<IActionResult> UpdateInstructor(int facultyId, int id, Instructor instructor)
+        {
+            if (id != instructor.Id)
+            {
+                return BadRequest("Invalid instructor ID");
+            }
+
+            if (facultyId != instructor.FacultyId)
+            {
+                return BadRequest("Invalid faculty ID");
+            }
+
+            _dbContext.Entry(instructor).State = EntityState.Modified;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok(instructor);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InstructorExists(id))
+                {
+                    return BadRequest("Instructor not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        [HttpPost("{facultyId}", Name = "CreateInstructor")]
+        public async Task<IActionResult> CreateInstructor(int facultyId, [FromBody] Instructor instructor)
         {
             var faculty = await _dbContext.Faculties.FindAsync(facultyId);
             if (faculty == null)
@@ -102,24 +93,24 @@ public async Task<IActionResult> UpdateInstructor(int facultyId, int id, Instruc
         }
 
         [HttpDelete("{facultyId}/{id}", Name = "DeleteInstructor")]
-public async Task<IActionResult> DeleteInstructor(int facultyId, int id)
-{
-    var instructor = await _dbContext.Instructors.FindAsync(id);
-    if (instructor == null)
-    {
-        return BadRequest("Instructor not found");
-    }
+        public async Task<IActionResult> DeleteInstructor(int facultyId, int id)
+        {
+            var instructor = await _dbContext.Instructors.FindAsync(id);
+            if (instructor == null)
+            {
+                return BadRequest("Instructor not found");
+            }
 
-    if (instructor.FacultyId != facultyId)
-    {
-        return BadRequest("Instructor does not belong to the specified faculty");
-    }
+            if (instructor.FacultyId != facultyId)
+            {
+                return BadRequest("Instructor does not belong to the specified faculty");
+            }
 
-    _dbContext.Instructors.Remove(instructor);
-    await _dbContext.SaveChangesAsync();
+            _dbContext.Instructors.Remove(instructor);
+            await _dbContext.SaveChangesAsync();
 
-    return Ok("Instructor deleted");
-}
+            return Ok("Instructor deleted");
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private bool InstructorExists(int id)

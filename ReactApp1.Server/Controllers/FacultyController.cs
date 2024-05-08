@@ -4,6 +4,7 @@ using ReactApp1.Server.Data;
 using ReactApp1.Server.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ReactApp1.Server.Controllers
@@ -26,98 +27,106 @@ namespace ReactApp1.Server.Controllers
             return Ok(faculties);
         }
 
-        [HttpGet("{universityId}/{facultyName}", Name = "GetFacultyByNameInUniversity")]
-      public async Task<ActionResult<Faculty>> GetFacultyByNameInUniversity(int universityId, string facultyName)
-      {
-          var faculty = await _dbContext.Faculties
-          .Include(f => f.University)
-          .FirstOrDefaultAsync(f => f.UniversityId == universityId && f.Name == facultyName);
-
-         if (faculty == null)
+        [HttpGet("{universityId}", Name = "GetFacultiesByUniversityId")]
+        public async Task<IActionResult> GetFacultiesByUniversityId(int universityId)
         {
-          return NotFound("Faculty not found in the specified university");
+            var university = await _dbContext.Universities
+                .Include(u => u.Faculties)
+                .FirstOrDefaultAsync(u => u.Id == universityId);
+
+            if (university == null || university.Faculties == null)
+            {
+                return NotFound("University not found");
+            }
+
+            var faculties = university.Faculties.Select(f => new
+            {
+                id = f.Id,
+                name = f.Name,
+            }).ToList();
+
+            var json = JsonSerializer.Serialize(faculties, new JsonSerializerOptions
+            {
+                WriteIndented = true, // You can set this to false in production for a more compact JSON
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            return Content(json, "application/json");
         }
 
-         return Ok(new
-    {
-        facultyId = faculty.Id,
-        facultyName = faculty.Name,
-        uniId = faculty.UniversityId,
-        universitydata = faculty.University,
-    });
-       }
-       [HttpPut("{universityId}/{id}", Name = "UpdateFaculty")]
-public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty faculty)
-{
-    if (id != faculty.Id)
-    {
-        return BadRequest("Invalid faculty ID");
-    }
 
-    if (universityId != faculty.UniversityId)
-    {
-        return BadRequest("Invalid university ID");
-    }
-
-    _dbContext.Entry(faculty).State = EntityState.Modified;
-
-    try
-    {
-        await _dbContext.SaveChangesAsync();
-        return Ok(faculty);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!FacultyExists(id))
+        [HttpPut("{universityId}/{id}", Name = "UpdateFaculty")]
+        public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty faculty)
         {
-            return BadRequest("Faculty not found");
+            if (id != faculty.Id)
+            {
+                return BadRequest("Invalid faculty ID");
+            }
+
+            if (universityId != faculty.UniversityId)
+            {
+                return BadRequest("Invalid university ID");
+            }
+
+            _dbContext.Entry(faculty).State = EntityState.Modified;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok(faculty);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FacultyExists(id))
+                {
+                    return BadRequest("Faculty not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
-        else
+
+
+        [HttpPost("{universityId}", Name = "CreateFaculty")]
+        public async Task<IActionResult> CreateFaculty(int universityId, [FromBody] Faculty faculty)
         {
-            throw;
+            Console.WriteLine("University ID received: " + universityId);
+            var university = await _dbContext.Universities.FindAsync(universityId);
+            if (university == null)
+            {
+                return BadRequest("University not found");
+            }
+
+            faculty.UniversityId = universityId;
+            _dbContext.Faculties.Add(faculty);
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(faculty);
         }
-    }
-}
 
 
-[HttpPost("{universityId}",Name = "CreateFaculty")]
-public async Task<IActionResult> CreateFaculty(int universityId, [FromBody]Faculty faculty)
-{
-     Console.WriteLine("University ID received: " + universityId);
-    var university = await _dbContext.Universities.FindAsync(universityId);
-    if (university == null)
-    {
-        return BadRequest("University not found");
-    }
+        [HttpDelete("{universityId}/{id}", Name = "DeleteFaculty")]
+        public async Task<IActionResult> DeleteFaculty(int universityId, int id)
+        {
+            var faculty = await _dbContext.Faculties.FindAsync(id);
+            if (faculty == null)
+            {
+                return BadRequest("Faculty not found");
+            }
 
-    faculty.UniversityId = universityId;
-    _dbContext.Faculties.Add(faculty);
-    await _dbContext.SaveChangesAsync();
+            if (faculty.UniversityId != universityId)
+            {
+                return BadRequest("Faculty does not belong to the specified university");
+            }
 
-    return Ok(faculty);
-}
+            _dbContext.Faculties.Remove(faculty);
+            await _dbContext.SaveChangesAsync();
 
+            return Ok("Faculty deleted");
+        }
 
-      [HttpDelete("{universityId}/{id}", Name = "DeleteFaculty")]
-public async Task<IActionResult> DeleteFaculty(int universityId, int id)
-{
-    var faculty = await _dbContext.Faculties.FindAsync(id);
-    if (faculty == null)
-    {
-        return BadRequest("Faculty not found");
-    }
-
-    if (faculty.UniversityId != universityId)
-    {
-        return BadRequest("Faculty does not belong to the specified university");
-    }
-
-    _dbContext.Faculties.Remove(faculty);
-    await _dbContext.SaveChangesAsync();
-
-    return Ok("Faculty deleted");
-}
-      
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private bool FacultyExists(int id)

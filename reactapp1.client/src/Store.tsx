@@ -11,11 +11,16 @@ const initialState = {
   email: userInfo?.email ? (userInfo.email as string) : "",
   token: userInfo?.token ? (userInfo.token as string) : "",
   universityID: userInfo?.universityID ? (userInfo.universityID as number) : 0,
+  facultyID: userInfo?.facultyID ? (userInfo.facultyID as number) : 0,
 };
 
 export type StoreAction =
   | {
       type: "SET_UNIVERSITYID";
+      payload: number;
+    }
+  | {
+      type: "SET_FACULTYID";
       payload: number;
     }
   | {
@@ -41,6 +46,9 @@ function reducer(state: typeof initialState, { type, payload }: StoreAction) {
   switch (type) {
     case "SET_UNIVERSITYID":
       newState = { ...state, universityID: payload };
+      break;
+    case "SET_FACULTYID":
+      newState = { ...state, facultyID: payload };
       break;
     case "LOGIN":
       newState = { ...state, ...payload };

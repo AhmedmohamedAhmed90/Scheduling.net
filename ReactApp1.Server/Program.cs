@@ -12,43 +12,52 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection")!));
 
-    builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    });
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.WriteIndented = true; // For better readability of the JSON output
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+}).AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented; // For better readability
+});
 
 
-builder.Services.AddControllers();
+// builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddIdentity<Student,IdentityRole>(options =>{
-   options.Password.RequireDigit=true;
-   options.Password.RequireLowercase=true;
-   options.Password.RequireUppercase=true;
-   options.Password.RequireNonAlphanumeric=true;
-   options.Password.RequiredLength=12;  // restrictions for the password
+builder.Services.AddIdentity<Student, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 12;  // restrictions for the password
 }).AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-builder.Services.AddScoped<ITokenService , TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
-builder.Services.AddAuthentication(options=>{
-    options.DefaultAuthenticateScheme=
-    options.DefaultChallengeScheme=
-    options.DefaultForbidScheme=
-    options.DefaultForbidScheme=
-    options.DefaultSignInScheme=
-    options.DefaultSignOutScheme=JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options => {
-    options.TokenValidationParameters= new TokenValidationParameters
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+    options.DefaultChallengeScheme =
+    options.DefaultForbidScheme =
+    options.DefaultForbidScheme =
+    options.DefaultSignInScheme =
+    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuer=true,
-        ValidIssuer=builder.Configuration["JWT:Issuer"],
-        ValidateAudience=true,
-        ValidAudience=builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey=true,
-        IssuerSigningKey=new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
+        ValidateIssuer = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
 
 
     };

@@ -213,11 +213,10 @@ namespace ReactApp1.Server.Migrations
                 {
                     ExceptionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    StudentId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    StudentId = table.Column<string>(type: "varchar(255)", nullable: true),
                     Reason = table.Column<string>(type: "longtext", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false),
-                    Status = table.Column<string>(type: "longtext", nullable: false),
-                    Priority = table.Column<string>(type: "longtext", nullable: false)
+                    Status = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -226,8 +225,7 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_Exceptions_AspNetUsers_StudentId",
                         column: x => x.StudentId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -283,7 +281,7 @@ namespace ReactApp1.Server.Migrations
                     Code = table.Column<string>(type: "longtext", nullable: false),
                     Title = table.Column<string>(type: "longtext", nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: false),
-                    InstructorId = table.Column<int>(type: "int", nullable: false)
+                    InstructorId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -292,8 +290,7 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_Courses_Instructors_InstructorId",
                         column: x => x.InstructorId,
                         principalTable: "Instructors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -357,7 +354,7 @@ namespace ReactApp1.Server.Migrations
                     EndTime = table.Column<string>(type: "longtext", nullable: false),
                     Day = table.Column<string>(type: "longtext", nullable: false),
                     Room = table.Column<string>(type: "longtext", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: false)
+                    GroupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -366,8 +363,7 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_Lectures_Groups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -376,8 +372,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "768c08ad-420d-4fc7-8a3c-6f6d0876434a", null, "User", "USER" },
-                    { "ebbba98c-4515-4850-9f4e-6e2b0fd8c3bb", null, "Admin", "ADMIN" }
+                    { "78dc83e5-df01-4cc0-90d8-b00f6649de17", null, "User", "USER" },
+                    { "88e22d3b-9c5e-486a-a1c4-2f8afbb5ea2f", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

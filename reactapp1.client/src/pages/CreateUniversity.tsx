@@ -43,57 +43,59 @@ export default function CreateUniversity() {
       <Heading as="h2" size="lg" mb={6} textAlign="center">
         Create University
       </Heading>
-      <form
-        onSubmit={() => {
+      <FormControl id="name" isRequired>
+        <FormLabel>Name</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter University Name"
+          value={university.name}
+          onChange={(e) => {
+            setUniversity((prev: University) => ({
+              ...prev,
+              name: e.target.value,
+            }));
+          }}
+        />
+      </FormControl>
+      <FormControl id="address" isRequired mt={4}>
+        <FormLabel>Address</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter University Address"
+          value={university.address}
+          onChange={(e) => {
+            setUniversity((prev: University) => ({
+              ...prev,
+              address: e.target.value,
+            }));
+          }}
+        />
+      </FormControl>
+      <FormControl id="phoneNumber" isRequired mt={4}>
+        <FormLabel>Phone Number</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter University Phone Number"
+          value={university.phoneNumber}
+          onChange={(e) => {
+            setUniversity((prev: University) => ({
+              ...prev,
+              phoneNumber: e.target.value,
+            }));
+          }}
+        />
+      </FormControl>
+      <Button
+        mt={8}
+        colorScheme="blue"
+        width="full"
+        onClick={() => {
+          console.log(university);
           mutate();
         }}
       >
-        <FormControl id="name" isRequired>
-          <FormLabel>Name</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Name"
-            value={university.name}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                name: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl id="address" isRequired mt={4}>
-          <FormLabel>Address</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Address"
-            value={university.address}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                address: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl id="phoneNumber" isRequired mt={4}>
-          <FormLabel>Phone Number</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Phone Number"
-            value={university.phoneNumber}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                phoneNumber: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <Button mt={8} colorScheme="blue" width="full" type="submit">
-          Create University
-        </Button>
-      </form>
+        Create University
+      </Button>
     </Box>
   );
 }

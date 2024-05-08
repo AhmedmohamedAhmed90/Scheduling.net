@@ -9,24 +9,25 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
-import { addUniversity, University } from "../services/universityService";
 import { Store } from "../Store";
+import { addFaculty, Faculty } from "../services/facultyService";
 
 export default function CreateFaculty() {
   const store = useContext(Store);
   const { dispatch } = store;
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
-  const [university, setUniversity] = useState<University>({} as University);
+  const [faculty, setFaculty] = useState<Faculty>({} as Faculty);
+
   const { mutate } = useMutation({
-    mutationFn: () => addUniversity(university),
+    mutationFn: () => addFaculty(faculty, store.state.universityID!),
     onSuccess: (payload) => {
       dispatch({
-        type: "SET_UNIVERSITYID",
+        type: "SET_FACULTYID",
         payload: payload.data.id,
       });
-      setUniversity({} as University);
-      alert("University Created Successfully with ID " + payload.data.id);
+      setFaculty({} as Faculty);
+      alert("Faculty Created Successfully with ID " + payload.data.id);
     },
   });
   return (
@@ -41,59 +42,33 @@ export default function CreateFaculty() {
       borderColor={borderColor}
     >
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create University
+        Create Faculty Using University ID: {store.state.universityID}
       </Heading>
-      <form
-        onSubmit={() => {
+
+      <FormControl id="name" isRequired>
+        <FormLabel>Name</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter Faculty Name"
+          value={faculty.name}
+          onChange={(e) => {
+            setFaculty((prev: Faculty) => ({
+              ...prev,
+              name: e.target.value,
+            }));
+          }}
+        />
+      </FormControl>
+      <Button
+        mt={8}
+        colorScheme="blue"
+        width="full"
+        onClick={() => {
           mutate();
         }}
       >
-        <FormControl id="name" isRequired>
-          <FormLabel>Name</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Name"
-            value={university.name}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                name: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl id="address" isRequired mt={4}>
-          <FormLabel>Address</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Address"
-            value={university.address}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                address: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <FormControl id="phoneNumber" isRequired mt={4}>
-          <FormLabel>Phone Number</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter University Phone Number"
-            value={university.phoneNumber}
-            onChange={(e) => {
-              setUniversity((prev: University) => ({
-                ...prev,
-                phoneNumber: e.target.value,
-              }));
-            }}
-          />
-        </FormControl>
-        <Button mt={8} colorScheme="blue" width="full" type="submit">
-          Create University
-        </Button>
-      </form>
+        Create Faculty
+      </Button>
     </Box>
   );
 }
