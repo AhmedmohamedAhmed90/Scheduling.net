@@ -26,6 +26,7 @@ namespace ReactApp1.Server.Data
     
     public DbSet<Group> Groups { get; set; }
     public DbSet<Lecture> Lectures { get; set; }
+     public DbSet<FacultyCourse> FacultyCourses { get; set; }
     protected override void OnModelCreating(ModelBuilder Builder)
     {
       base.OnModelCreating(Builder);
@@ -52,6 +53,9 @@ namespace ReactApp1.Server.Data
       
        Builder.Entity<GroupInstructor>()
         .HasKey(gi => new { gi.GroupsId, gi.InstructorsId });
+
+        Builder.Entity<FacultyCourse>()
+        .HasKey(gi => new { gi.FacultyId, gi.CourseId });
 
    Builder.Entity<GroupInstructor>()
     .HasOne(gi => gi.Group)

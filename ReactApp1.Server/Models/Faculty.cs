@@ -7,6 +7,8 @@ namespace ReactApp1.Server.Models
         public int UniversityId { get; set; }
         public University? University { get; set; } = null!;
         public ICollection<Instructor>? Instructors { get; } = [];
+        public ICollection<FacultyCourse>? FacultyCourses { get; set; }
+       
     }
 }
 // public string? Dean { get; set; }

@@ -11,8 +11,8 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240510131801_Initial")]
-    partial class Initial
+    [Migration("20240510190046_universityedit")]
+    partial class universityedit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "71b1306f-ad85-47cb-93b8-ec37a329e238",
+                            Id = "1dad8a09-5488-45b7-92ea-1f7cacb366f3",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "f1bb4069-0531-43b2-a219-89ca9623c3ae",
+                            Id = "65d36598-b1f6-4b6d-8c1e-5f0efa8f826f",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -236,6 +236,21 @@ namespace ReactApp1.Server.Migrations
                     b.HasIndex("UniversityId");
 
                     b.ToTable("Faculties");
+                });
+
+            modelBuilder.Entity("ReactApp1.Server.Models.FacultyCourse", b =>
+                {
+                    b.Property<int>("FacultyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FacultyId", "CourseId");
+
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("FacultyCourses");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Group", b =>
@@ -546,6 +561,25 @@ namespace ReactApp1.Server.Migrations
                     b.Navigation("University");
                 });
 
+            modelBuilder.Entity("ReactApp1.Server.Models.FacultyCourse", b =>
+                {
+                    b.HasOne("ReactApp1.Server.Models.Course", "Course")
+                        .WithMany("FacultyCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ReactApp1.Server.Models.Faculty", "Faculty")
+                        .WithMany("FacultyCourses")
+                        .HasForeignKey("FacultyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Faculty");
+                });
+
             modelBuilder.Entity("ReactApp1.Server.Models.Group", b =>
                 {
                     b.HasOne("ReactApp1.Server.Models.Course", "Course")
@@ -603,11 +637,15 @@ namespace ReactApp1.Server.Migrations
 
             modelBuilder.Entity("ReactApp1.Server.Models.Course", b =>
                 {
+                    b.Navigation("FacultyCourses");
+
                     b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.Faculty", b =>
                 {
+                    b.Navigation("FacultyCourses");
+
                     b.Navigation("Instructors");
                 });
 
