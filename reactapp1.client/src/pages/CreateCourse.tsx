@@ -6,15 +6,10 @@ import {
   Button,
   Heading,
   useColorModeValue,
-  Select,
 } from "@chakra-ui/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { Store } from "../Store";
-import {
-  getInstructorsByUniversityId,
-  Instructor,
-} from "../services/instructorService";
 import { addCourse, Course } from "../services/courseService";
 
 export default function CreateCourse() {
@@ -25,14 +20,11 @@ export default function CreateCourse() {
     code: "",
     title: "",
     description: "",
-    instructorId: 0,
+    departmeant: "",
   } as Course);
-  const { data: instructors } = useQuery({
-    queryKey: ["instructors By UniversityId", store.state.universityID!],
-    queryFn: () => getInstructorsByUniversityId(store.state.universityID!),
-  });
+
   const { mutate } = useMutation({
-    mutationFn: () => addCourse(course, course.instructorId),
+    mutationFn: () => addCourse(course),
     onSuccess: (payload) => {
       setCourse({} as Course);
       alert("Course Created Successfully with ID " + payload.data.id);
@@ -68,6 +60,21 @@ export default function CreateCourse() {
         />
       </FormControl>
 
+      <FormControl id="departmeant" isRequired>
+        <FormLabel>Departmeant</FormLabel>
+        <Input
+          type="text"
+          placeholder="Enter departmeant Name"
+          value={course.departmeant}
+          onChange={(e) => {
+            setCourse((prev: Course) => ({
+              ...prev,
+              departmeant: e.target.value,
+            }));
+          }}
+        />
+      </FormControl>
+
       <FormControl id="code" isRequired>
         <FormLabel>Code</FormLabel>
         <Input
@@ -81,26 +88,6 @@ export default function CreateCourse() {
             }));
           }}
         />
-      </FormControl>
-
-      <FormControl id="instructor" isRequired>
-        <FormLabel>Instructor</FormLabel>
-        <Select
-          placeholder="Select Instructor"
-          value={course.instructorId}
-          onChange={(e) =>
-            setCourse((prev: Course) => ({
-              ...prev,
-              instructorId: parseInt(e.target.value),
-            }))
-          }
-        >
-          {instructors?.data.map((instructor: Instructor) => (
-            <option key={instructor.id} value={instructor.id}>
-              {instructor.name}
-            </option>
-          ))}
-        </Select>
       </FormControl>
 
       <Button

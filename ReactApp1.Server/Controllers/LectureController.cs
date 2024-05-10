@@ -19,35 +19,35 @@ namespace ReactApp1.Server.Controllers
             _dbContext = dbContext;
         }
 
-      [HttpGet("ByGroup/{groupId}", Name = "GetLecturesByGroupId")]
-public async Task<ActionResult<IEnumerable<Lecture>>> GetLecturesByGroupId(int groupId)
-{
-    var lectures = await _dbContext.Lectures
-        .Where(l => l.GroupId == groupId)
-        .ToListAsync();
+        [HttpGet("ByGroup/{groupId}", Name = "GetLecturesByGroupId")]
+        public async Task<ActionResult<IEnumerable<Lecture>>> GetLecturesByGroupId(int groupId)
+        {
+            var lectures = await _dbContext.Lectures
+                .Where(l => l.GroupId == groupId)
+                .ToListAsync();
 
-    return Ok(lectures);
-}
+            return Ok(lectures);
+        }
 
-       [HttpGet("{id}", Name = "GetLecture")]
-public async Task<ActionResult<object>> GetLecture(int id)
-{
-    var lecture = await _dbContext.Lectures.FindAsync(id);
-    if (lecture == null)
-    {
-        return NotFound("Lecture not found");
-    }
+        [HttpGet("{id}", Name = "GetLecture")]
+        public async Task<ActionResult<object>> GetLecture(int id)
+        {
+            var lecture = await _dbContext.Lectures.FindAsync(id);
+            if (lecture == null)
+            {
+                return NotFound("Lecture not found");
+            }
 
-    var result = new
-    {
-        LectureId = lecture.Id,
-        Lecture = lecture
-    };
+            var result = new
+            {
+                LectureId = lecture.Id,
+                Lecture = lecture
+            };
 
-    return Ok(result);
-}
+            return Ok(result);
+        }
         [HttpPost(Name = "CreateLecture")]
-        public async Task<IActionResult> CreateLecture(string name, string startTime, string endTime, string day, string room, int groupId)
+        public async Task<IActionResult> CreateLecture(string startTime, string endTime, string day, string room, int groupId)
         {
             var group = await _dbContext.Groups.FindAsync(groupId);
             if (group == null)
@@ -57,7 +57,6 @@ public async Task<ActionResult<object>> GetLecture(int id)
 
             var lecture = new Lecture
             {
-                Name = name,
                 StartTime = startTime,
                 EndTime = endTime,
                 Day = day,
@@ -78,8 +77,8 @@ public async Task<ActionResult<object>> GetLecture(int id)
             {
                 return BadRequest("Invalid lecture ID");
             }
-    
-    
+
+
 
             var existingLecture = await _dbContext.Lectures.FindAsync(id);
             if (existingLecture == null)
@@ -88,10 +87,9 @@ public async Task<ActionResult<object>> GetLecture(int id)
             }
             if (existingLecture.GroupId != groupId)
             {
-        return BadRequest("Invalid instructor ID for the course");
+                return BadRequest("Invalid instructor ID for the course");
             }
 
-            existingLecture.Name = lecture.Name;
             existingLecture.StartTime = lecture.StartTime;
             existingLecture.EndTime = lecture.EndTime;
             existingLecture.Day = lecture.Day;
@@ -131,7 +129,7 @@ public async Task<ActionResult<object>> GetLecture(int id)
             return Ok("Lecture deleted");
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)] 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private bool LectureExists(int id)
         {
             return _dbContext.Lectures.Any(e => e.Id == id);

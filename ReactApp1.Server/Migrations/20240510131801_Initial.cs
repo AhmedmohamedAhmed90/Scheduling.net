@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class universityedit : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -305,7 +305,8 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_Groups_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Groups_Instructors_InstructorId",
                         column: x => x.InstructorId,
@@ -318,21 +319,20 @@ namespace ReactApp1.Server.Migrations
                 name: "GroupInstructors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     GroupsId = table.Column<int>(type: "int", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: true),
                     InstructorsId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     InstructorId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GroupInstructors", x => x.Id);
+                    table.PrimaryKey("PK_GroupInstructors", x => new { x.GroupsId, x.InstructorsId });
                     table.ForeignKey(
-                        name: "FK_GroupInstructors_Groups_GroupId",
-                        column: x => x.GroupId,
+                        name: "FK_GroupInstructors_Groups_GroupsId",
+                        column: x => x.GroupsId,
                         principalTable: "Groups",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GroupInstructors_Instructors_InstructorId",
                         column: x => x.InstructorId,
@@ -348,7 +348,6 @@ namespace ReactApp1.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false),
                     StartTime = table.Column<string>(type: "longtext", nullable: false),
                     EndTime = table.Column<string>(type: "longtext", nullable: false),
                     Day = table.Column<string>(type: "longtext", nullable: false),
@@ -371,8 +370,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "481da472-02ad-4171-b00e-d8b4653c2e5a", null, "User", "USER" },
-                    { "e4fcfe7f-3fa0-44c9-9d42-dd50a782b0e9", null, "Admin", "ADMIN" }
+                    { "71b1306f-ad85-47cb-93b8-ec37a329e238", null, "Admin", "ADMIN" },
+                    { "f1bb4069-0531-43b2-a219-89ca9623c3ae", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -421,11 +420,6 @@ namespace ReactApp1.Server.Migrations
                 name: "IX_Faculties_UniversityId",
                 table: "Faculties",
                 column: "UniversityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GroupInstructors_GroupId",
-                table: "GroupInstructors",
-                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GroupInstructors_InstructorId",

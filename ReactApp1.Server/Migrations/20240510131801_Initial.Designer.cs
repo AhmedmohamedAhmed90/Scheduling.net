@@ -11,8 +11,8 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240508183755_universityedit")]
-    partial class universityedit
+    [Migration("20240510131801_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e4fcfe7f-3fa0-44c9-9d42-dd50a782b0e9",
+                            Id = "71b1306f-ad85-47cb-93b8-ec37a329e238",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "481da472-02ad-4171-b00e-d8b4653c2e5a",
+                            Id = "f1bb4069-0531-43b2-a219-89ca9623c3ae",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -303,10 +303,6 @@ namespace ReactApp1.Server.Migrations
                     b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Room")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -460,25 +456,19 @@ namespace ReactApp1.Server.Migrations
 
             modelBuilder.Entity("reactapp1.Server.Models.GroupInstructor", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<int>("GroupsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("InstructorId")
                         .HasColumnType("int");
 
                     b.Property<int>("InstructorsId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.HasIndex("GroupId");
+                    b.Property<int>("InstructorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GroupsId", "InstructorsId");
 
                     b.HasIndex("InstructorId");
 
@@ -560,7 +550,8 @@ namespace ReactApp1.Server.Migrations
                 {
                     b.HasOne("ReactApp1.Server.Models.Course", "Course")
                         .WithMany("Groups")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ReactApp1.Server.Models.Instructor", "Instructor")
                         .WithMany("Groups")
@@ -595,7 +586,9 @@ namespace ReactApp1.Server.Migrations
                 {
                     b.HasOne("ReactApp1.Server.Models.Group", "Group")
                         .WithMany()
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ReactApp1.Server.Models.Instructor", "Instructor")
                         .WithMany()

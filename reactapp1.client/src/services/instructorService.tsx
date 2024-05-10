@@ -2,7 +2,6 @@ import axios from "axios";
 export interface Instructor {
   id?: number;
   name: string;
-  department: string;
   facultyid: number;
 }
 export const addInstructor = async (

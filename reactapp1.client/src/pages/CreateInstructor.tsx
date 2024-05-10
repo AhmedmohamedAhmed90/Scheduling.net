@@ -23,7 +23,6 @@ export default function CreateInstructor() {
   const borderColor = useColorModeValue("gray.300", "gray.600");
   const [instructor, setInstructor] = useState<Instructor>({
     facultyid: 0,
-    department: "",
     name: "",
   } as Instructor);
   const { data: faculties } = useQuery({
@@ -64,21 +63,6 @@ export default function CreateInstructor() {
             setInstructor((prev: Instructor) => ({
               ...prev,
               name: e.target.value,
-            }));
-          }}
-        />
-      </FormControl>
-
-      <FormControl id="department" isRequired>
-        <FormLabel>Department</FormLabel>
-        <Input
-          type="text"
-          placeholder="Enter Department Name"
-          value={instructor.department}
-          onChange={(e) => {
-            setInstructor((prev: Instructor) => ({
-              ...prev,
-              department: e.target.value,
             }));
           }}
         />
