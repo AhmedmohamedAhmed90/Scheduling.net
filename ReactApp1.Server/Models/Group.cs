@@ -4,18 +4,12 @@ namespace ReactApp1.Server.Models
 {
     public class Group
     {
-
-
         public int Id { get; set; }
         public required string Code { get; set; }
-
         public int? CourseId { get; set; }
         public Course? Course { get; set; } = null!;
-
         public int? InstructorId { get; set; }
         public Instructor? Instructor { get; set; } = null!;
-
-        //  public ICollection<GroupInstructor> GroupInstructors { get; set; } // Navigation property for GroupInstructors
         public ICollection<Lecture>? Lectures { get; } = [];
     }
 }
