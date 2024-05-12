@@ -36,29 +36,10 @@ namespace ReactApp1.Server.Controllers
         //          return Ok(courses);
         //       }
 
-        [HttpGet(Name = "GetCourse")]
-        public async Task<ActionResult<object>> GetCourse()
-        {
-            var courses = await _dbContext.Courses
-                .Select(c => new
-                {
-                    CourseId = c.Id,
-                    Course = c
-                })
-                .ToListAsync();
-
-            if (courses.Count == 0)
-            {
-                return NotFound("Course not found");
-            }
-
-            return Ok(courses);
-        }
-        // [HttpGet(Name = "GetCourseForUniveristy")]
-        // public async Task<ActionResult<object>> GetCourses(int universityId)
+        // [HttpGet(Name = "GetCourse")]
+        // public async Task<ActionResult<object>> GetCourse()
         // {
         //     var courses = await _dbContext.Courses
-        //         .Where(c => c.UniversityId == universityId)
         //         .Select(c => new
         //         {
         //             CourseId = c.Id,
@@ -74,33 +55,52 @@ namespace ReactApp1.Server.Controllers
         //     return Ok(courses);
         // }
 
-        [HttpPost(Name = "CreateCourse")]
-        public async Task<IActionResult> CreateCourse([FromBody] Course course)
+        [HttpGet("{facultyId}", Name = "GetCoursesByFacultyId")]
+public async Task<ActionResult<object>> GetCoursesByFacultyId(int facultyId)
+{
+    var courses = await _dbContext.Courses
+        .Where(course => course.FacultyCourses.Any(fc => fc.FacultyId == facultyId))
+        .Select(course => new
         {
+            CourseId = course.Id,
+            Course = course
+        })
+        .ToListAsync();
 
-            // var course = new Course
-            // {
-            //     Code = code,
-            //     Title = title,
-            //     Description = description,
-            //     InstructorId = instructorId
-            // };
-            _dbContext.Courses.Add(course);
+    if (courses.Count == 0)
+    {
+        return NotFound("Courses not found for the given faculty ID");
+    }
 
-            // var courseInstructor = new CourseInstructor
-            // {
-            //     CoursesId = course.Id,
-            //     InstructorsId = instructorId,
-            //     Course = course,
-            //     Instructor = instructor
-            // };
+    return Ok(courses);
+}
 
-            // _dbContext.CourseInstructors.Add(courseInstructor);
+     [HttpPost("{facultyId}", Name = "CreateCourse")]
+public async Task<IActionResult> CreateCourse(int facultyId, [FromBody] Course course)
+{
+    var faculty = await _dbContext.Faculties.FindAsync(facultyId);
+    if (faculty == null)
+    {
+        return BadRequest("Faculty not found");
+    }
 
-            await _dbContext.SaveChangesAsync();
+    var facultyCourse = new FacultyCourse
+    {
+        FacultyId = facultyId,
+        Course = course
+    };
+    
+     course.FacultyCourses = new List<FacultyCourse> { facultyCourse };
 
-            return Ok(course);
-        }
+    _dbContext.Courses.Add(course);
+    _dbContext.FacultyCourses.Add(facultyCourse);
+
+    await _dbContext.SaveChangesAsync();
+
+    return Ok(course);
+}
+
+
         [HttpPut("{id}", Name = "UpdateCourse")]
         public async Task<IActionResult> UpdateCourse(int id, Course courseUpdate)
         {
@@ -181,45 +181,41 @@ namespace ReactApp1.Server.Controllers
 
 
 
-        [HttpDelete("{id}", Name = "DeleteCourse")]
-        public async Task<IActionResult> DeleteCourse(int id)
+       [HttpDelete("{id}", Name = "DeleteCourse")]
+public async Task<IActionResult> DeleteCourse(int id)
+{
+    var course = await _dbContext.Courses.FindAsync(id);
+    if (course == null)
+    {
+        return BadRequest("Course not found");
+    }
+
+    try
+    {
+        var facultyCourse = await _dbContext.FacultyCourses.FirstOrDefaultAsync(fc => fc.CourseId == id);
+        if (facultyCourse != null)
         {
-            var course = await _dbContext.Courses.FindAsync(id);
-            if (course == null)
-            {
-                return BadRequest("Course not found");
-            }
-
-            try
-            {
-
-                var groups = await _dbContext.Groups
-                    .Where(g => g.CourseId == id)
-                    .ToListAsync();
-
-                var groupIds = groups.Select(g => g.Id).ToList();
-                var groupInstructors = await _dbContext.GroupInstructors
-                    .Where(gi => groupIds.Contains(gi.GroupsId))
-                    .ToListAsync();
-
-                _dbContext.GroupInstructors.RemoveRange(groupInstructors);
-
-                _dbContext.Groups.RemoveRange(groups);
-
-                _dbContext.Courses.Remove(course);
-
-                await _dbContext.SaveChangesAsync();
-
-                return Ok("Course deleted");
-            }
-            catch (System.Exception ex)
-            {
-
-                Console.WriteLine(ex.ToString());
-                return StatusCode(500, "An error occurred while deleting the course.");
-            }
+            _dbContext.FacultyCourses.Remove(facultyCourse);
         }
 
+        var groups = await _dbContext.Groups.Where(g => g.CourseId == id).ToListAsync();
+        var groupIds = groups.Select(g => g.Id).ToList();
+        var groupInstructors = await _dbContext.GroupInstructors.Where(gi => groupIds.Contains(gi.GroupsId)).ToListAsync();
+        _dbContext.GroupInstructors.RemoveRange(groupInstructors);
+        _dbContext.Groups.RemoveRange(groups);
+
+        _dbContext.Courses.Remove(course);
+
+        await _dbContext.SaveChangesAsync();
+
+        return Ok("Course deleted");
+    }
+    catch (System.Exception ex)
+    {
+        Console.WriteLine(ex.ToString());
+        return StatusCode(500, "An error occurred while deleting the course.");
+    }
+}
 
 
         [ApiExplorerSettings(IgnoreApi = true)]
