@@ -1,0 +1,95 @@
+.hint-text {
+  color: rgba(35, 35, 35, 255);
+}
+.container {
+  height: 100vh;
+  overflow-y: auto;
+}
+.content {
+  height: calc(100vh + 1px);
+}
+.scrollable-horizontal {
+  overflow-x: auto;
+  min-width: 97%;
+  margin-right: 16px;
+  border: 1px solid rgba(35, 35, 35, 255);
+  border-radius: 12px;
+}
+
+@media (min-width: 800px) {
+  .scrollable-horizontal {
+    min-width: auto;
+    margin-left: 16px;
+  }
+}
+
+table {
+  border-collapse: collapse;
+  border-radius: 16px;
+  width: 100%;
+  font-size: 13px;
+  text-align: center;
+  background-color: rgb(var(--v-theme-background));
+}
+
+@media (min-width: 1080px) {
+  table {
+    table-layout: fixed;
+  }
+}
+
+td {
+  width: 33%;
+  min-width: 110px;
+}
+
+th {
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+tbody th {
+  padding: 32px;
+}
+
+td {
+  border: 1px solid rgba(35, 35, 35, 255);
+  padding: 6px;
+  vertical-align: top;
+}
+
+tr {
+  vertical-align: top;
+}
+
+td .info {
+  margin-bottom: 16px;
+}
+
+td :first-child.info {
+  margin-top: 16px;
+}
+
+td .info .sub-info {
+  color: gray;
+}
+
+thead th {
+  width: 25%;
+  border-left: thin solid rgba(35, 35, 35, 255);
+  border-right: thin solid rgba(35, 35, 35, 255);
+  padding: 24px;
+}
+
+thead th:first-of-type {
+  border-right: none;
+}
+
+thead th:last-of-type {
+  border-left: none;
+}
+
+td,
+th {
+  border-bottom: thin solid rgba(35, 35, 35, 255);
+}
