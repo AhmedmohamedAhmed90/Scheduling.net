@@ -32,7 +32,10 @@ export default function CreateInstructor() {
   const { mutate } = useMutation({
     mutationFn: () => addInstructor(instructor, instructor.facultyid),
     onSuccess: (payload) => {
-      setInstructor({} as Instructor);
+      setInstructor({
+        facultyid: 0,
+        name: "",
+      } as Instructor);
       alert("Instructor Created Successfully with ID " + payload.data.id);
     },
   });
@@ -49,8 +52,6 @@ export default function CreateInstructor() {
     >
       <Heading as="h2" size="lg" mb={6} textAlign="center">
         Create Instructor Using University ID: {store.state.universityID}
-        {JSON.stringify(faculties?.data)}
-        {JSON.stringify(instructor)}
       </Heading>
 
       <FormControl id="name" isRequired>

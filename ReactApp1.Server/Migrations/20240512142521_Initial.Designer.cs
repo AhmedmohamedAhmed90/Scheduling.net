@@ -11,13 +11,8 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:ReactApp1.Server/Migrations/20240512134930_Initial.Designer.cs
-    [Migration("20240512134930_Initial")]
+    [Migration("20240512142521_Initial")]
     partial class Initial
-========
-    [Migration("20240510190046_universityedit")]
-    partial class universityedit
->>>>>>>> a81992fe29c125829715498cd5a31193936ccad7:ReactApp1.Server/Migrations/20240510190046_universityedit.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,21 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-<<<<<<<< HEAD:ReactApp1.Server/Migrations/20240512134930_Initial.Designer.cs
-                            Id = "14afae6a-521d-4aa4-9c88-cce0f2413762",
-========
-                            Id = "1dad8a09-5488-45b7-92ea-1f7cacb366f3",
->>>>>>>> a81992fe29c125829715498cd5a31193936ccad7:ReactApp1.Server/Migrations/20240510190046_universityedit.Designer.cs
+                            Id = "fff9dca3-7964-47e5-bc4e-a2e8900feabf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-<<<<<<<< HEAD:ReactApp1.Server/Migrations/20240512134930_Initial.Designer.cs
-                            Id = "0183fbd7-b1ab-4736-934e-131022570582",
-========
-                            Id = "65d36598-b1f6-4b6d-8c1e-5f0efa8f826f",
->>>>>>>> a81992fe29c125829715498cd5a31193936ccad7:ReactApp1.Server/Migrations/20240510190046_universityedit.Designer.cs
+                            Id = "dc02f836-3943-440f-a25b-74c8bcad9cca",
                             Name = "User",
                             NormalizedName = "USER"
                         });

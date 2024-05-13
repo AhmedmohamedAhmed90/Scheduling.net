@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class universityedit : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -395,13 +395,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-<<<<<<<< HEAD:ReactApp1.Server/Migrations/20240512134930_Initial.cs
-                    { "0183fbd7-b1ab-4736-934e-131022570582", null, "User", "USER" },
-                    { "14afae6a-521d-4aa4-9c88-cce0f2413762", null, "Admin", "ADMIN" }
-========
-                    { "1dad8a09-5488-45b7-92ea-1f7cacb366f3", null, "Admin", "ADMIN" },
-                    { "65d36598-b1f6-4b6d-8c1e-5f0efa8f826f", null, "User", "USER" }
->>>>>>>> a81992fe29c125829715498cd5a31193936ccad7:ReactApp1.Server/Migrations/20240510190046_universityedit.cs
+                    { "dc02f836-3943-440f-a25b-74c8bcad9cca", null, "User", "USER" },
+                    { "fff9dca3-7964-47e5-bc4e-a2e8900feabf", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

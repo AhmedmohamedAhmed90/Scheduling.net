@@ -5,14 +5,18 @@ export interface Course {
   title: string;
   description: string;
   departmeant: string;
+  facultyid: number;
 }
 export const addCourse = async (course: Course) => {
-  return await axios.post(`/api/Course`, course);
+  return await axios.post(`/api/Course/${course.facultyid}`, course);
 };
 export const getCourses = async () => {
   return await axios.get("/api/Course");
 };
-export const getCourse = async (id: string) => {
+export const getCoursesByFacultyID = async (facultyID: number) => {
+  return await axios.get(`/api/Course/ByFaculty/${facultyID}`);
+};
+export const getCourse = async (id: number) => {
   return await axios.get(`/api/Course/${id}`);
 };
 export const updateCourse = async (id: string, course: Course) => {

@@ -22,6 +22,7 @@ import CreateCourse from "./pages/CreateCourse.tsx";
 import SendException from "./components/SendException.tsx";
 import ExceptionList from "./components/ExceptionList.tsx";
 import CreateGroup from "./pages/CreateGroup.tsx";
+import CreateLecture from "./pages/CreateLecture.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
       <Route path="/admin/group/create" element={<CreateGroup />} />
+      <Route path="/admin/lecture/create" element={<CreateLecture />} />
       <Route path="/sendexception" element={<SendException />} />
       <Route path="/adminexceptionspanel" element={<ExceptionList />} />
       {/* <Route path="" element={<ProtectedRoute />}>

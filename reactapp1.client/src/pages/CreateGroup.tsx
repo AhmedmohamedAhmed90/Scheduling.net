@@ -109,13 +109,11 @@ export default function CreateGroup() {
             }))
           }
         >
-          {courses?.data.map(
-            ({ course }: { courseId: number; course: Course }) => (
-              <option key={course.id} value={course.id}>
-                {course.title + " " + course.code}
-              </option>
-            )
-          )}
+          {courses?.data.map((course: Course) => (
+            <option key={course.id} value={course.id}>
+              {course.title + " " + course.code}
+            </option>
+          ))}
         </Select>
       </FormControl>
 

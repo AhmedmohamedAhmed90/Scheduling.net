@@ -6,11 +6,16 @@ import {
   Button,
   Heading,
   useColorModeValue,
+  Select,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { Store } from "../Store";
 import { addCourse, Course } from "../services/courseService";
+import {
+  Faculty,
+  getFacultiesByUniversityId,
+} from "../services/facultyService";
 
 export default function CreateCourse() {
   const store = useContext(Store);
@@ -21,14 +26,25 @@ export default function CreateCourse() {
     title: "",
     description: "",
     departmeant: "",
+    facultyid: 0,
   } as Course);
 
   const { mutate } = useMutation({
     mutationFn: () => addCourse(course),
     onSuccess: (payload) => {
-      setCourse({} as Course);
+      setCourse({
+        code: "",
+        title: "",
+        description: "",
+        departmeant: "",
+        facultyid: 0,
+      } as Course);
       alert("Course Created Successfully with ID " + payload.data.id);
     },
+  });
+  const { data: faculties } = useQuery({
+    queryKey: ["Faculties By UniversityId", store.state.universityID!],
+    queryFn: () => getFacultiesByUniversityId(store.state.universityID!),
   });
   return (
     <Box
@@ -59,7 +75,25 @@ export default function CreateCourse() {
           }}
         />
       </FormControl>
-
+      <FormControl id="faculty" isRequired>
+        <FormLabel>Faculty</FormLabel>
+        <Select
+          placeholder="Select faculty"
+          value={course.facultyid}
+          onChange={(e) =>
+            setCourse((prev: Course) => ({
+              ...prev,
+              facultyid: parseInt(e.target.value),
+            }))
+          }
+        >
+          {faculties?.data.map((faculty: Faculty) => (
+            <option key={faculty.id} value={faculty.id}>
+              {faculty.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
       <FormControl id="departmeant" isRequired>
         <FormLabel>Departmeant</FormLabel>
         <Input
