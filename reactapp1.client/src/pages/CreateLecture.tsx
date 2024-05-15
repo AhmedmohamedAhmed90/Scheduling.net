@@ -35,8 +35,8 @@ export default function CreateLecture() {
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
   const [lecture, setLecture] = useState<Lecture>({
-    StartTime: "",
-    EndTime: "",
+    startTime: "",
+    endTime: "",
     day: "",
     room: "",
     groupId: 0,
@@ -49,8 +49,8 @@ export default function CreateLecture() {
     mutationFn: () => addLecture(lecture),
     onSuccess: (payload) => {
       setLecture({
-        StartTime: "",
-        EndTime: "",
+        startTime: "",
+        endTime: "",
         day: "",
         room: "",
         groupId: 0,
@@ -88,11 +88,11 @@ export default function CreateLecture() {
         <Input
           type="text"
           placeholder="Enter Lecture Start Time"
-          value={lecture.StartTime}
+          value={lecture.startTime}
           onChange={(e) => {
             setLecture((prev) => ({
               ...prev,
-              StartTime: e.target.value,
+              startTime: e.target.value,
             }));
           }}
           onBlur={(e) => {
@@ -111,11 +111,11 @@ export default function CreateLecture() {
         <Input
           type="text"
           placeholder="Enter Lecture End Time"
-          value={lecture.EndTime}
+          value={lecture.endTime}
           onChange={(e) => {
             setLecture((prev) => ({
               ...prev,
-              EndTime: e.target.value,
+              endTime: e.target.value,
             }));
           }}
           onBlur={(e) => {

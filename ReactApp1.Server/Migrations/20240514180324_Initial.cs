@@ -395,8 +395,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "dc02f836-3943-440f-a25b-74c8bcad9cca", null, "User", "USER" },
-                    { "fff9dca3-7964-47e5-bc4e-a2e8900feabf", null, "Admin", "ADMIN" }
+                    { "114ff4af-f0e2-462f-af38-b90d5afb5e11", null, "User", "USER" },
+                    { "46e7ba8c-fe66-48b7-8428-7b0594dae7d8", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(

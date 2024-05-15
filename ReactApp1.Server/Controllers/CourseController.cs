@@ -57,7 +57,12 @@ namespace ReactApp1.Server.Controllers
         [HttpGet(Name = "GetAllCourse")]
         public async Task<ActionResult<object>> GetCourse()
         {
-            var courses = await _dbContext.Courses.Include(i => i.Groups).ToListAsync();
+            var courses = await _dbContext.Courses
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Lectures)
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Instructor)
+                .ToListAsync();
 
             if (courses.Count == 0)
             {

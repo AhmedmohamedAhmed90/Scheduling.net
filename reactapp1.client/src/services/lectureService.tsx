@@ -1,16 +1,16 @@
 import axios from "axios";
 export interface Lecture {
   id?: number;
-  StartTime: string;
-  EndTime: string;
+  startTime: string;
+  endTime: string;
   day: string;
   room: string;
   groupId: number;
 }
 export const addLecture = async (lecture: Lecture) => {
   return await axios.post(
-    `/api/Lecture?startTime=${lecture.StartTime}
-    &endTime=${lecture.EndTime}&day=${lecture.day}
+    `/api/Lecture?startTime=${lecture.startTime}
+    &endTime=${lecture.endTime}&day=${lecture.day}
     &room=${lecture.room}&groupId=${lecture.groupId}`
   );
 };

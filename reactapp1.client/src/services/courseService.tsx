@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Group } from "./groupService";
 export interface Course {
   id?: number;
   code: string;
@@ -6,6 +7,8 @@ export interface Course {
   description: string;
   departmeant: string;
   facultyid: number;
+  conflict_count?: number;
+  groups?: Group[];
 }
 export const addCourse = async (course: Course) => {
   return await axios.post(`/api/Course/${course.facultyid}`, course);

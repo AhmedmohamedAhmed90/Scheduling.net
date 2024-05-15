@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fff9dca3-7964-47e5-bc4e-a2e8900feabf",
+                            Id = "46e7ba8c-fe66-48b7-8428-7b0594dae7d8",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "dc02f836-3943-440f-a25b-74c8bcad9cca",
+                            Id = "114ff4af-f0e2-462f-af38-b90d5afb5e11",
                             Name = "User",
                             NormalizedName = "USER"
                         });

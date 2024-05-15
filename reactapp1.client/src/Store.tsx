@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react";
-
+import { Course } from "./services/courseService";
+import { CourseMultiSelect } from "./utils/utils";
 interface StoreProviderProps {
   children: React.ReactNode;
 }
@@ -12,12 +13,39 @@ const initialState = {
   token: userInfo?.token ? (userInfo.token as string) : "",
   universityID: userInfo?.universityID ? (userInfo.universityID as number) : 0,
   facultyID: userInfo?.facultyID ? (userInfo.facultyID as number) : 0,
+  tableIndex: userInfo?.tableIndex ? (userInfo.tableIndex as number) : 0,
+  selectedSuggestedCourses: userInfo?.selectedSuggestedCourses
+    ? (userInfo?.selectedSuggestedCourses as CourseMultiSelect[])
+    : [],
+  suggestedCourses: userInfo?.suggestedCourses
+    ? (userInfo.suggestedCourses as Course[][])
+    : [],
 };
 
 export type StoreAction =
   | {
       type: "SET_UNIVERSITYID";
       payload: number;
+    }
+  | {
+      type: "SET_TABLEINDEX";
+      payload: number;
+    }
+  | {
+      type: "INCREMENT_TABLEINDEX";
+      payload: undefined;
+    }
+  | {
+      type: "DECREMENT_TABLEINDEX";
+      payload: undefined;
+    }
+  | {
+      type: "SET_SELECTED_SUGGESTED_COURSES";
+      payload: CourseMultiSelect[];
+    }
+  | {
+      type: "SET_SUGGESTED_COURSES";
+      payload: Course[][];
     }
   | {
       type: "SET_FACULTYID";
@@ -44,6 +72,22 @@ function reducer(state: typeof initialState, { type, payload }: StoreAction) {
   let newState = state; // Use newState to handle state updates
 
   switch (type) {
+    case "SET_TABLEINDEX":
+      newState = { ...state, tableIndex: payload };
+      break;
+    case "SET_SELECTED_SUGGESTED_COURSES":
+      newState = { ...state, selectedSuggestedCourses: payload };
+      break;
+    case "INCREMENT_TABLEINDEX":
+      if (state.tableIndex < state.suggestedCourses.length - 1) {
+        newState = { ...state, tableIndex: state.tableIndex + 1 };
+      }
+      break;
+    case "DECREMENT_TABLEINDEX":
+      if (state.tableIndex > 0) {
+        newState = { ...state, tableIndex: state.tableIndex - 1 };
+      }
+      break;
     case "SET_UNIVERSITYID":
       newState = { ...state, universityID: payload };
       break;
@@ -52,6 +96,9 @@ function reducer(state: typeof initialState, { type, payload }: StoreAction) {
       break;
     case "LOGIN":
       newState = { ...state, ...payload };
+      break;
+    case "SET_SUGGESTED_COURSES":
+      newState = { ...state, suggestedCourses: payload };
       break;
     case "LOGOUT":
       newState = { ...initialState };

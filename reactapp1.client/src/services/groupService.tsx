@@ -1,9 +1,13 @@
 import axios from "axios";
+import { Lecture } from "./lectureService";
+import { Instructor } from "./instructorService";
 export interface Group {
   id?: number;
   code: string;
   courseid: number;
   instructorid: number;
+  instructor?: Instructor;
+  lectures?: Lecture[];
 }
 export const addGroup = async (group: Group) => {
   return await axios.post(

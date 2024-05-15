@@ -24,6 +24,8 @@ import ExceptionList from "./components/ExceptionList.tsx";
 import CreateGroup from "./pages/CreateGroup.tsx";
 import CreateLecture from "./pages/CreateLecture.tsx";
 import TablePage from "./pages/TablePage.tsx";
+import SuggestCoures from "./pages/SuggestCoures.tsx";
+import SuggestedTablePage from "./pages/SuggestedTablePage.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomePage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/table" element={<TablePage />} />
+      <Route path="/suggest" element={<SuggestCoures />} />
+      <Route path="/suggestedtable" element={<SuggestedTablePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/admin/university/create" element={<CreateUniversity />} />
@@ -63,13 +67,11 @@ const router = createBrowserRouter(
 );
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ChakraProvider>
-      <QueryClientProvider client={queryClient}>
-        <StoreProvider>
-          <RouterProvider router={router} />
-        </StoreProvider>
-      </QueryClientProvider>
-    </ChakraProvider>
-  </React.StrictMode>
+  <ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <StoreProvider>
+        <RouterProvider router={router} />
+      </StoreProvider>
+    </QueryClientProvider>
+  </ChakraProvider>
 );
