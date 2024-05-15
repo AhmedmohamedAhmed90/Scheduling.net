@@ -40,12 +40,12 @@ const ExceptionList: React.FC = () => {
       const response = await axios.get(`${BASE_URL}Exceptions`);
       const data = response.data;
 
-      if (!data || !data['$values']) {
+      if (!data ) {
         throw new Error('Invalid response format');
       }
 
       // Extract exceptions array from the response
-      const exceptions: Exception[] = data['$values'];
+      const exceptions: Exception[] = data;
 
       // Prioritize exceptions with reason "case of death" first
       exceptions.sort((a, b) => {
