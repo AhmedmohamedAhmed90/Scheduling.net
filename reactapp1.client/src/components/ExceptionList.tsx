@@ -17,9 +17,14 @@ import {
 import axios from 'axios';
 import { BASE_URL } from '../constant';
 
+interface Student {
+  studentId: string;
+  name: string;
+}
+
 interface Exception {
   exceptionId: number;
-  studentId: string;
+  student: Student;
   reason: string;
   description: string;
   status: string;
@@ -123,7 +128,7 @@ const ExceptionList: React.FC = () => {
       <Table variant="striped" colorScheme="teal">
         <Thead>
           <Tr>
-            <Th>Student ID</Th>
+            <Th>Student Name</Th>
             <Th>Reason</Th>
             <Th>Description</Th>
             <Th>Status</Th>
@@ -133,7 +138,7 @@ const ExceptionList: React.FC = () => {
         <Tbody>
           {exceptions.map((exception) => (
             <Tr key={exception.exceptionId}>
-              <Td>{exception.studentId}</Td>
+              <Td>{exception.student.name}</Td>
               <Td>{exception.reason}</Td>
               <Td>{exception.description}</Td>
               <Td>{exception.status}</Td>

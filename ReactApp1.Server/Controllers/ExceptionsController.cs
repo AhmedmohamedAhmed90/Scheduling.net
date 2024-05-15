@@ -23,7 +23,9 @@ namespace ReactApp1.Server.Controllers
 [HttpGet]
 public async Task<IActionResult> GetExceptions()
 {
-    var exceptions = await _context.Exceptions.ToListAsync();
+    var exceptions = await _context.Exceptions
+        .Include(e => e.Student) // Eager loading the Student navigation property
+        .ToListAsync();
 
     return Ok(exceptions);
 }
