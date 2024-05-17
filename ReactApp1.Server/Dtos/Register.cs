@@ -28,5 +28,7 @@ namespace ReactApp1.Server.Dtos
 
         [StringLength(50)] 
         public string Faculty { get; set; }
+
+         public string? PhoneNumber { get; set; } 
     }
 }

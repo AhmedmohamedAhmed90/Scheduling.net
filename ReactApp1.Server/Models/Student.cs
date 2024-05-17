@@ -22,6 +22,9 @@ namespace ReactApp1.Server.Models
         public string Faculty { get; set; }
 
         public ICollection<Exception> Exception { get; } = [];
+
+
+        public string? PhoneNumber { get; set; } 
      
     }
 
