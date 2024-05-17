@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import Select from "react-select";
+import MultiSelect from "react-select";
 import { Course, getCourses } from "../services/courseService";
 import {
   Box,
@@ -10,6 +10,7 @@ import {
   Center,
   CircularProgress,
   Heading,
+  Select,
   Skeleton,
   Stack,
   Text,
@@ -27,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 function SuggestCoures() {
   const navigate = useNavigate();
   const store = useContext(Store);
+  const [subjectNum, setSubjectNum] = useState(0);
 
   const [selectedOptions, setSelectedOptions] = useState<CourseMultiSelect[]>(
     store.state.selectedSuggestedCourses
@@ -71,7 +73,7 @@ function SuggestCoures() {
     > = await axios.post(
       "https://horizon-engine-315b0e6bd87c.herokuapp.com/get-schedule",
       {
-        subjects_per_solution: arr.length,
+        subjects_per_solution: subjectNum != 0 ? subjectNum : arr.length,
         subjects: arr,
       }
     );
@@ -115,7 +117,7 @@ function SuggestCoures() {
     return (
       <Box rounded="md" m="32" marginTop={5}>
         <Skeleton>
-          <Select
+          <MultiSelect
             options={[]}
             isMulti
             className="basic-multi-select"
@@ -135,8 +137,8 @@ function SuggestCoures() {
     };
   });
   return (
-    <Box rounded="md" m="32" marginTop={5}>
-      <Select
+    <Box rounded="md" m="32" marginTop={5} marginBottom={4}>
+      <MultiSelect
         options={options}
         isMulti
         className="basic-multi-select"
@@ -146,6 +148,17 @@ function SuggestCoures() {
           setSelectedOptions(e as never[]);
         }}
       />
+      <Select
+        placeholder="Select option"
+        value={subjectNum}
+        onChange={(e) => setSubjectNum(parseInt(e.target.value))}
+      >
+        <option value={selectedOptions.length}>All</option>
+        <option value={2}>2</option>
+        <option value={3}>3</option>
+        <option value={4}>4</option>
+        <option value={5}>5</option>
+      </Select>
       <Button marginBottom={4} marginTop={3} onClick={onSuggestCourses}>
         Suggest Courses
       </Button>

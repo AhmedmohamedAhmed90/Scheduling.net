@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,14 +13,9 @@ import {
   Tooltip,
   Tr,
   useToast,
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { BASE_URL } from '../constant';
-
-interface Student {
-  studentId: string;
-  name: string;
-}
+} from "@chakra-ui/react";
+import axios from "axios";
+import { BASE_URL } from "../constant";
 
 interface Exception {
   exceptionId: number;
@@ -33,38 +28,31 @@ interface Exception {
 const ExceptionList: React.FC = () => {
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const toast = useToast();
 
   const getExceptions = async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
       const response = await axios.get(`${BASE_URL}Exceptions`);
       const data = response.data;
 
       if (!data) {
-        throw new Error('Invalid response format');
+        throw new Error("Invalid response format");
       }
 
+      // Extract exceptions array from the response
       const exceptions: Exception[] = data;
 
       exceptions.sort((a, b) => {
-        // If both are pending, sort based on exceptionId
-        if (a.status === 'pending' && b.status === 'pending') {
-          return a.exceptionId - b.exceptionId;
-        }
-        // If one is pending and the other is not, prioritize pending
-        else if (a.status === 'pending' && b.status !== 'pending') {
+        if (a.reason === "case of death" && b.reason !== "case of death") {
           return -1;
-        } else if (a.status !== 'pending' && b.status === 'pending') {
-          return 1;
-        }
-        // If both are not pending, prioritize 'case of death' reason
-        else if (a.reason === 'case of death' && b.reason !== 'case of death') {
-          return -1;
-        } else if (a.reason !== 'case of death' && b.reason === 'case of death') {
+        } else if (
+          a.reason !== "case of death" &&
+          b.reason === "case of death"
+        ) {
           return 1;
         }
         // If none of the above conditions met, maintain current order
@@ -73,31 +61,59 @@ const ExceptionList: React.FC = () => {
 
       setExceptions(exceptions);
     } catch (error) {
-      setError('Failed to fetch exceptions');
-      console.error('Failed to fetch exceptions:', error);
+      setError("Failed to fetch exceptions");
+      console.error("Failed to fetch exceptions:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExceptionAction = async (exceptionId: number, action: 'approve' | 'reject') => {
-    const actionVerb = action === 'approve' ? 'Approved' : 'Rejected';
+  const handleExceptionAction = async (
+    exceptionId: number,
+    action: "approve" | "reject"
+  ) => {
+    const actionVerb = action === "approve" ? "Approved" : "Rejected";
     try {
       await axios.post(`${BASE_URL}Exceptions/${exceptionId}/${action}`);
       toast({
-        title: `Exception ${actionVerb}`,
-        description: `Exception with ID ${exceptionId} has been ${actionVerb.toLowerCase()}.`,
-        status: 'success',
+        title: "Exception Approved",
+        description: `Exception with ID ${exceptionId} has been approved.`,
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
       getExceptions();
     } catch (error) {
-      console.error(`Failed to ${actionVerb.toLowerCase()} exception:`, error);
+      console.error("Failed to approve exception:", error);
       toast({
-        title: `Failed to ${actionVerb} Exception`,
-        description: `An error occurred while ${actionVerb.toLowerCase()}ing the exception.`,
-        status: 'error',
+        title: "Failed to Approve Exception",
+        description: "An error occurred while approving the exception.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  // Handle rejection of an exception
+  const rejectException = async (exceptionId: number) => {
+    try {
+      await axios.post(`${BASE_URL}Exceptions/${exceptionId}/reject`);
+      toast({
+        title: "Exception Rejected",
+        description: `Exception with ID ${exceptionId} has been rejected.`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      // Refresh the exceptions list after the update
+      getExceptions();
+    } catch (error) {
+      console.error("Failed to reject exception:", error);
+      toast({
+        title: "Failed to Reject Exception",
+        description: "An error occurred while rejecting the exception.",
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -143,14 +159,22 @@ const ExceptionList: React.FC = () => {
               <Td>{exception.description}</Td>
               <Td>{exception.status}</Td>
               <Td>
-                {exception.status === 'pending' && (
+                {exception.status === "pending" && (
                   <Flex gap={2}>
-                    <Tooltip label="Approve this exception" aria-label="Approve">
+                    <Tooltip
+                      label="Approve this exception"
+                      aria-label="Approve"
+                    >
                       <Button
                         colorScheme="green"
                         size="sm"
-                        onClick={() => handleExceptionAction(exception.exceptionId, 'approve')}
-                        _hover={{ bg: 'green.400' }}
+                        onClick={() =>
+                          handleExceptionAction(
+                            exception.exceptionId,
+                            "approve"
+                          )
+                        }
+                        _hover={{ bg: "green.400" }}
                       >
                         Approve
                       </Button>
@@ -159,16 +183,21 @@ const ExceptionList: React.FC = () => {
                       <Button
                         colorScheme="red"
                         size="sm"
-                        onClick={() => handleExceptionAction(exception.exceptionId, 'reject')}
-                        _hover={{ bg: 'red.400' }}
+                        onClick={() =>
+                          handleExceptionAction(exception.exceptionId, "reject")
+                        }
+                        _hover={{ bg: "red.400" }}
                       >
                         Reject
                       </Button>
                     </Tooltip>
                   </Flex>
                 )}
-                {['approved', 'rejected'].includes(exception.status) && (
-                  <Text>{`Request was ${exception.status}`}</Text>
+                {exception.status === "approved" && (
+                  <Text>Requset was approved</Text>
+                )}
+                {exception.status === "rejected" && (
+                  <Text>Requset was rejected</Text>
                 )}
               </Td>
             </Tr>

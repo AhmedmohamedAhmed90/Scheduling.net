@@ -86,12 +86,22 @@ namespace ReactApp1.Server.Controllers
         public async Task<ActionResult<object>> GetCoursesByFacultyId(int facultyId)
         {
             var courses = await _dbContext.Courses
-                .Where(course => course.FacultyCourses.Any(fc => fc.FacultyId == facultyId))
-                .Select(course => new
-                {
-                    CourseId = course.Id,
-                    Course = course
-                })
+                .Where(course => course.FacultyCourses != null && course.FacultyCourses.Any(fc => fc.FacultyId == facultyId))
+                .ToListAsync();
+
+            if (courses.Count == 0)
+            {
+                return NotFound("Courses not found for the given faculty ID");
+            }
+
+            return Ok(courses);
+        }
+
+        [HttpGet("ByUniversity/{universityID}", Name = "GetCoursesByUniversityId")]
+        public async Task<ActionResult<object>> GetCoursesByUniversityId(int universityID)
+        {
+            var courses = await _dbContext.Courses
+                .Where(course => course.FacultyCourses.Any(fc => fc.Faculty.UniversityId == universityID))
                 .ToListAsync();
 
             if (courses.Count == 0)

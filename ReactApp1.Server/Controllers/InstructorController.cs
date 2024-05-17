@@ -27,21 +27,34 @@ namespace ReactApp1.Server.Controllers
 
             return Ok(instructors);
         }
-
         [HttpGet("{UniversityId}", Name = "GetInstructorsByUniversityId")]
         public async Task<ActionResult<object>> GetInstructorsByUniversityId(int UniversityId)
         {
+            var instructors = await _dbContext.Instructors
+                .Include(i => i.Faculty)
+                .Where(i => i.Faculty.UniversityId == UniversityId)
+                .Select(i => new
+                {
+                    i.Id,
+                    i.Name,
+                    i.FacultyId,
+                    Faculty = new
+                    {
+                        i.Faculty.Id,
+                        i.Faculty.Name,
+                        i.Faculty.UniversityId
+                    }
+                })
+                .ToListAsync();
 
-            var instructor = await _dbContext.Instructors.Include(i => i.Faculty).Where(i => i.Faculty.UniversityId == UniversityId).ToListAsync();
-
-            if (instructor.Count == 0)
+            if (instructors.Count == 0)
             {
                 return NotFound("Instructor not found");
             }
-            
 
-            return Ok(instructor);
+            return Ok(instructors);
         }
+
 
 
         [HttpPut("{facultyId}/{id}", Name = "UpdateInstructor")]
@@ -107,9 +120,9 @@ namespace ReactApp1.Server.Controllers
                 return BadRequest("Instructor does not belong to the specified faculty");
             }
 
-     var groupInstructors = await _dbContext.GroupInstructors
-                                        .Where(gi => gi.InstructorsId == id)
-                                        .ToListAsync();
+            var groupInstructors = await _dbContext.GroupInstructors
+                                               .Where(gi => gi.InstructorsId == id)
+                                               .ToListAsync();
 
             _dbContext.GroupInstructors.RemoveRange(groupInstructors);
             _dbContext.Instructors.Remove(instructor);

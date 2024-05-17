@@ -19,6 +19,9 @@ export const getCourses = async () => {
 export const getCoursesByFacultyID = async (facultyID: number) => {
   return await axios.get(`/api/Course/ByFaculty/${facultyID}`);
 };
+export const getCoursesByUniversityID = async (universityID: number) => {
+  return await axios.get(`/api/Course/ByUniversity/${universityID}`);
+};
 export const getCourse = async (id: number) => {
   return await axios.get(`/api/Course/${id}`);
 };

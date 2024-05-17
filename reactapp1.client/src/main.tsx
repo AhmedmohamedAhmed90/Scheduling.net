@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -26,6 +25,8 @@ import CreateLecture from "./pages/CreateLecture.tsx";
 import TablePage from "./pages/TablePage.tsx";
 import SuggestCoures from "./pages/SuggestCoures.tsx";
 import SuggestedTablePage from "./pages/SuggestedTablePage.tsx";
+import FacultyPage from "./pages/FacultyPage.tsx";
+import InstructorPage from "./pages/InstructorPage.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -40,9 +41,12 @@ const router = createBrowserRouter(
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/admin/university/create" element={<CreateUniversity />} />
+      <Route path="/admin/faculty" element={<FacultyPage />} />
       <Route path="/admin/faculty/create" element={<CreateFaculty />} />
+      <Route path="/admin/instructor" element={<InstructorPage />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
+      <Route path="/admin/course" element={<CoursePage />} />
       <Route path="/admin/group/create" element={<CreateGroup />} />
       <Route path="/admin/lecture/create" element={<CreateLecture />} />
       <Route path="/sendexception" element={<SendException />} />

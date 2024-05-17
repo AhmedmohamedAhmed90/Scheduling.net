@@ -21,6 +21,6 @@ export const getFaculty = async (id: string) => {
 export const updateFaculty = async (id: string, faculty: Faculty) => {
   return await axios.put(`/api/Faculty/${id}`, faculty);
 };
-export const deleteFaculty = async (id: string) => {
-  return await axios.delete(`/api/Faculty/${id}`);
+export const deleteFaculty = async (universityID: number, id: number) => {
+  return await axios.delete(`/api/Faculty/${universityID}/${id}`);
 };
