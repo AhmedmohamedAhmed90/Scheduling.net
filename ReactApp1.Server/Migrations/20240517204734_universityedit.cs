@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class universityedit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,6 +42,7 @@ namespace ReactApp1.Server.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Faculty = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -50,7 +51,6 @@ namespace ReactApp1.Server.Migrations
                     PasswordHash = table.Column<string>(type: "longtext", nullable: true),
                     SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
@@ -395,8 +395,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "114ff4af-f0e2-462f-af38-b90d5afb5e11", null, "User", "USER" },
-                    { "46e7ba8c-fe66-48b7-8428-7b0594dae7d8", null, "Admin", "ADMIN" }
+                    { "4df4adbd-1401-4b9c-be6c-81a8c48b9c72", null, "User", "USER" },
+                    { "cb038fe6-f3fc-4460-8262-6c225f6ab4e3", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
