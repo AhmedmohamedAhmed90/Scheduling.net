@@ -8,6 +8,6 @@ namespace ReactApp1.Server.Interfaces
 {
     public interface ITokenService
     {
-        string CreateToken(Student student);
+        Task<string> CreateToken(Student student);
     }
 }

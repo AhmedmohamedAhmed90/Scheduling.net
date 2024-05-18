@@ -63,6 +63,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization();
 
 // Configure HttpClient
 // builder.Services.AddHttpClient("MyApiClient", client =>
@@ -90,7 +91,9 @@ app.UseCors(options =>
         .AllowAnyMethod();
 });
 app.UseHttpsRedirection();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
