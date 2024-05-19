@@ -8,32 +8,30 @@ import {
   Heading,
   Text,
   Link,
-  Select,
   Grid,
-  
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 
 // Define the Register interface
-export interface Register {
-  Name: string;
-  Username: string;
-  Email: string;
-  Password: string;
-  Address: string;
-  Age: number;
-  Year: string;
-  Faculty: string;
-  PhoneNumber: string;
+interface Register {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+  address: string;
+  age: number;
+  year: string;
+  faculty: string;
+  phoneNumber: string;
 }
 
-// Define the addUniversity function
-export const addUser = async (registerData: Register, notificationMethod: string) => {
-  return await axios.post(`/api/account/register?notificationMethod=${notificationMethod}`, registerData);
+// Define the addUser function
+const addUser = async (registerData: Register) => {
+  return await axios.post(`/api/account/register`, registerData);
 };
 
-function SignupPage() {
+const SignupPage: React.FC = () => {
   // State variables for form fields
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -44,7 +42,7 @@ function SignupPage() {
   const [year, setYear] = useState("");
   const [faculty, setFaculty] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [notificationMethod, setNotificationMethod] = useState("email"); // Default to "email"
+  const [error, setError] = useState("");
 
   // Theme-related variables
   const bgColor = useColorModeValue("gray.50", "gray.700");
@@ -54,33 +52,34 @@ function SignupPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const registerData: Register = {
-      Name: name,
-      Username: username,
-      Email: email,
-      Password: password,
-      Address: address,
-      Age: parseInt(age, 10),
-      Year: year,
-      Faculty: faculty,
-      PhoneNumber: phoneNumber,
+      name,
+      username,
+      email,
+      password,
+      address,
+      age: parseInt(age, 10),
+      year,
+      faculty,
+      phoneNumber,
     };
 
     try {
-      const response = await addUser(registerData, notificationMethod);
+      const response = await addUser(registerData);
       console.log("Success:", response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);
-        if (error.response?.data?.errors) {
-          console.error("Validation errors:", error.response.data.errors);
-        }
-      } 
+        setError(error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error:", error);
+        setError("An unexpected error occurred");
+      }
     }
   };
 
   return (
     <Box
-      backgroundImage="url('../assets/images/university.jpg')"
+      backgroundImage="url('/path/to/your/image.jpg')" // Adjust the path to your background image
       backgroundSize="cover"
       backgroundPosition="center"
       minHeight="100vh"
@@ -97,7 +96,7 @@ function SignupPage() {
         mt={20}
         bg={bgColor}
         borderColor={borderColor}
-        maxWidth="1000px"
+        maxWidth="800px"
         width="full"
         as="form"
         onSubmit={handleSubmit}
@@ -105,6 +104,7 @@ function SignupPage() {
         <Heading as="h2" size="lg" mb={6} textAlign="center">
           Sign up
         </Heading>
+        {error && <Text color="red.500" mb={4}>{error}</Text>}
         <Grid templateColumns="1fr 1fr" gap={4}>
           <FormControl id="name" isRequired>
             <FormLabel>Name</FormLabel>
@@ -187,17 +187,6 @@ function SignupPage() {
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </FormControl>
-          <FormControl id="notificationMethod" isRequired>
-          <FormLabel>Notification Method</FormLabel>
-            <Select
-              placeholder="Select notification method"
-              value={notificationMethod}
-              onChange={(e) => setNotificationMethod(e.target.value)}
-            >
-              <option value="email">Email</option>
-              <option value="whatsapp">WhatsApp</option>
-            </Select>
-          </FormControl>
         </Grid>
         <Button mt={8} colorScheme="blue" width="full" type="submit">
           Sign up
@@ -211,6 +200,6 @@ function SignupPage() {
       </Box>
     </Box>
   );
-}
+};
 
 export default SignupPage;
