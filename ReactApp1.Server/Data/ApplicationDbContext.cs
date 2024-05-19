@@ -13,14 +13,18 @@ namespace ReactApp1.Server.Data
     {
        
     }
+
+     // public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+     //    {
+     //    }
     public DbSet<Product> Products { get; set; }
     public DbSet<Models.Exception> Exceptions { get; set; }
     public DbSet<Student> Students { get; set; }
-    public DbSet<University> Universities { get; set; }
+    public virtual DbSet<University> Universities { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
     
-    public DbSet<Course> Courses { get; set; }
+    public virtual DbSet<Course> Courses { get; set; }
   
     public DbSet<GroupInstructor> GroupInstructors { get; set; }
     

@@ -46,7 +46,7 @@ const router = createBrowserRouter(
       <Route path="/admin/instructor" element={<InstructorPage />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
-      <Route path="/admin/course" element={<CoursePage />} />
+     
       <Route path="/admin/group/create" element={<CreateGroup />} />
       <Route path="/admin/lecture/create" element={<CreateLecture />} />
       <Route path="/sendexception" element={<SendException />} />
