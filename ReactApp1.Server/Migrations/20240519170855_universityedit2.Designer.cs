@@ -11,15 +11,15 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240515180143_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240519170855_universityedit2")]
+    partial class universityedit2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -50,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4f00975a-6923-498c-8be3-e584e265051f",
+                            Id = "318d6674-0333-4ed3-ac57-b6972a249e66",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d6eaac76-6e69-4faa-99db-b3fe9f8bead8",
+                            Id = "b0bf145f-0651-4a99-8c49-12be15b47246",
                             Name = "User",
                             NormalizedName = "USER"
                         });

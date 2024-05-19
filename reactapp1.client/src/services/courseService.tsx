@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Group } from "./groupService";
+import { Faculty } from "./facultyService";
 export interface Course {
   id?: number;
   code: string;
@@ -7,6 +8,7 @@ export interface Course {
   description: string;
   departmeant: string;
   facultyid: number;
+  faculty?: Faculty;
   conflict_count?: number;
   groups?: Group[];
 }
@@ -28,6 +30,6 @@ export const getCourse = async (id: number) => {
 export const updateCourse = async (id: string, course: Course) => {
   return await axios.put(`/api/Course/${id}`, course);
 };
-export const deleteCourse = async (id: string) => {
+export const deleteCourse = async (id: number) => {
   return await axios.delete(`/api/Course/${id}`);
 };

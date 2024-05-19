@@ -16,7 +16,7 @@ namespace ReactApp1.Server.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4f00975a-6923-498c-8be3-e584e265051f",
+                            Id = "318d6674-0333-4ed3-ac57-b6972a249e66",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "d6eaac76-6e69-4faa-99db-b3fe9f8bead8",
+                            Id = "b0bf145f-0651-4a99-8c49-12be15b47246",
                             Name = "User",
                             NormalizedName = "USER"
                         });

@@ -6,7 +6,6 @@ import {
   Button,
   Heading,
   useColorModeValue,
-  FormErrorMessage,
   Select,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -30,8 +29,16 @@ const days = [
   "Thursday",
 ];
 export default function CreateLecture() {
-  const timeRegex = /^\d{1,2}:\d{2}$/;
   const store = useContext(Store);
+  // store.dispatch({
+  //   type: "SET_UNIVERSITYID",
+  //   payload: 1,
+  // });
+  // store.dispatch({
+  //   type: "SET_FACULTYID",
+  //   payload: 1,
+  // });
+
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
   const [lecture, setLecture] = useState<Lecture>({
@@ -41,9 +48,8 @@ export default function CreateLecture() {
     room: "",
     groupId: 0,
   } as Lecture);
-  const [errorStartTime, setErrorStartTime] = useState("");
-  const [errorEndTime, setErrorEndTime] = useState("");
   const [courseID, setCourseID] = useState(0);
+  const [time, setTime] = useState("");
 
   const { mutate } = useMutation({
     mutationFn: () => addLecture(lecture),
@@ -80,53 +86,37 @@ export default function CreateLecture() {
       borderColor={borderColor}
     >
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Lecture Using University ID: {store.state.universityID}
+        Create Lecture Using University ID: {store.state.universityID}{" "}
       </Heading>
 
-      <FormControl isInvalid={errorStartTime !== ""} isRequired>
-        <FormLabel htmlFor="lecture-time">Lecture Start Time</FormLabel>
-        <Input
-          type="text"
-          placeholder="Enter Lecture Start Time"
-          value={lecture.startTime}
+      <FormControl id="lecture-time" isRequired>
+        <FormLabel>Lecture Time</FormLabel>
+        <Select
+          placeholder="Select Lecture Time"
+          value={time}
           onChange={(e) => {
-            setLecture((prev) => ({
+            setTime(e.target.value);
+            const [startTime, endTime] = e.target.value.split(" - ");
+            setLecture((prev: Lecture) => ({
               ...prev,
-              startTime: e.target.value,
+              startTime,
+              endTime,
             }));
           }}
-          onBlur={(e) => {
-            if (!timeRegex.test(e.target.value)) {
-              setErrorStartTime("Enter a valid time (e.g., 8:00, 10:00)");
-            } else {
-              setErrorStartTime("");
-            }
-          }}
-        />
-        <FormErrorMessage>{errorStartTime}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl isInvalid={errorEndTime !== ""} isRequired>
-        <FormLabel htmlFor="lecture-time">Lecture End Time</FormLabel>
-        <Input
-          type="text"
-          placeholder="Enter Lecture End Time"
-          value={lecture.endTime}
-          onChange={(e) => {
-            setLecture((prev) => ({
-              ...prev,
-              endTime: e.target.value,
-            }));
-          }}
-          onBlur={(e) => {
-            if (!timeRegex.test(e.target.value)) {
-              setErrorEndTime("Enter a valid time (e.g., 8:00, 10:00)");
-            } else {
-              setErrorEndTime("");
-            }
-          }}
-        />
-        <FormErrorMessage>{errorEndTime}</FormErrorMessage>
+        >
+          {[
+            "8:00 - 9:30",
+            "9:30 - 11:00",
+            "11:00 - 12:30",
+            "12:30 - 2:00",
+            "2:00 - 3:30",
+            "3:30 - 5:00",
+          ].map((time) => (
+            <option key={time} value={time}>
+              {time}
+            </option>
+          ))}
+        </Select>
       </FormControl>
 
       <FormControl id="room" isRequired>
@@ -147,7 +137,7 @@ export default function CreateLecture() {
       <FormControl id="day" isRequired>
         <FormLabel>Day</FormLabel>
         <Select
-          placeholder="Select faculty"
+          placeholder="Select day"
           value={lecture.day}
           onChange={(e) =>
             setLecture((prev: Lecture) => ({
@@ -171,13 +161,14 @@ export default function CreateLecture() {
           value={courseID}
           onChange={(e) => setCourseID(parseInt(e.target.value))}
         >
-          {courses?.data.map(({ course }: { course: Course }) => (
+          {courses?.data.map((course: Course) => (
             <option key={course.id} value={course.id}>
-              {course.code}
+              {course.title} - {course.code}
             </option>
           ))}
         </Select>
       </FormControl>
+
       <FormControl id="group" isRequired>
         <FormLabel>Group</FormLabel>
         <Select
@@ -197,6 +188,7 @@ export default function CreateLecture() {
           ))}
         </Select>
       </FormControl>
+
       <Button
         mt={8}
         colorScheme="blue"
