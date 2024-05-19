@@ -27,6 +27,8 @@ import SuggestCoures from "./pages/SuggestCoures.tsx";
 import SuggestedTablePage from "./pages/SuggestedTablePage.tsx";
 import FacultyPage from "./pages/FacultyPage.tsx";
 import InstructorPage from "./pages/InstructorPage.tsx";
+import CoursePage from "./pages/CoursePage.tsx";
+import GroupPage from "./pages/GroupPage.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -46,26 +48,13 @@ const router = createBrowserRouter(
       <Route path="/admin/instructor" element={<InstructorPage />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
-     
+      <Route path="/admin/course" element={<CoursePage />} />
+      <Route path="/admin/group/bycourse/:courseID" element={<GroupPage />} />
       <Route path="/admin/group/create" element={<CreateGroup />} />
+
       <Route path="/admin/lecture/create" element={<CreateLecture />} />
       <Route path="/sendexception" element={<SendException />} />
       <Route path="/adminexceptionspanel" element={<ExceptionList />} />
-      {/* <Route path="" element={<ProtectedRoute />}>
-        <Route path="/payment" element={<PaymentMethodPage />} />
-        <Route path="/placeorder" element={<PlaceOrderPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/order/:id" element={<OrderPage />} />
-      </Route> */}
-      {/* Admin Users */}
-      {/* <Route path="/admin" element={<AdminRoute />}>
-        <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="users" element={<UserListPage />} />
-        <Route path="user/:id" element={<UserEditPage />} />
-        <Route path="products" element={<ProductListPage />} />
-        <Route path="product/:id" element={<ProductEditPage />} />
-        <Route path="orders" element={<OrderListPage />} />
-      </Route>*/}
     </Route>
   )
 );

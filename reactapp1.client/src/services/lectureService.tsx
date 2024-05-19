@@ -20,6 +20,6 @@ export const getLectures = async () => {
 export const updateLecture = async (id: string, lecture: Lecture) => {
   return await axios.put(`/api/Lecture/${id}`, lecture);
 };
-export const deleteLecture = async (id: string) => {
+export const deleteLecture = async (id: number) => {
   return await axios.delete(`/api/Lecture/${id}`);
 };

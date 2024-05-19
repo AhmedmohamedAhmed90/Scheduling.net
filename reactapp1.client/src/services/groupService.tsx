@@ -14,8 +14,8 @@ export const addGroup = async (group: Group) => {
     `/api/Group?code=${group.code}&courseId=${group.courseid}&instructorId=${group.instructorid}`
   );
 };
-export const getGroupsByUniversityId = async (id: number) => {
-  return await axios.get(`/api/Group/${id}`);
+export const getGroupsByCourseId = (id: string) => {
+  return axios.get(`/api/Group/${id}`);
 };
 export const getGroup = async (id: string) => {
   return await axios.get(`/api/Group/${id}`);
@@ -23,6 +23,6 @@ export const getGroup = async (id: string) => {
 export const updateGroup = async (id: string, group: Group) => {
   return await axios.put(`/api/Group/${id}`, group);
 };
-export const deleteGroup = async (id: string) => {
+export const deleteGroup = async (id: number) => {
   return await axios.delete(`/api/Group/${id}`);
 };
