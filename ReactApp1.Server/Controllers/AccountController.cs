@@ -49,6 +49,7 @@ namespace ReactApp1.Server.Controllers
                 new NewUser{
                     UserName=user.UserName,
                     Email = user.Email,
+                    Id=user.Id,
                     Token = await _TokenService.CreateToken(user)
                 }
             );

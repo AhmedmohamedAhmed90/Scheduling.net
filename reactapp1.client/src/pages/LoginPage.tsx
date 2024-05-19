@@ -35,8 +35,10 @@ function LoginPage() {
       }
 
       const data = await response.json();
+      console.log(data);
       localStorage.setItem('token', data.token);
-      localStorage.setItem('name', data.name);
+      localStorage.setItem('UserName', data.userName);
+      localStorage.setItem('id', data.id);
       navigate('/');
     } catch (error) {
       if (error instanceof Error) {
