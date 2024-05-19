@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class universityedit2 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,6 +43,7 @@ namespace ReactApp1.Server.Migrations
                     Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Faculty = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
+                    UniversityId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -395,8 +396,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "318d6674-0333-4ed3-ac57-b6972a249e66", null, "Admin", "ADMIN" },
-                    { "b0bf145f-0651-4a99-8c49-12be15b47246", null, "User", "USER" }
+                    { "b68c56b6-343d-46a9-aa98-d9f3e203e56f", null, "Admin", "ADMIN" },
+                    { "fb5bad92-e55b-4980-a6cf-4ca6c9c056c5", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

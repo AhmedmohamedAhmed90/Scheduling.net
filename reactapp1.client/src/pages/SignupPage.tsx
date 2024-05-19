@@ -24,11 +24,13 @@ interface Register {
   year: string;
   faculty: string;
   phoneNumber: string;
+  UniversityId:string;
+  
 }
 
 // Define the addUser function
 const addUser = async (registerData: Register) => {
-  return await axios.post(`/api/account/register`, registerData);
+  return await axios.post(`http://localhost:5261/api/account/register`, registerData);
 };
 
 const SignupPage: React.FC = () => {
@@ -42,6 +44,8 @@ const SignupPage: React.FC = () => {
   const [year, setYear] = useState("");
   const [faculty, setFaculty] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [UniversityId, setUniversityId] = useState("");
+
   const [error, setError] = useState("");
 
   // Theme-related variables
@@ -61,6 +65,8 @@ const SignupPage: React.FC = () => {
       year,
       faculty,
       phoneNumber,
+      UniversityId,
+      
     };
 
     try {
@@ -185,6 +191,15 @@ const SignupPage: React.FC = () => {
               placeholder="Enter your phone number"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="UniversityId" isRequired>
+            <FormLabel>UniversityId</FormLabel>
+            <Input
+              type="text"
+              placeholder="Enter your UniversityId"
+              value={UniversityId}
+              onChange={(e) => setUniversityId(e.target.value)}
             />
           </FormControl>
         </Grid>

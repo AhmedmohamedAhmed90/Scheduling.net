@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Text;
 using System.Net.Http;
+using Microsoft.AspNetCore.Identity;
 //using System.Diagnostics;
 
 //using Microsoft.AspNetCore.Identity;
@@ -23,13 +24,15 @@ namespace ReactApp1.Server.Controllers;
 public class StudentController : Controller
 {
     private readonly ApplicationDbContext _dbContext;
+    private readonly UserManager<Student> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
 
    // private readonly IPasswordHasher<Student> _passwordHasher;
    //IPasswordHasher<Student> passwordHasher
-    public StudentController(ApplicationDbContext dbContext)
+   public StudentController(UserManager<Student> userManager, RoleManager<IdentityRole> roleManager)
     {
-        _dbContext = dbContext;
-        //_passwordHasher = passwordHasher;
+        _userManager = userManager;
+        _roleManager = roleManager;
     }
 
 
@@ -141,61 +144,64 @@ protected string GenerateRandomNumbers(int length)
 
 
 
-[HttpPost (Name ="CreateStudents")]
-public async Task<ActionResult> CreateStudents([FromForm] Student student)
-{
-    if (ModelState.IsValid)
+    [HttpPost]
+    [Route("CreateStudents")]
+    public async Task<ActionResult> CreateStudents([FromForm] Student student)
     {
-        // student.Password = _passwordHasher.HashPassword(student, student.Password);
-       // Generate a username (student name + 4 random numbers)
-        string username = student.Name.Replace(" ", "") + GenerateRandomNumbers(4);
+        if (ModelState.IsValid)
+        {
+            // Generate a username (student name + 4 random numbers)
+            string username = student.Name.Replace(" ", "") + GenerateRandomNumbers(4);
 
-        // Generate a password (6 random numbers)
-        string password = GenerateRandomNumbers(6);
-        string studentEmail= student.Email.ToString();
+            // Generate a password (6 random numbers)
+            string password = GenerateRandomNumbers(15) +  'a' + 'A' + '@';
+            string studentEmail = student.Email;
 
-        // Assign the generated username and password to the student
-        student.UserName = username;
-        student.PasswordHash  = password;
-        
-        _dbContext.Set<Student>().Add(student);
-        await _dbContext.SaveChangesAsync();
+            // Assign the generated username and password to the student
+            student.UserName = username;
+            var result = await _userManager.CreateAsync(student, password);
 
-        // Send email to the student
-    //     try{
-
-    //    // await SendEmailAsync(studentEmail, "your university account's username and password", username, password);
-
-    //     }catch(Exception ex){
-    //         return Ok("problem:"+ex.Message);
-    //     }
-     // Send email to the student
-    var payload = new
+            if (result.Succeeded)
             {
-                email = student.Email,
-                subject = "Your credentials for the University Account",
-                body = $"Username: {username}\nPassword: {password}"
-            };
+                // Ensure the role exists
+                if (!await _roleManager.RoleExistsAsync("User"))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole("User"));
+                }
 
-    // Use HttpClient to send the request
-    using (var client = new HttpClient())
-    {
-        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-        var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
-        response.EnsureSuccessStatusCode();
-        Console.WriteLine(await response.Content.ReadAsStringAsync());
+                // Assign the "User" role to the student
+                await _userManager.AddToRoleAsync(student, "User");
+
+                // Send email to the student
+                var payload = new
+                {
+                    email = student.Email,
+                    subject = "Your credentials for the University Account",
+                    body = $"Username: {username}\nPassword: {password}"
+                };
+
+                // Use HttpClient to send the request
+                using (var client = new HttpClient())
+                {
+                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                    var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
+                    response.EnsureSuccessStatusCode();
+                    Console.WriteLine(await response.Content.ReadAsStringAsync());
+                }
+
+                return Ok(student);
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
+        else
+        {
+            return BadRequest("Problem with model state");
+        }
     }
 
-               
-            return Ok(student);
-    }
-    else
-    {
-        // If model state is not valid, return to the form
-        //return BadRequest();
-        return Ok("problem");
-    }
-}
 
 [HttpGet("{id}", Name = "GetStudent")]
 public IActionResult GetStudent(String id)

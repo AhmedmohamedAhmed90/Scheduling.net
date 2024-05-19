@@ -57,7 +57,7 @@ namespace ReactApp1.Server.Controllers
 
         [HttpPost("register")]
        public async Task<IActionResult> Register([FromBody] Register registerDto)
-       {
+    {
           try{
                 if (!ModelState.IsValid){
                      return BadRequest(ModelState);
@@ -73,7 +73,8 @@ namespace ReactApp1.Server.Controllers
                     Age=registerDto.Age,
                     Year=registerDto.Year,
                     Faculty=registerDto.Faculty,
-                    PhoneNumber=registerDto.PhoneNumber
+                    PhoneNumber=registerDto.PhoneNumber,
+                    UniversityId=registerDto.UniversityId
                     
                 };
             var createUser = await  visitor.CreateAsync(student , registerDto.Password);
@@ -94,6 +95,13 @@ namespace ReactApp1.Server.Controllers
          return StatusCode(500 , ex.Message );
         }
     }
+     [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signin.SignOutAsync();
+            return Ok("User logged out successfully");
+        }
+    
 
     }
 
