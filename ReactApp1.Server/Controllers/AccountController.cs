@@ -49,160 +49,52 @@ namespace ReactApp1.Server.Controllers
                 new NewUser{
                     UserName=user.UserName,
                     Email = user.Email,
-                    Token = _TokenService.CreateToken(user)
+                    Id=user.Id,
+                    Token = await _TokenService.CreateToken(user)
                 }
             );
         }
 
-    //    [HttpPost("register")]
-    //    public async Task<IActionResult> Register([FromBody] Register registerDto)
-    //    {
-    //       try{
-    //             if (!ModelState.IsValid){
-    //                  return BadRequest(ModelState);
-    //             }
-                
-    //             var student= new Student
-    //             {
-    //                 // UserName=registerDto.Username,
-    //                 Email=registerDto.Email,
-    //                 Faculty=registerDto.Faculty,
-    //                 Address=registerDto.Address,
-    //                 Age = registerDto.Age,
-    //                 Year=registerDto.Year,
-    //                 Name=registerDto.Name
-
-    //             };
-
-    //             string username = registerDto.Name.Replace(" ", "") + GenerateRandomNumbers(4);
-    //             student.UserName = username;
-               
-    //             string password = GenerateRandomNumbers(9)+"Aa#";
-
-    //         var createUser = await  visitor.CreateAsync(student , password);
-    //         if(createUser.Succeeded){
-    //            var payload = new
-    //            {
-    //              email = student.Email,
-    //              subject = "Your credentials for the University Account",
-    //              body = $"Username: {username}\nPassword: {password}"
-    //            };
-
-    //         // Use HttpClient to send the request
-    //          using (var client = new HttpClient())
-    //          {
-    //              var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-    //              var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
-    //              response.EnsureSuccessStatusCode();
-    //              Console.WriteLine(await response.Content.ReadAsStringAsync());
-    //          }
-    //              var Result = await visitor.AddToRoleAsync(student , "User");
-    //              if(Result.Succeeded){
-    //               return Ok(
-    //                 new NewUser{
-    //                     UserName=student.UserName,
-    //                     Email = student.Email,
-    //                     Token = _TokenService.CreateToken(student)
-    //                 }
-    //               );
-    //             }
-    //             else{
-    //                 return StatusCode(500 ,Result.Errors);
-    //              }
-    //         }
-    //         else {
-    //             return StatusCode(500 , createUser.Errors);
-    //         }
-    //         }
-    //     catch(System.Exception ex){
-    //      return StatusCode(500 , ex.Message );
-    //     }
-    // }
-
-     [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] Register registerDto, [FromQuery] string notificationMethod)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
+        [HttpPost("register")]
+       public async Task<IActionResult> Register([FromBody] Register registerDto)
+       {
+          try{
+                if (!ModelState.IsValid){
+                     return BadRequest(ModelState);
                 }
 
-                var student = new Student
+                var student= new Student
                 {
-                    Email = registerDto.Email,
-                    Faculty = registerDto.Faculty,
-                    Address = registerDto.Address,
-                    Age = registerDto.Age,
-                    Year = registerDto.Year,
-                    Name = registerDto.Name,
-                    PhoneNumber = registerDto.PhoneNumber
-                };
-
-                string username = registerDto.Name.Replace(" ", "") + GenerateRandomNumbers(4);
-                student.UserName = username;
-
-                string password = GenerateRandomNumbers(9) + "Aa#";
-
-                var createUser = await visitor.CreateAsync(student, password);
-                if (createUser.Succeeded)
-                {
-                    var factory = NotificationFactory.GetFactory(notificationMethod);
+                    Name=registerDto.Name,
+                    UserName=registerDto.Username,
+                    Email=registerDto.Email,
+                    PasswordHash=registerDto.Password,
+                    Address=registerDto.Address,
+                    Age=registerDto.Age,
+                    Year=registerDto.Year,
+                    Faculty=registerDto.Faculty,
+                    PhoneNumber=registerDto.PhoneNumber
                     
-                    var notificationway = factory.CreateNotification();
-
-                    if (notificationMethod.ToLower() == "email")
-                    {
-                        await notificationway.NotifyAsync(username, password, student.Email);
-                    }
-                    else if (notificationMethod.ToLower() == "whatsapp")
-                    {
-                        await notificationway.NotifyAsync(username, password, student.PhoneNumber);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Invalid notification method");
-                    }
-
-                    var addToRoleResult = await visitor.AddToRoleAsync(student, "User");
-                    if (addToRoleResult.Succeeded)
-                    {
-                        return Ok(new NewUser
-                        {
-                            UserName = student.UserName,
-                            Email = student.Email,
-                            Token = _TokenService.CreateToken(student)
-                        });
-                    }
-                    else
-                    {
-                        return StatusCode(500, addToRoleResult.Errors);
-                    }
-                }
-                else
-                {
-                    return StatusCode(500, createUser.Errors);
-                }
+                };
+            var createUser = await  visitor.CreateAsync(student , registerDto.Password);
+            if(createUser.Succeeded){
+                 var Result = await visitor.AddToRoleAsync(student , "Admin");
+                 if(Result.Succeeded){
+                  return Ok("User Created");
+                 }
+                else{
+                    return StatusCode(500 ,Result.Errors);
+                 }
             }
-            catch (System.Exception ex)
-            {
-                return StatusCode(500, ex.Message);
+            else {
+                return StatusCode(500 , createUser.Errors);
             }
+            }
+        catch(System.Exception ex){
+         return StatusCode(500 , ex.Message );
         }
+    }
 
-[ApiExplorerSettings(IgnoreApi = true)]
-protected string GenerateRandomNumbers(int length)
-        {
-            Random random = new Random();
-            const string chars = "0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-
- }
-
-
+    }
 
 }
