@@ -63,7 +63,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    
+});
+
 
 // Configure HttpClient
 // builder.Services.AddHttpClient("MyApiClient", client =>
