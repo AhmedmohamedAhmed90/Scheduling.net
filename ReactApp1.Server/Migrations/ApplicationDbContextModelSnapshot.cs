@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "318d6674-0333-4ed3-ac57-b6972a249e66",
+                            Id = "b68c56b6-343d-46a9-aa98-d9f3e203e56f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b0bf145f-0651-4a99-8c49-12be15b47246",
+                            Id = "fb5bad92-e55b-4980-a6cf-4ca6c9c056c5",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -421,6 +421,9 @@ namespace ReactApp1.Server.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("UniversityId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)

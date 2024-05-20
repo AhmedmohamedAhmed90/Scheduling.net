@@ -46,13 +46,12 @@ namespace ReactApp1.Server.Controllers
             var result = await _signin.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!result.Succeeded) return Unauthorized("Invalid UserName and / or password");
-            var roles = await visitor.GetRolesAsync(user);
+
             return Ok(
                 new NewUser
                 {
                     UserName = user.UserName,
                     Email = user.Email,
-                    Role = roles[0],
                     Id = user.Id,
                     Token = await _TokenService.CreateToken(user)
                 }
@@ -79,7 +78,9 @@ namespace ReactApp1.Server.Controllers
                     Age = registerDto.Age,
                     Year = registerDto.Year,
                     Faculty = registerDto.Faculty,
-                    PhoneNumber = registerDto.PhoneNumber
+                    PhoneNumber = registerDto.PhoneNumber,
+                    UniversityId = registerDto.UniversityId
+
                 };
                 var createUser = await visitor.CreateAsync(student, registerDto.Password);
                 if (createUser.Succeeded)
@@ -104,6 +105,13 @@ namespace ReactApp1.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signin.SignOutAsync();
+            return Ok("User logged out successfully");
+        }
+
 
     }
 
