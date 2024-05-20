@@ -38,7 +38,7 @@ const queryClient = new QueryClient();
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route index={true} path="/" element={<HomePage />} />
+      <Route path="/" index={true} element={<HomePage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/table" element={<TablePage />} />
       <Route path="/suggest" element={<SuggestCoures />} />
