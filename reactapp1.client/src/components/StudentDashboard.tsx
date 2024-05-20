@@ -54,7 +54,7 @@ const StudentDashboard: React.FC = () => {
           <GridItem>
             <Button
               as={RouterLink}
-              to="/"
+              to="/suggest"
               leftIcon={<FaCalendarAlt />}
               colorScheme="teal"
               size="lg"
@@ -67,14 +67,14 @@ const StudentDashboard: React.FC = () => {
           <GridItem>
             <Button
               as={RouterLink}
-              to="/"
+              to="/table"
               leftIcon={<FaRegCalendarAlt />}
               colorScheme="teal"
               size="lg"
               w="100%"
               h="100px"
             >
-              View Schedule
+              View Faculty Table
             </Button>
           </GridItem>
         </Grid>
