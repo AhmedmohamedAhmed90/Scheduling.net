@@ -18,9 +18,8 @@ function NavBar() {
           <NavLink to="/table">Table</NavLink>
           <NavLink to="/product">Product</NavLink>
           <NavLink to="/sendexception">Form</NavLink>
-          <NavLink to="/adminexceptionspanel">Admin Exception Panel</NavLink>
           <NavLink to="/studentdashboard">Student Dashboard</NavLink>
-          <NavLink to="/login">login</NavLink>
+          <NavLink to="/admindashboard">Admin Dashboard</NavLink>
         </Stack>
       </Flex>
     </Box>
