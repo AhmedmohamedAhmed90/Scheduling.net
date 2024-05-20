@@ -34,7 +34,17 @@ import StudentDashboard from "./components/StudentDashboard.tsx";
 import LectureEdit from "./pages/LectureEdit.tsx";
 import AdminDashboard from "./components/AdminDasboard.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 1,
+      retryDelay: 3000,
+    },
+  },
+});
 
 const router = createBrowserRouter(
   createRoutesFromElements(

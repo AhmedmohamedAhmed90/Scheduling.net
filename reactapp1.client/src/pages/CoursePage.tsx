@@ -56,8 +56,16 @@ function CoursePage() {
     });
     refetch();
   };
+  if (error) {
+    toast({
+      title: "there's no Courses to show",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    navigate("/admindashboard");
+  }
   if (!data) return <FacultySkeleton />;
-  if (error) return "Error";
   return (
     <Box shadow="md" borderWidth="1px" rounded="md" m="32">
       <Flex

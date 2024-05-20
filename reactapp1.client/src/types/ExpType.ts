@@ -1,5 +1,5 @@
-export interface  ExpType{
-    studentId: string;
-    reason: string;
-    description: string;
-  }
+export interface ExpType {
+  studentId: string;
+  reason: string;
+  description: string;
+}

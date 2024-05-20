@@ -1,5 +1,5 @@
 // src/LoginPage.tsx
-import React, { useState } from 'react';
+import React, { useContext, useState } from "react";
 import {
   Box,
   FormControl,
@@ -10,12 +10,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
+import { Store } from "../Store";
 
 function LoginPage() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const store = useContext(Store);
+  const { dispatch } = store;
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
@@ -23,28 +26,29 @@ function LoginPage() {
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:5261/api/account/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+      const response = await fetch("/api/account/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
       if (!response.ok) {
-       
-        throw new Error( 'You have enter a wrong username or password');
+        throw new Error("You have enter a wrong email or password");
       }
 
       const data = await response.json();
       console.log(data);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('UserName', data.userName);
-      localStorage.setItem('id', data.id);
-      navigate('/');
+      dispatch({ type: "LOGIN", payload: data });
+      if (data.role === "Admin") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/studentdashboard");
+      }
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('An unknown error occurred');
+        setError("An unknown error occurred");
       }
     }
   };
@@ -71,16 +75,16 @@ function LoginPage() {
         width="full"
       >
         <Heading as="h2" size="lg" mb={6} textAlign="center">
-          Login
+          Login {JSON.stringify(store.state.email, null, 2)}
         </Heading>
         <form onSubmit={handleLogin}>
-          <FormControl id="username" isRequired>
-            <FormLabel>Username</FormLabel>
+          <FormControl id="email" isRequired>
+            <FormLabel>Email</FormLabel>
             <Input
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
             />
           </FormControl>
           <FormControl id="password" isRequired mt={4}>
@@ -92,17 +96,21 @@ function LoginPage() {
               placeholder="Enter your password"
             />
           </FormControl>
-          {error && <Text color="red.500" mt={4}>{error}</Text>}
+          {error && (
+            <Text color="red.500" mt={4}>
+              {error}
+            </Text>
+          )}
           <Button mt={8} colorScheme="blue" width="full" type="submit">
             Login
           </Button>
         </form>
         <Text mt={4} textAlign="center">
-      or Get an account?{' '}
-      <Link  to="/signup" color="teal.500">
-        Sign Up
-      </Link>
-    </Text>
+          or Get an account?{" "}
+          <Link to="/signup" color="teal.500">
+            Sign Up
+          </Link>
+        </Text>
       </Box>
     </Box>
   );
