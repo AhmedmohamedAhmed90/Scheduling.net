@@ -5,31 +5,32 @@ namespace ReactApp1.Server.Models
 {
     public class Student : IdentityUser
     {
-        
-         [StringLength(50)] 
+
+        [StringLength(50)]
         public string Name { get; set; }
 
-        [StringLength(100)] 
+        [StringLength(100)]
         public string Address { get; set; }
 
         [Range(0, 150)] // Example range for age
         public int Age { get; set; }
 
-        [StringLength(50)] 
+        [StringLength(50)]
         public string Year { get; set; }
 
-        [StringLength(50)] 
-        public string Faculty { get; set; }
+        [StringLength(50)]
+        public string FacultyId { get; set; }
+        public Faculty Faculty { get; set; }
 
         public ICollection<Exception> Exception { get; } = [];
- 
-        public string? PhoneNumber { get; set; } 
 
-           [Range(0, 150)] // Example range for age
+        public string? PhoneNumber { get; set; }
+
+        [Range(0, 150)] // Example range for age
         public int UniversityId { get; set; }
         public University University { get; set; }
-     
+
     }
 
-    
+
 }
