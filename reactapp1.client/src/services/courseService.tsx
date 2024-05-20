@@ -25,7 +25,7 @@ export const getCoursesByUniversityID = async (universityID: number) => {
   return await axios.get(`/api/Course/ByUniversity/${universityID}`);
 };
 export const getCourse = async (id: number) => {
-  return await axios.get(`/api/Course/${id}`);
+  return axios.get(`/api/Course/${id}`).then((res) => res.data);
 };
 export const updateCourse = async (id: string, course: Course) => {
   return await axios.put(`/api/Course/${id}`, course);

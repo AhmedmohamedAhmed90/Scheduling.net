@@ -30,5 +30,8 @@ namespace ReactApp1.Server.Dtos
         public string Faculty { get; set; }
 
          public string? PhoneNumber { get; set; } 
+
+        [Range(0, 150)] 
+        public int UniversityId { get; set; }
     }
 }

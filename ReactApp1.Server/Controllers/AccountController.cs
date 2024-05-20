@@ -24,76 +24,94 @@ namespace ReactApp1.Server.Controllers
         private readonly ITokenService _TokenService;
 
         private readonly SignInManager<Student> _signin;
-        public AccountController(UserManager<Student> userManager ,ITokenService TokenService , SignInManager<Student> signin )
+        public AccountController(UserManager<Student> userManager, ITokenService TokenService, SignInManager<Student> signin)
         {
-            visitor=userManager;
-            _TokenService=TokenService;
-            _signin = signin;    
-    
+            visitor = userManager;
+            _TokenService = TokenService;
+            _signin = signin;
+
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(Login login){
-             if (!ModelState.IsValid){
-                     return BadRequest(ModelState);
-                }
-            var user= await visitor.Users.FirstOrDefaultAsync(x=> x.UserName == login.Username.ToLower());    
+        public async Task<IActionResult> Login(Login login)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var user = await visitor.Users.FirstOrDefaultAsync(x => x.UserName == login.Username.ToLower());
 
-            if (user ==null) return Unauthorized("the user not found");
+            if (user == null) return Unauthorized("the user not found");
 
-            var result = await  _signin.CheckPasswordSignInAsync(user, login.Password , false);
+            var result = await _signin.CheckPasswordSignInAsync(user, login.Password, false);
 
             if (!result.Succeeded) return Unauthorized("Invalid UserName and / or password");
 
             return Ok(
-                new NewUser{
-                    UserName=user.UserName,
+                new NewUser
+                {
+                    UserName = user.UserName,
                     Email = user.Email,
-                    Id=user.Id,
+                    Id = user.Id,
                     Token = await _TokenService.CreateToken(user)
                 }
             );
         }
 
         [HttpPost("register")]
-       public async Task<IActionResult> Register([FromBody] Register registerDto)
-       {
-          try{
-                if (!ModelState.IsValid){
-                     return BadRequest(ModelState);
+        public async Task<IActionResult> Register([FromBody] Register registerDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
-                var student= new Student
+                var student = new Student
                 {
-                    Name=registerDto.Name,
-                    UserName=registerDto.Username,
-                    Email=registerDto.Email,
-                    PasswordHash=registerDto.Password,
-                    Address=registerDto.Address,
-                    Age=registerDto.Age,
-                    Year=registerDto.Year,
-                    Faculty=registerDto.Faculty,
-                    PhoneNumber=registerDto.PhoneNumber
-                    
+                    Name = registerDto.Name,
+                    UserName = registerDto.Username,
+                    Email = registerDto.Email,
+                    PasswordHash = registerDto.Password,
+                    Address = registerDto.Address,
+                    Age = registerDto.Age,
+                    Year = registerDto.Year,
+                    Faculty = registerDto.Faculty,
+                    PhoneNumber = registerDto.PhoneNumber,
+                    UniversityId = registerDto.UniversityId
+
                 };
-            var createUser = await  visitor.CreateAsync(student , registerDto.Password);
-            if(createUser.Succeeded){
-                 var Result = await visitor.AddToRoleAsync(student , "Admin");
-                 if(Result.Succeeded){
-                  return Ok("User Created");
-                 }
-                else{
-                    return StatusCode(500 ,Result.Errors);
-                 }
+                var createUser = await visitor.CreateAsync(student, registerDto.Password);
+                if (createUser.Succeeded)
+                {
+                    var Result = await visitor.AddToRoleAsync(student, "Admin");
+                    if (Result.Succeeded)
+                    {
+                        return Ok("User Created");
+                    }
+                    else
+                    {
+                        return StatusCode(500, Result.Errors);
+                    }
+                }
+                else
+                {
+                    return StatusCode(500, createUser.Errors);
+                }
             }
-            else {
-                return StatusCode(500 , createUser.Errors);
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
-            }
-        catch(System.Exception ex){
-         return StatusCode(500 , ex.Message );
         }
-    }
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signin.SignOutAsync();
+            return Ok("User logged out successfully");
+        }
+
 
     }
 

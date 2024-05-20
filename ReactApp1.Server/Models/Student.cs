@@ -22,9 +22,11 @@ namespace ReactApp1.Server.Models
         public string Faculty { get; set; }
 
         public ICollection<Exception> Exception { get; } = [];
-
-
+ 
         public string? PhoneNumber { get; set; } 
+
+           [Range(0, 150)] // Example range for age
+        public int UniversityId { get; set; }
      
     }
 
