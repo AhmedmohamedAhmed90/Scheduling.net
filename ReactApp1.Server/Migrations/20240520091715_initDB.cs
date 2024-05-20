@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class initDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,38 +29,6 @@ namespace ReactApp1.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Faculty = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
-                    UniversityId = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "longtext", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -131,6 +99,65 @@ namespace ReactApp1.Server.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Faculty = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
+                    UniversityId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Universities_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "Universities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Faculties",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false),
+                    UniversityId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Faculties", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Faculties_Universities_UniversityId",
+                        column: x => x.UniversityId,
+                        principalTable: "Universities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -244,27 +271,6 @@ namespace ReactApp1.Server.Migrations
                         column: x => x.StudentId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Faculties",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false),
-                    UniversityId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Faculties", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Faculties_Universities_UniversityId",
-                        column: x => x.UniversityId,
-                        principalTable: "Universities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -396,8 +402,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "b68c56b6-343d-46a9-aa98-d9f3e203e56f", null, "Admin", "ADMIN" },
-                    { "fb5bad92-e55b-4980-a6cf-4ca6c9c056c5", null, "User", "USER" }
+                    { "1d95eb93-5012-4924-93f8-9659eabc4339", null, "User", "USER" },
+                    { "25649acb-b685-406b-a5f8-2df44846d012", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -430,6 +436,11 @@ namespace ReactApp1.Server.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UniversityId",
+                table: "AspNetUsers",
+                column: "UniversityId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",

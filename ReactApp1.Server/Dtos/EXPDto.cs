@@ -11,6 +11,5 @@ namespace ReactApp1.Server.Dtos
         public string? reason { get; set; }
         public string? description { get; set; }
         public string? status { get; set; }
-        public string? priority { get; set; }
     }
 }

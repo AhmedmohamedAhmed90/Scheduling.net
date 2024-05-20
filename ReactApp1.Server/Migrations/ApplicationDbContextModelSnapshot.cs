@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b68c56b6-343d-46a9-aa98-d9f3e203e56f",
+                            Id = "25649acb-b685-406b-a5f8-2df44846d012",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "fb5bad92-e55b-4980-a6cf-4ca6c9c056c5",
+                            Id = "1d95eb93-5012-4924-93f8-9659eabc4339",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -443,6 +443,8 @@ namespace ReactApp1.Server.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
+                    b.HasIndex("UniversityId");
+
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -614,6 +616,17 @@ namespace ReactApp1.Server.Migrations
                         .HasForeignKey("GroupId");
 
                     b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("ReactApp1.Server.Models.Student", b =>
+                {
+                    b.HasOne("ReactApp1.Server.Models.University", "University")
+                        .WithMany()
+                        .HasForeignKey("UniversityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("University");
                 });
 
             modelBuilder.Entity("reactapp1.Server.Models.GroupInstructor", b =>
