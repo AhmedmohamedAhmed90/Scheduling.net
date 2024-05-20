@@ -32,6 +32,7 @@ import GroupPage from "./pages/GroupPage.tsx";
 import CourseEdit from "./pages/CourseEdit.tsx";
 import StudentDashboard from "./components/StudentDashboard.tsx";
 import LectureEdit from "./pages/LectureEdit.tsx";
+import AdminDashboard from "./components/AdminDasboard.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -60,6 +61,7 @@ const router = createBrowserRouter(
       <Route path="/sendexception" element={<SendException />} />
       <Route path="/adminexceptionspanel" element={<ExceptionList />} />
       <Route path="/studentdashboard" element={<StudentDashboard />} />
+      <Route path="/admindashboard" element={<AdminDashboard />} />
     </Route>
   )
 );
