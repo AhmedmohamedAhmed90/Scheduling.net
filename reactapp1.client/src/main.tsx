@@ -29,6 +29,7 @@ import FacultyPage from "./pages/FacultyPage.tsx";
 import InstructorPage from "./pages/InstructorPage.tsx";
 import CoursePage from "./pages/CoursePage.tsx";
 import GroupPage from "./pages/GroupPage.tsx";
+import CourseEdit from "./pages/CourseEdit.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const router = createBrowserRouter(
       <Route path="/admin/instructor" element={<InstructorPage />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
+      <Route path="/admin/course/edit/:id" element={<CourseEdit />} />
       <Route path="/admin/course" element={<CoursePage />} />
       <Route path="/admin/group/bycourse/:courseID" element={<GroupPage />} />
       <Route path="/admin/group/create" element={<CreateGroup />} />
