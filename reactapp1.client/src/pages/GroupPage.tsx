@@ -21,12 +21,14 @@ import {
   PopoverBody,
   PopoverFooter,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Group, getGroupsByCourseId } from "../services/groupService";
 import { useNavigate, useParams } from "react-router-dom";
 import FacultySkeleton from "../components/FacultySkeleton";
 import { deleteLecture } from "../services/lectureService";
+import { getCourse } from "../services/courseService";
 
 function GroupPage() {
   const param = useParams();
@@ -36,6 +38,11 @@ function GroupPage() {
   const { refetch, error, data } = useQuery<Group[], Error>({
     queryKey: ["Get Groups for Course", courseID],
     queryFn: () => getGroupsByCourseId(courseID!).then((res) => res.data),
+  });
+
+  const { data: courseData } = useQuery({
+    queryKey: ["Course By Id", courseID],
+    queryFn: () => getCourse(parseInt(courseID!)),
   });
 
   const onDelete = async (groupID: number) => {
@@ -58,7 +65,7 @@ function GroupPage() {
         px={5}
         justifyContent={"space-between"}
       >
-        <Heading fontSize={20}>Group List</Heading>
+        <Heading fontSize={20}>Group List for {courseData.title}</Heading>
         <HStack>
           <Button
             mt={5}
@@ -102,14 +109,24 @@ function GroupPage() {
                   <Td>{lecture.startTime}</Td>
                   <Td>{lecture.endTime}</Td>
                   <Td>{lecture.day}</Td>
-                  <Td>{lecture.room}</Td>
+                  <Td>
+                    <Text
+                      style={{
+                        wordWrap: "break-word",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {lecture.room}
+                    </Text>
+                  </Td>
                   <Td>
                     <HStack gap={3}>
                       <EditIcon
                         color={"blue"}
                         boxSize={22}
                         onClick={() =>
-                          navigate(`/admin/group/edit/${group.id}`)
+                          navigate(`/admin/lecture/edit/${lecture.id!}`)
                         }
                       />
                       <Popover>

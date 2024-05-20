@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Group } from "./groupService";
 export interface Lecture {
   id?: number;
   startTime: string;
@@ -6,6 +7,7 @@ export interface Lecture {
   day: string;
   room: string;
   groupId: number;
+  group?: Group;
 }
 export const addLecture = async (lecture: Lecture) => {
   return await axios.post(
@@ -17,8 +19,11 @@ export const addLecture = async (lecture: Lecture) => {
 export const getLectures = async () => {
   return await axios.get("/api/Lecture");
 };
+export const getLecture = async (id: string) => {
+  return await axios.get(`/api/Lecture/${id}`);
+};
 export const updateLecture = async (id: string, lecture: Lecture) => {
-  return await axios.put(`/api/Lecture/${id}`, lecture);
+  return await axios.put(`/api/Lecture/${id}/${lecture.groupId}`, lecture);
 };
 export const deleteLecture = async (id: number) => {
   return await axios.delete(`/api/Lecture/${id}`);

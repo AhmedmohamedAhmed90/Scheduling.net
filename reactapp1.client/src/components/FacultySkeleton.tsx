@@ -26,17 +26,19 @@ import {
 function FacultySkeleton() {
   return (
     <Box shadow="md" borderWidth="1px" rounded="md" m="32">
-      <Flex
-        alignItems={"center"}
-        mb={5}
-        px={5}
-        justifyContent={"space-between"}
-      >
-        <Heading fontSize={20}>Faculty List</Heading>
-        <Button mt={5} colorScheme="blue" leftIcon={<AddIcon />}>
-          Add Faculty
-        </Button>
-      </Flex>
+      <Skeleton>
+        <Flex
+          alignItems={"center"}
+          mb={5}
+          px={5}
+          justifyContent={"space-between"}
+        >
+          <Heading fontSize={20}>Faculty List</Heading>
+          <Button mt={5} colorScheme="blue" leftIcon={<AddIcon />}>
+            Add Faculty
+          </Button>
+        </Flex>
+      </Skeleton>
       <TableContainer>
         <Skeleton>
           <Table variant="striped">

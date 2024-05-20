@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReactApp1.Server.Data;
 using ReactApp1.Server.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,8 +32,14 @@ namespace ReactApp1.Server.Controllers
 
         [HttpGet("{id}", Name = "GetLecture")]
         public async Task<ActionResult<object>> GetLecture(int id)
+
+
         {
-            var lecture = await _dbContext.Lectures.FindAsync(id);
+            var lecture = await _dbContext.Lectures
+    .Include(l => l.Group).ThenInclude(g => g.Course)
+
+    .FirstOrDefaultAsync(l => l.Id == id);
+
             if (lecture == null)
             {
                 return NotFound("Lecture not found");

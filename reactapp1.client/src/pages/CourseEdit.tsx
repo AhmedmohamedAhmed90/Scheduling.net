@@ -8,19 +8,23 @@ import {
   useColorModeValue,
   Select,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { Store } from "../Store";
-import { addCourse, Course, getCourse } from "../services/courseService";
+import { Course, getCourse, updateCourse } from "../services/courseService";
 import {
   Faculty,
   getFacultiesByUniversityId,
 } from "../services/facultyService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function CourseEdit() {
   const param = useParams();
   const { id } = param;
+  const navigate = useNavigate();
+  const toast = useToast();
   const store = useContext(Store);
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
@@ -33,16 +37,15 @@ export default function CourseEdit() {
   } as Course);
 
   const { mutate } = useMutation({
-    mutationFn: () => addCourse(course),
-    onSuccess: (payload) => {
-      setCourse({
-        code: "",
-        title: "",
-        description: "",
-        departmeant: "",
-        facultyid: 0,
-      } as Course);
-      alert("Course Created Successfully with ID " + payload.data.id);
+    mutationFn: () => updateCourse(course.id!, course),
+    onSuccess: () => {
+      toast({
+        title: "Course Updated",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate("/admin/course");
     },
   });
   const { data: faculties } = useQuery({
@@ -56,7 +59,7 @@ export default function CourseEdit() {
   });
   useEffect(() => {
     if (isCourseDataSuccess && courseData) {
-      console.log(courseData);
+      courseData.facultyid = courseData.facultyid || 1;
       setCourse(courseData);
     }
   }, [isCourseDataSuccess, courseData]);
