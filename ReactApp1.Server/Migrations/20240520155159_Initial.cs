@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class initDB : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -402,8 +402,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1d95eb93-5012-4924-93f8-9659eabc4339", null, "User", "USER" },
-                    { "25649acb-b685-406b-a5f8-2df44846d012", null, "Admin", "ADMIN" }
+                    { "0e187e94-bc76-4f20-ba8f-77e07a83b8be", null, "Admin", "ADMIN" },
+                    { "1ede4a82-e9b8-44b6-aaae-766238a86c62", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(

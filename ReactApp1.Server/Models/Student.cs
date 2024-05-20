@@ -7,20 +7,18 @@ namespace ReactApp1.Server.Models
     {
 
         [StringLength(50)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [StringLength(100)]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [Range(0, 150)] // Example range for age
         public int Age { get; set; }
 
         [StringLength(50)]
-        public string Year { get; set; }
+        public string? Year { get; set; }
 
-        [StringLength(50)]
-        public string FacultyId { get; set; }
-        public Faculty Faculty { get; set; }
+        public string? Faculty { get; set; }
 
         public ICollection<Exception> Exception { get; } = [];
 

@@ -39,19 +39,19 @@ namespace ReactApp1.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = await visitor.Users.FirstOrDefaultAsync(x => x.UserName == login.Username.ToLower());
+            var user = await visitor.Users.FirstOrDefaultAsync(x => x.UserName == login.Username!.ToLower());
 
             if (user == null) return Unauthorized("the user not found");
 
-            var result = await _signin.CheckPasswordSignInAsync(user, login.Password, false);
+            var result = await _signin.CheckPasswordSignInAsync(user, login.Password!, false);
 
             if (!result.Succeeded) return Unauthorized("Invalid UserName and / or password");
 
             return Ok(
                 new NewUser
                 {
-                    UserName = user.UserName,
-                    Email = user.Email,
+                    UserName = user.UserName!,
+                    Email = user.Email!,
                     Id = user.Id,
                     Token = await _TokenService.CreateToken(user)
                 }
@@ -63,32 +63,51 @@ namespace ReactApp1.Server.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                // if (!ModelState.IsValid)
+                // {
+                //     return BadRequest(ModelState);
+                // }
+                Console.WriteLine(registerDto);
+                Console.WriteLine("1");
+                Console.WriteLine(registerDto.UniversityName!, registerDto.UniversityAddress!, registerDto.UniversityPhoneNumber!
+                );
+                var university = new University
                 {
-                    return BadRequest(ModelState);
-                }
-
+                    Name = registerDto.UniversityName!,
+                    Address = registerDto.UniversityAddress!,
+                    PhoneNumber = registerDto.UniversityPhoneNumber!,
+                };
+                Console.WriteLine(university);
+                Console.WriteLine("2");
+                Console.WriteLine(registerDto.Email, registerDto.Password!
+                , registerDto.Password, university.Id
+                );
                 var student = new Student
                 {
-                    Name = registerDto.Name,
-                    UserName = registerDto.Username,
+                    Name = registerDto.Email,
+                    UserName = registerDto.Email,
                     Email = registerDto.Email,
+                    Year = "2024",
+                    Address = registerDto.UniversityAddress!,
+                    Faculty = "Faculty",
                     PasswordHash = registerDto.Password,
-                    Address = registerDto.Address,
-                    Age = registerDto.Age,
-                    Year = registerDto.Year,
-                    Faculty = registerDto.Faculty,
-                    PhoneNumber = registerDto.PhoneNumber,
-                    UniversityId = registerDto.UniversityId
-
+                    UniversityId = university.Id,
+                    University = university,
                 };
-                var createUser = await visitor.CreateAsync(student, registerDto.Password);
+                var createUser = await visitor.CreateAsync(student, registerDto.Password!);
                 if (createUser.Succeeded)
                 {
                     var Result = await visitor.AddToRoleAsync(student, "Admin");
                     if (Result.Succeeded)
                     {
-                        return Ok("User Created");
+                        return Ok(new NewUser
+                        {
+                            Id = student.Id,
+                            Email = student.Email!,
+                            Role = "Admin",
+                            isAdmin = true,
+                            Token = await _TokenService.CreateToken(student)
+                        });
                     }
                     else
                     {
