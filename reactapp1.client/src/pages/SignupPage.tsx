@@ -7,11 +7,11 @@ import {
   Button,
   Heading,
   Text,
-  Link,
   Grid,
   useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
+import {Link}   from 'react-router-dom';
 
 // Define the Register interface
 interface Register {
@@ -207,11 +207,11 @@ const SignupPage: React.FC = () => {
           Sign up
         </Button>
         <Text mt={4} textAlign="center">
-          Already have an account?{" "}
-          <Link color="teal.500" href="/login">
-            Sign in
-          </Link>
-        </Text>
+        Already have an account? {' '}
+      <Link  to="/login" color="teal.500">
+        Login
+      </Link>
+    </Text>
       </Box>
     </Box>
   );

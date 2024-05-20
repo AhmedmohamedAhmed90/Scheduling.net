@@ -10,7 +10,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [username, setUsername] = useState<string>('');
@@ -97,6 +97,12 @@ function LoginPage() {
             Login
           </Button>
         </form>
+        <Text mt={4} textAlign="center">
+      or Get an account?{' '}
+      <Link  to="/signup" color="teal.500">
+        Sign Up
+      </Link>
+    </Text>
       </Box>
     </Box>
   );

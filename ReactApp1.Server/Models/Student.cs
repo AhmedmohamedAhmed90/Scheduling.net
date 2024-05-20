@@ -27,6 +27,7 @@ namespace ReactApp1.Server.Models
 
            [Range(0, 150)] // Example range for age
         public int UniversityId { get; set; }
+        public University University { get; set; }
      
     }
 
