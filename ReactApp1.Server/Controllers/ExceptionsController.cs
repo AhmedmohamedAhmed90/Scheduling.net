@@ -29,6 +29,20 @@ public async Task<IActionResult> GetExceptions()
 
     return Ok(exceptions);
 }
+        [HttpGet("{studentId}")]
+        public async Task<IActionResult> GetExceptionsByStudentId(string studentId)
+        {
+            var exceptions = await _context.Exceptions
+                .Where(e => e.StudentId == studentId)
+                .ToListAsync();
+
+            if (exceptions == null || exceptions.Count == 0)
+            {
+                return NotFound("No exceptions found for the given student ID");
+            }
+
+            return Ok(exceptions);
+        }
 
         [HttpPost]
         public async Task<IActionResult> SubmitException([FromBody] EXPDto req)

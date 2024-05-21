@@ -41,7 +41,7 @@ const StudentDashboard: React.FC = () => {
           <GridItem>
             <Button
               as={RouterLink}
-              to="/"
+              to="/studentexceptions"
               leftIcon={<FaEye />}
               colorScheme="teal"
               size="lg"

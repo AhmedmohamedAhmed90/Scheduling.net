@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -10,17 +10,21 @@ import {
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { BASE_URL } from '../constant';
+import { Store } from '../Store'; // Adjust the import path to your Store context
 
-interface ExceptionFormProps {
-  // No need to pass baseUrl as a prop
-}
-
-const SendException: React.FC<ExceptionFormProps> = () => {
+const SendException: React.FC = () => {
+  const { state } = useContext(Store);
   const [studentId, setStudentId] = useState('');
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (state.id) {
+      setStudentId(state.id);
+    }
+  }, [state.id]);
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +42,6 @@ const SendException: React.FC<ExceptionFormProps> = () => {
       await axios.post(`${BASE_URL}Exceptions`, data);
 
       // Clear form fields
-      setStudentId('');
       setReason('');
       setDescription('');
 
@@ -53,14 +56,7 @@ const SendException: React.FC<ExceptionFormProps> = () => {
   return (
     <Box maxWidth="400px" margin="0 auto">
       <form onSubmit={handleFormSubmit}>
-        <FormControl id="studentId" isRequired>
-          <FormLabel>Student ID</FormLabel>
-          <Input
-            type="text"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-          />
-        </FormControl>
+        <Input type="hidden" value={studentId} readOnly />
 
         <FormControl id="reason" isRequired>
           <FormLabel>Reason</FormLabel>
