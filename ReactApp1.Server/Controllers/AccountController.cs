@@ -39,7 +39,7 @@ namespace ReactApp1.Server.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user = await visitor.Users.FirstOrDefaultAsync(x => x.UserName == login.Username!.ToLower());
+            var user = await visitor.Users.FirstOrDefaultAsync(x => x.UserName == login.Email!.ToLower());
 
             if (user == null) return Unauthorized("the user not found");
 
@@ -47,12 +47,18 @@ namespace ReactApp1.Server.Controllers
 
             if (!result.Succeeded) return Unauthorized("Invalid UserName and / or password");
 
+            var roles = await visitor.GetRolesAsync(user);
+
+
             return Ok(
                 new NewUser
                 {
-                    UserName = user.UserName!,
+                    UserName = user.UserName,
                     Email = user.Email!,
+                    Role = roles[0],
+                    isAdmin = roles[0] == "Admin" ? true : false,
                     Id = user.Id,
+                    UniversityID = user.UniversityId,
                     Token = await _TokenService.CreateToken(user)
                 }
             );
@@ -63,25 +69,12 @@ namespace ReactApp1.Server.Controllers
         {
             try
             {
-                // if (!ModelState.IsValid)
-                // {
-                //     return BadRequest(ModelState);
-                // }
-                Console.WriteLine(registerDto);
-                Console.WriteLine("1");
-                Console.WriteLine(registerDto.UniversityName!, registerDto.UniversityAddress!, registerDto.UniversityPhoneNumber!
-                );
                 var university = new University
                 {
                     Name = registerDto.UniversityName!,
                     Address = registerDto.UniversityAddress!,
                     PhoneNumber = registerDto.UniversityPhoneNumber!,
                 };
-                Console.WriteLine(university);
-                Console.WriteLine("2");
-                Console.WriteLine(registerDto.Email, registerDto.Password!
-                , registerDto.Password, university.Id
-                );
                 var student = new Student
                 {
                     Name = registerDto.Email,
@@ -106,6 +99,7 @@ namespace ReactApp1.Server.Controllers
                             Email = student.Email!,
                             Role = "Admin",
                             isAdmin = true,
+                            UniversityID = student.UniversityId,
                             Token = await _TokenService.CreateToken(student)
                         });
                     }

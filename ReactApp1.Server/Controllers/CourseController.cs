@@ -103,12 +103,6 @@ namespace ReactApp1.Server.Controllers
             var courses = await _dbContext.Courses
                 .Where(course => course.FacultyCourses.Any(fc => fc.Faculty.UniversityId == universityID))
                 .ToListAsync();
-
-            if (courses.Count == 0)
-            {
-                return NotFound("Courses not found for the given faculty ID");
-            }
-
             return Ok(courses);
         }
 

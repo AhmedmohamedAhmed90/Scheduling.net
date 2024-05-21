@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Button,
@@ -8,9 +8,9 @@ import {
   Heading,
   IconButton,
   useColorMode,
-  useColorModeValue
-} from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   FaSun,
   FaMoon,
@@ -19,14 +19,13 @@ import {
   FaCalendarPlus,
   FaUniversity,
   FaChalkboardTeacher,
-  FaUsers
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
 const AdminDashboard: React.FC = () => {
   const { toggleColorMode } = useColorMode();
-  const bg = useColorModeValue('gray.100', 'gray.700');
-  const color = useColorModeValue('black', 'white');
-  const iconColor = useColorModeValue('gray.600', 'gray.300');
+  const bg = useColorModeValue("gray.100", "gray.700");
+  const color = useColorModeValue("black", "white");
+  const iconColor = useColorModeValue("gray.600", "gray.300");
 
   return (
     <Box p={4} bg={bg} minH="100vh">
@@ -73,66 +72,40 @@ const AdminDashboard: React.FC = () => {
           <GridItem>
             <Button
               as={RouterLink}
-              to="/admin/course/create"
-              leftIcon={<FaCalendarPlus />}
-              colorScheme="teal"
-              size="lg"
-              w="100%"
-              h="100px"
-            >
-              Create Course
-            </Button>
-          </GridItem>
-          <GridItem>
-            <Button
-              as={RouterLink}
-              to="/admin/faculty/create"
+              to="/admin/faculty"
               leftIcon={<FaUniversity />}
               colorScheme="teal"
               size="lg"
               w="100%"
               h="100px"
             >
-              Create Faculty
+              Faculties
             </Button>
           </GridItem>
           <GridItem>
             <Button
               as={RouterLink}
-              to="/admin/instructor/create"
+              to="/admin/instructor"
               leftIcon={<FaChalkboardTeacher />}
               colorScheme="teal"
               size="lg"
               w="100%"
               h="100px"
             >
-              Create Instructor
+              Instructors
             </Button>
           </GridItem>
           <GridItem>
             <Button
               as={RouterLink}
-              to="/admin/university/create"
-              leftIcon={<FaUniversity />}
+              to="/admin/course"
+              leftIcon={<FaCalendarPlus />}
               colorScheme="teal"
               size="lg"
               w="100%"
               h="100px"
             >
-              Create University
-            </Button>
-          </GridItem>
-          <GridItem>
-            <Button
-              as={RouterLink}
-              to="/admin/group/create"
-              leftIcon={<FaUsers />}
-              colorScheme="teal"
-              size="lg"
-              w="100%"
-              h="100px"
-            >
-              Create Group
+              Courses
             </Button>
           </GridItem>
         </Grid>
