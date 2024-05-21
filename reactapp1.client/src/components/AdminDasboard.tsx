@@ -46,7 +46,7 @@ const AdminDashboard: React.FC = () => {
           <GridItem>
             <Button
               as={RouterLink}
-              to="/"
+              to="/addstudent"
               leftIcon={<FaUserPlus />}
               colorScheme="teal"
               size="lg"
