@@ -1,13 +1,17 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
-namespace ReactApp1.Server.Models
+namespace ReactApp1.Server.Dtos
 {
-    public class Student : IdentityUser
+    public class StudentDto
     {
         [StringLength(50)]
         public string? Name { get; set; }
+
+        public string? Username { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
 
         [StringLength(100)]
         public string? Address { get; set; }
@@ -18,14 +22,11 @@ namespace ReactApp1.Server.Models
         [StringLength(50)]
         public string? Year { get; set; }
 
+        [StringLength(50)]
         public string? Faculty { get; set; }
 
-        public ICollection<Exception> Exceptions { get; } = new List<Exception>();
-
-        [StringLength(15)]
-        public override string? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
 
         public int UniversityId { get; set; }
-        public University University { get; set; }
     }
 }

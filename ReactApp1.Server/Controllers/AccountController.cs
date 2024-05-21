@@ -124,6 +124,58 @@ namespace ReactApp1.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        // [HttpPost("registerstudent")]
+        // public async Task<IActionResult> registerstudent([FromBody] StudentDto registerDto)
+        // {
+        //     try
+        //     {
+        //         // if (!ModelState.IsValid)
+        //         // {
+        //         //     return BadRequest(ModelState);
+        //         // }
+               
+
+        //         var student = new Student
+        //         {
+        //             Name = registerDto.Name,
+        //             UserName = registerDto.Username,
+        //             Email = registerDto.Email,
+        //             Year = registerDto.Year,
+        //             Address = registerDto.Address,
+        //             Faculty = registerDto.Faculty,
+        //             PasswordHash = registerDto.Password,
+        //             UniversityId = registerDto.UniversityId,
+        //         };
+        //         var createUser = await visitor.CreateAsync(student, registerDto.Password!);
+        //         if (createUser.Succeeded)
+        //         {
+        //             var Result = await visitor.AddToRoleAsync(student, "User");
+        //             if (Result.Succeeded)
+        //             {
+        //                 return Ok(new NewUser
+        //                 {
+        //                     Id = student.Id,
+        //                     Email = student.Email!,
+        //                     Role = "User",
+        //                     isAdmin = true,
+        //                     Token = await _TokenService.CreateToken(student)
+        //                 });
+        //             }
+        //             else
+        //             {
+        //                 return StatusCode(500, Result.Errors);
+        //             }
+        //         }
+        //         else
+        //         {
+        //             return StatusCode(500, createUser.Errors);
+        //         }
+        //     }
+        //     catch (System.Exception ex)
+        //     {
+        //         return StatusCode(500, ex.Message);
+        //     }
+        // }
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {

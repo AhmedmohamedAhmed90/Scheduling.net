@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Net.Http;
 using Microsoft.AspNetCore.Identity;
+using ReactApp1.Server.Dtos;
 //using System.Diagnostics;
 
 //using Microsoft.AspNetCore.Identity;
@@ -144,63 +145,70 @@ protected string GenerateRandomNumbers(int length)
 
 
 
-    [HttpPost]
-    [Route("CreateStudents")]
-    public async Task<ActionResult> CreateStudents([FromForm] Student student)
-    {
-        if (ModelState.IsValid)
+            [HttpPost]
+        [Route("CreateStudents")]
+        public async Task<ActionResult> CreateStudents([FromBody] StudentDto studentDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Problem with model state");
+            }
+
             // Generate a username (student name + 4 random numbers)
-            string username = student.Name.Replace(" ", "") + GenerateRandomNumbers(4);
+            string username = studentDto.Name?.Replace(" ", "") + GenerateRandomNumbers(4);
+            // Generate a password (6 random numbers + a character of each type)
+            string password = GenerateRandomNumbers(12) + 'a' + 'A' + '@';
 
-            // Generate a password (6 random numbers)
-            string password = GenerateRandomNumbers(15) +  'a' + 'A' + '@';
-            string studentEmail = student.Email;
+            // Create a new student entity
+            var student = new Student
+            {
+                Name = studentDto.Name,
+                UserName = username,
+                Email = studentDto.Email,
+                Address = studentDto.Address,
+                Age = studentDto.Age,
+                Year = studentDto.Year,
+                Faculty = studentDto.Faculty,
+                PhoneNumber = studentDto.PhoneNumber,
+                UniversityId = studentDto.UniversityId
+            };
 
-            // Assign the generated username and password to the student
-            student.UserName = username;
             var result = await _userManager.CreateAsync(student, password);
 
-            if (result.Succeeded)
-            {
-                // Ensure the role exists
-                if (!await _roleManager.RoleExistsAsync("User"))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole("User"));
-                }
-
-                // Assign the "User" role to the student
-                await _userManager.AddToRoleAsync(student, "User");
-
-                // Send email to the student
-                var payload = new
-                {
-                    email = student.Email,
-                    subject = "Your credentials for the University Account",
-                    body = $"Username: {username}\nPassword: {password}"
-                };
-
-                // Use HttpClient to send the request
-                using (var client = new HttpClient())
-                {
-                    var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
-                    response.EnsureSuccessStatusCode();
-                    Console.WriteLine(await response.Content.ReadAsStringAsync());
-                }
-
-                return Ok(student);
-            }
-            else
+            if (!result.Succeeded)
             {
                 return BadRequest(result.Errors);
             }
+
+            // Ensure the role exists
+            if (!await _roleManager.RoleExistsAsync("User"))
+            {
+                await _roleManager.CreateAsync(new IdentityRole("User"));
+            }
+
+            // Assign the "User" role to the student
+            await _userManager.AddToRoleAsync(student, "User");
+
+            // Send email to the student
+            var payload = new
+            {
+                email = studentDto.Email,
+                subject = "Your credentials for the University Account",
+                body = $"Username: {username}\nPassword: {password}"
+            };
+
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
+                response.EnsureSuccessStatusCode();
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+
+            return Ok(student);
         }
-        else
-        {
-            return BadRequest("Problem with model state");
-        }
-    }
+
+
 
 
 [HttpGet("{id}", Name = "GetStudent")]
