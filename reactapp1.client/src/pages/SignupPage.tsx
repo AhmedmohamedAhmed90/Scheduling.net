@@ -172,7 +172,7 @@ const SignupPage: React.FC = () => {
         </Button>
         <Text mt={4} textAlign="center">
           Already have an account?{" "}
-          <Link to="/login" color="teal.500">
+          <Link to="/" color="teal.500">
             Login
           </Link>
         </Text>
