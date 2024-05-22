@@ -11,7 +11,10 @@ import {
   useToast,
   Flex,
   Spacer,
+  Tooltip,
+  Icon,
 } from '@chakra-ui/react';
+import { FaUser, FaEnvelope, FaMapMarkerAlt, FaPhone, FaUniversity, FaCalendarAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { Store } from '../Store'; // Adjust the import path to your Store context
 import { getFacultiesByUniversityId } from '../services/facultyService'; // Adjust the import path to your faculty service
@@ -82,68 +85,116 @@ const StudentForm: React.FC = () => {
   };
 
   return (
-    <Flex justifyContent="center" alignItems="center" h="100vh" bg="gray.50" p={4}>
-      <Box maxW="lg" w="full" p={8} borderWidth={1} borderRadius="lg" boxShadow="lg" bg="white">
-        <Heading mb={6} color="teal.500" textAlign="center">Student Registration Form</Heading>
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      h="100vh"
+      bg="gray.100"
+      p={4}
+      bgImage="url('/path-to-your-image.jpg')"
+      bgSize="cover"
+      bgPosition="center"
+      bgRepeat="no-repeat"
+      position="relative"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        bg: 'rgba(0, 0, 0, 0.5)',
+      }}
+    >
+      <Box
+        maxW="lg"
+        w="full"
+        p={8}
+        borderWidth={1}
+        borderRadius="lg"
+        boxShadow="2xl"
+        bgGradient="linear(to-r, teal.500, green.500)"
+        position="relative"
+        zIndex={1}
+      >
+        <Heading mb={6} color="white" textAlign="center">Student Registration Form</Heading>
         <Stack as="form" spacing={6} onSubmit={handleSubmit}>
           <FormControl id="name" isRequired>
-            <FormLabel>Name</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaUser} mr={2} /> Name
+            </FormLabel>
             <Input
               type="text"
               name="name"
               value={student.name}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <FormControl id="email" isRequired>
-            <FormLabel>Email</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaEnvelope} mr={2} /> Email
+            </FormLabel>
             <Input
               type="email"
               name="email"
               value={student.email}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <FormControl id="address">
-            <FormLabel>Address</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaMapMarkerAlt} mr={2} /> Address
+            </FormLabel>
             <Input
               type="text"
               name="address"
               value={student.address}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <FormControl id="age" isRequired>
-            <FormLabel>Age</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaCalendarAlt} mr={2} /> Age
+            </FormLabel>
             <Input
               type="number"
               name="age"
               value={student.age}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <FormControl id="year">
-            <FormLabel>Year</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaUniversity} mr={2} /> Year
+            </FormLabel>
             <Input
               type="text"
               name="year"
               value={student.year}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <FormControl id="faculty" isRequired>
-            <FormLabel>Faculty</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaUniversity} mr={2} /> Faculty
+            </FormLabel>
             <Select
               name="faculty"
               placeholder="Select faculty"
               value={student.faculty}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             >
               {faculties.map(faculty => (
                 <option key={faculty.name} value={faculty.name}>
@@ -153,21 +204,26 @@ const StudentForm: React.FC = () => {
             </Select>
           </FormControl>
           <FormControl id="phoneNumber">
-            <FormLabel>Phone Number</FormLabel>
+            <FormLabel color="white">
+              <Icon as={FaPhone} mr={2} /> Phone Number
+            </FormLabel>
             <Input
               type="text"
               name="phoneNumber"
               value={student.phoneNumber}
               onChange={handleChange}
-              focusBorderColor="teal.500"
+              focusBorderColor="white"
+              bg="whiteAlpha.800"
             />
           </FormControl>
           <Input type="hidden" name="universityId" value={student.universityId} />
           <Flex>
             <Spacer />
-            <Button type="submit" colorScheme="teal" size="lg">
-              Create Student
-            </Button>
+            <Tooltip label="Create Student" aria-label="Create Student Tooltip">
+              <Button type="submit" colorScheme="whiteAlpha" size="lg" rightIcon={<Icon as={FaUser} />}>
+                Create Student
+              </Button>
+            </Tooltip>
           </Flex>
         </Stack>
       </Box>

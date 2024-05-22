@@ -9,7 +9,6 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import HomePage from "./pages/HomePage.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
 import { StoreProvider } from "./Store.tsx";
@@ -51,12 +50,11 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" index={true} element={<HomePage />} />
+      <Route path="/" index={true} element={<LoginPage />} />
       <Route path="/product" element={<ProductPage />} />
       <Route path="/table" element={<TablePage />} />
       <Route path="/suggest" element={<SuggestCoures />} />
       <Route path="/suggestedtable" element={<SuggestedTablePage />} />
-      <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/admin/university/create" element={<CreateUniversity />} />
       <Route path="/admin/faculty" element={<FacultyPage />} />

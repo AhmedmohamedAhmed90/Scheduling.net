@@ -33,7 +33,7 @@ function LoginPage() {
       });
 
       if (!response.ok) {
-        throw new Error("You have enter a wrong email or password");
+        throw new Error("You have enter a wrong username or password");
       }
 
       const data = await response.json();
@@ -75,7 +75,7 @@ function LoginPage() {
         width="full"
       >
         <Heading as="h2" size="lg" mb={6} textAlign="center">
-          Login {JSON.stringify(store.state.email, null, 2)}
+          Login 
         </Heading>
         <form onSubmit={handleLogin}>
           <FormControl id="email" isRequired>
@@ -84,7 +84,7 @@ function LoginPage() {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
             />
           </FormControl>
           <FormControl id="password" isRequired mt={4}>
