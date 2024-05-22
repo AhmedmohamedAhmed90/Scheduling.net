@@ -6,7 +6,6 @@ import {
   FormLabel,
   Input,
   Select,
-  Stack,
   Heading,
   useToast,
   Flex,
@@ -69,8 +68,7 @@ const StudentForm: React.FC = () => {
     setStudent((prevStudent) => ({ ...prevStudent, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       await axios.post(`/api/Student/CreateStudents`, student);
       toast({
@@ -107,122 +105,107 @@ const StudentForm: React.FC = () => {
       bg={bgColor}
       borderColor={borderColor}
     >
-      <Heading mb={6} color="white" textAlign="center">
+      <Heading mb={6} textAlign="center">
         Student Registration Form
       </Heading>
-      <Stack as="form" spacing={6} onSubmit={handleSubmit}>
-        <FormControl id="name" isRequired>
-          <FormLabel color="white">
-            <Icon as={FaUser} mr={2} /> Name
-          </FormLabel>
-          <Input
-            type="text"
-            name="name"
-            value={student.name}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <FormControl id="email" isRequired>
-          <FormLabel color="white">
-            <Icon as={FaEnvelope} mr={2} /> Email
-          </FormLabel>
-          <Input
-            type="email"
-            name="email"
-            value={student.email}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <FormControl id="address">
-          <FormLabel color="white">
-            <Icon as={FaMapMarkerAlt} mr={2} /> Address
-          </FormLabel>
-          <Input
-            type="text"
-            name="address"
-            value={student.address}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <FormControl id="age" isRequired>
-          <FormLabel color="white">
-            <Icon as={FaCalendarAlt} mr={2} /> Age
-          </FormLabel>
-          <Input
-            type="number"
-            name="age"
-            value={student.age}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <FormControl id="year">
-          <FormLabel color="white">
-            <Icon as={FaUniversity} mr={2} /> Year
-          </FormLabel>
-          <Input
-            type="text"
-            name="year"
-            value={student.year}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <FormControl id="faculty" isRequired>
-          <FormLabel color="white">
-            <Icon as={FaUniversity} mr={2} /> Faculty
-          </FormLabel>
-          <Select
-            name="faculty"
-            placeholder="Select faculty"
-            value={student.faculty}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
+      <FormControl id="name" isRequired>
+        <FormLabel>
+          <Icon as={FaUser} mr={2} /> Name
+        </FormLabel>
+        <Input
+          type="text"
+          name="name"
+          value={student.name}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="email" isRequired>
+        <FormLabel>
+          <Icon as={FaEnvelope} mr={2} /> Email
+        </FormLabel>
+        <Input
+          type="email"
+          name="email"
+          value={student.email}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="address">
+        <FormLabel>
+          <Icon as={FaMapMarkerAlt} mr={2} /> Address
+        </FormLabel>
+        <Input
+          type="text"
+          name="address"
+          value={student.address}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="age" isRequired>
+        <FormLabel>
+          <Icon as={FaCalendarAlt} mr={2} /> Age
+        </FormLabel>
+        <Input
+          type="number"
+          name="age"
+          value={student.age}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="year">
+        <FormLabel>
+          <Icon as={FaUniversity} mr={2} /> Year
+        </FormLabel>
+        <Input
+          type="text"
+          name="year"
+          value={student.year}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <FormControl id="faculty" isRequired>
+        <FormLabel>
+          <Icon as={FaUniversity} mr={2} /> Faculty
+        </FormLabel>
+        <Select
+          name="faculty"
+          placeholder="Select faculty"
+          value={student.faculty}
+          onChange={handleChange}
+        >
+          {faculties.map((faculty) => (
+            <option key={faculty.name} value={faculty.name}>
+              {faculty.name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl id="phoneNumber">
+        <FormLabel>
+          <Icon as={FaPhone} mr={2} /> Phone Number
+        </FormLabel>
+        <Input
+          type="text"
+          name="phoneNumber"
+          value={student.phoneNumber}
+          onChange={handleChange}
+        />
+      </FormControl>
+      <Input type="hidden" name="universityId" value={student.universityId} />
+      <Flex>
+        <Spacer />
+        <Tooltip label="Create Student" aria-label="Create Student Tooltip">
+          <Button
+            type="submit"
+            colorScheme="whiteAlpha"
+            size="lg"
+            rightIcon={<Icon as={FaUser} />}
+            onClick={handleSubmit}
           >
-            {faculties.map((faculty) => (
-              <option key={faculty.name} value={faculty.name}>
-                {faculty.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl id="phoneNumber">
-          <FormLabel color="white">
-            <Icon as={FaPhone} mr={2} /> Phone Number
-          </FormLabel>
-          <Input
-            type="text"
-            name="phoneNumber"
-            value={student.phoneNumber}
-            onChange={handleChange}
-            focusBorderColor="white"
-            bg="whiteAlpha.800"
-          />
-        </FormControl>
-        <Input type="hidden" name="universityId" value={student.universityId} />
-        <Flex>
-          <Spacer />
-          <Tooltip label="Create Student" aria-label="Create Student Tooltip">
-            <Button
-              type="submit"
-              colorScheme="whiteAlpha"
-              size="lg"
-              rightIcon={<Icon as={FaUser} />}
-            >
-              Create Student
-            </Button>
-          </Tooltip>
-        </Flex>
-      </Stack>
+            Create Student
+          </Button>
+        </Tooltip>
+      </Flex>
     </Box>
   );
 };
