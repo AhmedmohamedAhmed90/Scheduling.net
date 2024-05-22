@@ -127,7 +127,7 @@ namespace ReactApp1.Server.Controllers
         //         // {
         //         //     return BadRequest(ModelState);
         //         // }
-               
+
 
         //         var student = new Student
         //         {

@@ -27,7 +27,7 @@ namespace ReactApp1.Server.Controllers
             return Ok(faculties);
         }
 
-        [HttpGet("{universityId}", Name = "GetFacultiesByUniversityId")]
+        [HttpGet("ByUniversity/{universityId}", Name = "GetFacultiesByUniversityId")]
         public async Task<IActionResult> GetFacultiesByUniversityId(int universityId)
         {
             var university = await _dbContext.Universities
@@ -53,50 +53,61 @@ namespace ReactApp1.Server.Controllers
 
             return Content(json, "application/json");
         }
-
-
-     [HttpPut("{universityId}/{id}", Name = "UpdateFaculty")]
-public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty faculty)
-{
-    if (id != faculty.Id)
-    {
-        return BadRequest("Invalid faculty ID");
-    }
-
-    if (universityId != faculty.UniversityId)
-    {
-        return BadRequest("Invalid university ID");
-    }
-
-    var existingFaculty = await _dbContext.Faculties
-        .Include(f => f.FacultyCourses)
-        .FirstOrDefaultAsync(f => f.Id == id && f.UniversityId == universityId);
-
-    if (existingFaculty == null)
-    {
-        return NotFound("Faculty not found");
-    }
-
-    existingFaculty.Name = faculty.Name;
-
-    try
-    {
-        await _dbContext.SaveChangesAsync();
-        return Ok(existingFaculty);
-    }
-    catch (DbUpdateConcurrencyException)
-    {
-        if (!FacultyExists(id))
+        [HttpGet("{id}", Name = "GetFacultyById")]
+        public async Task<IActionResult> GetFacultyById(int id)
         {
-            return NotFound("Faculty not found");
+            var faculty = await _dbContext.Faculties.FindAsync(id);
+
+            if (faculty == null)
+            {
+                return NotFound("Faculty not found");
+            }
+
+            return Ok(faculty);
         }
-        else
+
+        [HttpPut("{universityId}/{id}", Name = "UpdateFaculty")]
+        public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty faculty)
         {
-            throw;
+            if (id != faculty.Id)
+            {
+                return BadRequest("Invalid faculty ID");
+            }
+
+            if (universityId != faculty.UniversityId)
+            {
+                return BadRequest("Invalid university ID");
+            }
+
+            var existingFaculty = await _dbContext.Faculties
+                .Include(f => f.FacultyCourses)
+                .FirstOrDefaultAsync(f => f.Id == id && f.UniversityId == universityId);
+
+            if (existingFaculty == null)
+            {
+                return NotFound("Faculty not found");
+            }
+
+            existingFaculty.Name = faculty.Name;
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok(existingFaculty);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!FacultyExists(id))
+                {
+                    return NotFound("Faculty not found");
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
-    }
-}
- 
+
 
 
         [HttpPost("{universityId}", Name = "CreateFaculty")]
@@ -117,28 +128,28 @@ public async Task<IActionResult> UpdateFaculty(int universityId, int id, Faculty
         }
 
 
-      [HttpDelete("{universityId}/{id}", Name = "DeleteFaculty")]
-public async Task<IActionResult> DeleteFaculty(int universityId, int id)
-{
-    var faculty = await _dbContext.Faculties
-        .Include(f => f.FacultyCourses)
-        .FirstOrDefaultAsync(f => f.Id == id && f.UniversityId == universityId);
+        [HttpDelete("{universityId}/{id}", Name = "DeleteFaculty")]
+        public async Task<IActionResult> DeleteFaculty(int universityId, int id)
+        {
+            var faculty = await _dbContext.Faculties
+                .Include(f => f.FacultyCourses)
+                .FirstOrDefaultAsync(f => f.Id == id && f.UniversityId == universityId);
 
-    if (faculty == null)
-    {
-        return BadRequest("Faculty not found");
-    }
+            if (faculty == null)
+            {
+                return BadRequest("Faculty not found");
+            }
 
-   
-    _dbContext.FacultyCourses.RemoveRange(faculty.FacultyCourses);
 
-   
-    _dbContext.Faculties.Remove(faculty);
+            _dbContext.FacultyCourses.RemoveRange(faculty.FacultyCourses);
 
-    await _dbContext.SaveChangesAsync();
 
-    return Ok("Faculty deleted");
-}
+            _dbContext.Faculties.Remove(faculty);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Ok("Faculty deleted");
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         private bool FacultyExists(int id)

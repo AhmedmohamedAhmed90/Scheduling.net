@@ -27,7 +27,7 @@ namespace ReactApp1.Server.Controllers
 
             return Ok(instructors);
         }
-        [HttpGet("{UniversityId}", Name = "GetInstructorsByUniversityId")]
+        [HttpGet("ByUniversity/{UniversityId}", Name = "GetInstructorsByUniversityId")]
         public async Task<ActionResult<object>> GetInstructorsByUniversityId(int UniversityId)
         {
             var instructors = await _dbContext.Instructors
@@ -52,6 +52,18 @@ namespace ReactApp1.Server.Controllers
             return Ok(instructors);
         }
 
+        [HttpGet("{id}", Name = "GetInstructorsById")]
+        public async Task<ActionResult<Instructor>> GetInstructorById(int id)
+        {
+            var instructor = await _dbContext.Instructors.FindAsync(id);
+
+            if (instructor == null)
+            {
+                return NotFound("Instructor not found");
+            }
+
+            return Ok(instructor);
+        }
 
 
         [HttpPut("{facultyId}/{id}", Name = "UpdateInstructor")]
