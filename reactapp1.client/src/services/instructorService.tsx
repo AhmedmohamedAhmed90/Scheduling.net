@@ -13,13 +13,16 @@ export const addInstructor = async (
   return await axios.post(`/api/Instructor/${facultyid}`, instructor);
 };
 export const getInstructorsByUniversityId = async (universityId: number) => {
-  return await axios.get(`/api/Instructor/${universityId}`);
+  return await axios.get(`/api/Instructor/ByUniversity/${universityId}`);
 };
 export const getInstructor = async (id: string) => {
   return await axios.get(`/api/Instructor/${id}`);
 };
 export const updateInstructor = async (id: string, instructor: Instructor) => {
-  return await axios.put(`/api/Instructor/${id}`, instructor);
+  return await axios.put(
+    `/api/Instructor/${instructor.facultyId}/${id}`,
+    instructor
+  );
 };
 export const deleteInstructor = async (facultyid: number, id: number) => {
   return await axios.delete(`/api/Instructor/${facultyid}/${id}`);

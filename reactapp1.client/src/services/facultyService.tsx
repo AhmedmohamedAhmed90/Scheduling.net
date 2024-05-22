@@ -13,13 +13,16 @@ export const getFaculties = async () => {
   return await axios.get("/api/Faculty");
 };
 export const getFacultiesByUniversityId = async (universityID: number) => {
-  return await axios.get(`/api/Faculty/${universityID}`);
+  return await axios.get(`/api/Faculty/ByUniversity/${universityID}`);
 };
 export const getFaculty = async (id: string) => {
   return await axios.get(`/api/Faculty/${id}`);
 };
 export const updateFaculty = async (id: string, faculty: Faculty) => {
-  return await axios.put(`/api/Faculty/${id}`, faculty);
+  return await axios.put(
+    `/api/Faculty/${faculty.universityId!}/${id}`,
+    faculty
+  );
 };
 export const deleteFaculty = async (universityID: number, id: number) => {
   return await axios.delete(`/api/Faculty/${universityID}/${id}`);

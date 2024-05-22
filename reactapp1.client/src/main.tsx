@@ -34,6 +34,8 @@ import LectureEdit from "./pages/LectureEdit.tsx";
 import AdminDashboard from "./components/AdminDasboard.tsx";
 import StudentForm from "./components/StudentForm.tsx";
 import ExceptionsSummary from "./components/ExceptionsSummary.tsx";
+import InstructorUpdate from "./pages/InstructorUpdate.tsx";
+import FacultyUpdate from "./pages/FacultyUpdate.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient({
   // defaultOptions: {
@@ -59,8 +61,10 @@ const router = createBrowserRouter(
       <Route path="/admin/university/create" element={<CreateUniversity />} />
       <Route path="/admin/faculty" element={<FacultyPage />} />
       <Route path="/admin/faculty/create" element={<CreateFaculty />} />
+      <Route path="/admin/faculty/edit/:id" element={<FacultyUpdate />} />
       <Route path="/admin/instructor" element={<InstructorPage />} />
       <Route path="/admin/instructor/create" element={<CreateInstructor />} />
+      <Route path="/admin/instructor/edit/:id" element={<InstructorUpdate />} />
       <Route path="/admin/course/create" element={<CreateCourse />} />
       <Route path="/admin/course/edit/:id" element={<CourseEdit />} />
       <Route path="/admin/course" element={<CoursePage />} />

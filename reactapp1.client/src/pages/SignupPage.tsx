@@ -73,7 +73,7 @@ const SignupPage: React.FC = () => {
 
   const validatePassword = (password: string) => {
     const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
     return regex.test(password);
   };
   return (
@@ -104,7 +104,7 @@ const SignupPage: React.FC = () => {
         </Heading>
         {error && (
           <Text color="red.500" mb={4}>
-            {error}
+            {JSON.stringify(error, null, 2)}
           </Text>
         )}
         <Grid templateColumns="1fr 1fr" gap={4}>

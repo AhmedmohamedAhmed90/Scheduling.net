@@ -26,6 +26,7 @@ import { Store } from "../Store"; // Adjust the import path to your Store contex
 import { BASE_URL } from "../constant"; // Adjust the import path to your constant file
 
 const AdminDashboard: React.FC = () => {
+  const store = useContext(Store);
   const { toggleColorMode } = useColorMode();
   const bg = useColorModeValue("gray.100", "gray.700");
   const color = useColorModeValue("black", "white");
@@ -57,7 +58,7 @@ const AdminDashboard: React.FC = () => {
       </Box>
       <VStack spacing={8}>
         <Heading as="h1" size="xl" color={color}>
-          Admin Dashboard
+          Admin Dashboard {store.state.userName}
         </Heading>
         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
           <GridItem>
