@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   FormControl,
@@ -9,9 +9,11 @@ import {
   Text,
   Grid,
   useColorModeValue,
+  FormHelperText,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Store } from "../Store";
 
 // Define the Register interface
 interface Register {
@@ -29,9 +31,13 @@ const addUser = async (registerData: Register) => {
 
 const SignupPage: React.FC = () => {
   // State variables for form fields
+  const navigate = useNavigate();
+  const store = useContext(Store);
+  const { dispatch } = store;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [UniversityName, setUniversityName] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [UniversityAddress, setUniversityAddress] = useState("");
   const [UniversityPhoneNumber, setUniversityPhoneNumber] = useState("");
   const [error, setError] = useState("");
@@ -50,21 +56,26 @@ const SignupPage: React.FC = () => {
       UniversityAddress,
       UniversityPhoneNumber,
     };
-
     try {
       const response = await addUser(registerData);
-      console.log("Success:", response.data);
+      dispatch({ type: "LOGIN", payload: response.data });
+      navigate("/admindashboard");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);
         setError(error.response?.data || error.message);
       } else {
-        console.error("Unexpected error:", error);
+        console.error("Unexpected error:", JSON.stringify(error, null, 2));
         setError("An unexpected error occurred");
       }
     }
   };
 
+  const validatePassword = (password: string) => {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
   return (
     <Box
       backgroundSize="cover"
@@ -112,8 +123,20 @@ const SignupPage: React.FC = () => {
               type="password"
               placeholder="Enter your password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                const newPassword = e.target.value;
+                setPassword(newPassword);
+
+                if (!validatePassword(newPassword)) {
+                  setPasswordError(
+                    "Password must be minimum 8 characters, contain 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character"
+                  );
+                } else {
+                  setPasswordError("");
+                }
+              }}
             />
+            {passwordError && <FormHelperText>{passwordError}</FormHelperText>}
           </FormControl>
 
           <FormControl id="UniversityName" isRequired>
@@ -128,7 +151,7 @@ const SignupPage: React.FC = () => {
           <FormControl id="UniversityAddress" isRequired>
             <FormLabel>University Address</FormLabel>
             <Input
-              type="number"
+              type="text"
               placeholder="Enter your University Address"
               value={UniversityAddress}
               onChange={(e) => setUniversityAddress(e.target.value)}

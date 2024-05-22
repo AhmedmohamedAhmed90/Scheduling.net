@@ -22,7 +22,7 @@ export default function CreateInstructor() {
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
   const [instructor, setInstructor] = useState<Instructor>({
-    facultyid: 0,
+    facultyId: 0,
     name: "",
   } as Instructor);
   const { data: faculties } = useQuery({
@@ -30,10 +30,10 @@ export default function CreateInstructor() {
     queryFn: () => getFacultiesByUniversityId(store.state.universityID!),
   });
   const { mutate } = useMutation({
-    mutationFn: () => addInstructor(instructor, instructor.facultyid),
+    mutationFn: () => addInstructor(instructor, instructor.facultyId),
     onSuccess: (payload) => {
       setInstructor({
-        facultyid: 0,
+        facultyId: 0,
         name: "",
       } as Instructor);
       alert("Instructor Created Successfully with ID " + payload.data.id);
@@ -73,11 +73,11 @@ export default function CreateInstructor() {
         <FormLabel>Faculty</FormLabel>
         <Select
           placeholder="Select faculty"
-          value={instructor.facultyid}
+          value={instructor.facultyId}
           onChange={(e) =>
             setInstructor((prev: Instructor) => ({
               ...prev,
-              facultyid: parseInt(e.target.value),
+              facultyId: parseInt(e.target.value),
             }))
           }
         >
