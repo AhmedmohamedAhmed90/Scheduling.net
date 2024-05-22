@@ -47,10 +47,15 @@ namespace ReactApp1.Server.Controllers
                 })
                 .ToListAsync();
 
+              if (instructors == null || instructors.Count == 0)
+    {
+        return NotFound("Instructor not found");
+    }
 
+    return Ok(instructors);
 
-            return Ok(instructors);
-        }
+            
+     }
 
 
 
