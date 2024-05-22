@@ -43,8 +43,8 @@ function GroupPage() {
   const { data: courseData } = useQuery({
     queryKey: ["Course By Id", courseID],
     queryFn: () => getCourse(parseInt(courseID!)),
+    enabled: !!courseID,
   });
-
   const onDelete = async (groupID: number) => {
     await deleteLecture(groupID);
     toast({
@@ -56,6 +56,7 @@ function GroupPage() {
     refetch();
   };
   if (!data) return <FacultySkeleton />;
+  if (!courseData) return <FacultySkeleton />;
   if (error) return "Error";
   return (
     <Box shadow="md" borderWidth="1px" rounded="md" m="32">
@@ -65,6 +66,17 @@ function GroupPage() {
         px={5}
         justifyContent={"space-between"}
       >
+        <Flex alignItems={"center"} justifyContent={"start"}>
+          <Button
+            mt={5}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admin/course");
+            }}
+          >
+            Back
+          </Button>
+        </Flex>
         <Heading fontSize={20}>Group List for {courseData.title}</Heading>
         <HStack>
           <Button
@@ -122,16 +134,20 @@ function GroupPage() {
                   </Td>
                   <Td>
                     <HStack gap={3}>
-                      <EditIcon
-                        color={"blue"}
-                        boxSize={22}
-                        onClick={() =>
-                          navigate(`/admin/lecture/edit/${lecture.id!}`)
-                        }
-                      />
+                      <Box as="button">
+                        <EditIcon
+                          color={"blue"}
+                          boxSize={22}
+                          onClick={() =>
+                            navigate(`/admin/lecture/edit/${lecture.id!}`)
+                          }
+                        />
+                      </Box>
                       <Popover>
                         <PopoverTrigger>
-                          <DeleteIcon color={"red"} boxSize={22} />
+                          <Box as="button">
+                            <DeleteIcon color={"red"} boxSize={22} />
+                          </Box>
                         </PopoverTrigger>
                         <PopoverContent>
                           <PopoverArrow />

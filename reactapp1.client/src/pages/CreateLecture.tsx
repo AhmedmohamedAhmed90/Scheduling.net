@@ -7,6 +7,7 @@ import {
   Heading,
   useColorModeValue,
   Select,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -15,7 +16,7 @@ import { addLecture, Lecture } from "../services/lectureService";
 import {
   Course,
   getCourse,
-  getCoursesByFacultyID,
+  getCoursesByUniversityID,
 } from "../services/courseService";
 import { Group } from "../services/groupService";
 
@@ -53,7 +54,7 @@ export default function CreateLecture() {
 
   const { mutate } = useMutation({
     mutationFn: () => addLecture(lecture),
-    onSuccess: (payload) => {
+    onSuccess: () => {
       setLecture({
         startTime: "",
         endTime: "",
@@ -62,17 +63,18 @@ export default function CreateLecture() {
         groupId: 0,
       } as Lecture);
       setCourseID(0);
-      alert("Lecture Created Successfully with ID " + payload.data.id);
+      history.back();
     },
   });
 
   const { data: courses } = useQuery({
-    queryKey: ["Courses By Faculty", store.state.facultyID!],
-    queryFn: () => getCoursesByFacultyID(store.state.facultyID!),
+    queryKey: ["Courses By University", store.state.universityID!],
+    queryFn: () => getCoursesByUniversityID(store.state.universityID!),
   });
   const { data: groups } = useQuery({
     queryKey: ["Groups By Course", courseID],
     queryFn: () => getCourse(courseID),
+    enabled: courseID !== 0,
   });
   return (
     <Box
@@ -85,8 +87,18 @@ export default function CreateLecture() {
       bg={bgColor}
       borderColor={borderColor}
     >
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            history.back();
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Lecture Using University ID: {store.state.universityID}{" "}
+        Create Lecture
       </Heading>
 
       <FormControl id="lecture-time" isRequired>
@@ -181,7 +193,7 @@ export default function CreateLecture() {
             }))
           }
         >
-          {groups?.data?.groups?.map((group: Group) => (
+          {groups?.groups?.map((group: Group) => (
             <option key={group.id} value={group.id}>
               {group.code}
             </option>

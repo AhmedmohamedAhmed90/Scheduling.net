@@ -59,7 +59,10 @@ export default function CourseEdit() {
   });
   useEffect(() => {
     if (isCourseDataSuccess && courseData) {
-      courseData.facultyid = courseData.facultyid || 1;
+      courseData.facultyid =
+        (courseData.facultyCourses && courseData.facultyCourses[0].facultyId) ||
+        1;
+      delete courseData.facultyCourses;
       setCourse(courseData);
     }
   }, [isCourseDataSuccess, courseData]);
@@ -76,7 +79,7 @@ export default function CourseEdit() {
       borderColor={borderColor}
     >
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Course Using University ID: {store.state.universityID}
+        Update Course
       </Heading>
 
       <FormControl id="title" isRequired>
@@ -150,7 +153,7 @@ export default function CourseEdit() {
           mutate();
         }}
       >
-        Create Course
+        Update Course
       </Button>
     </Box>
   );

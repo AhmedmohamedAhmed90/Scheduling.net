@@ -25,6 +25,7 @@ import {
 import axios from "axios";
 import { Store } from "../Store"; // Adjust the import path to your Store context
 import { getFacultiesByUniversityId } from "../services/facultyService"; // Adjust the import path to your faculty service
+import { useNavigate } from "react-router-dom";
 
 interface Faculty {
   id?: number;
@@ -33,6 +34,7 @@ interface Faculty {
 }
 
 const StudentForm: React.FC = () => {
+  const navigate = useNavigate();
   const { state } = useContext(Store);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
   const initialStudentState = {
@@ -80,6 +82,7 @@ const StudentForm: React.FC = () => {
       });
       // Reset the form to its initial state
       setStudent(initialStudentState);
+      navigate("/admindashboard");
     } catch (error) {
       toast({
         title: "Error.",
@@ -100,14 +103,26 @@ const StudentForm: React.FC = () => {
       borderWidth="1px"
       rounded="lg"
       p={8}
-      mt={20}
+      mt={26}
       mx={40}
       bg={bgColor}
       borderColor={borderColor}
     >
-      <Heading mb={6} textAlign="center">
-        Student Registration Form
-      </Heading>
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          mt={5}
+          colorScheme="blue"
+          onClick={() => {
+            navigate("/admindashboard");
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
+
+      <Flex alignItems={"center"} mb={5} px={5} justifyContent={"center"}>
+        <Heading fontSize={30}>Student Registration Form</Heading>
+      </Flex>
       <FormControl id="name" isRequired>
         <FormLabel>
           <Icon as={FaUser} mr={2} /> Name
@@ -196,9 +211,9 @@ const StudentForm: React.FC = () => {
         <Spacer />
         <Tooltip label="Create Student" aria-label="Create Student Tooltip">
           <Button
-            type="submit"
-            colorScheme="whiteAlpha"
-            size="lg"
+            mt={8}
+            colorScheme="blue"
+            width="full"
             rightIcon={<Icon as={FaUser} />}
             onClick={handleSubmit}
           >

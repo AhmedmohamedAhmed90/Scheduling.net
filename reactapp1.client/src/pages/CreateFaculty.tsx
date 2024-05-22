@@ -7,6 +7,7 @@ import {
   Heading,
   useColorModeValue,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -45,6 +46,17 @@ export default function CreateFaculty() {
       bg={bgColor}
       borderColor={borderColor}
     >
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            navigate("/admin/faculty");
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
+
       <Heading as="h2" size="lg" mb={6} textAlign="center">
         Create Faculty
       </Heading>

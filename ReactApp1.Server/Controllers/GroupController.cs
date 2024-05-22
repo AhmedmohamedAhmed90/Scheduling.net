@@ -35,10 +35,6 @@ namespace ReactApp1.Server.Controllers
                 .Include(g => g.Lectures)
                 .ToListAsync();
 
-            if (groups.Count == 0)
-            {
-                return NotFound("Groups not found");
-            }
             return Ok(groups);
 
         }

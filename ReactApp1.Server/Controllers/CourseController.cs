@@ -74,14 +74,35 @@ namespace ReactApp1.Server.Controllers
         [HttpGet("{id}", Name = "GetCourse")]
         public async Task<ActionResult<object>> GetCourse(int id)
         {
-            var course = await _dbContext.Courses.Include(i => i.Groups).FirstOrDefaultAsync(c => c.Id == id);
+            //add the faculty to the course
+            var course = await _dbContext.Courses
+                .Include(i => i.Groups)
+                .Include(c => c.FacultyCourses)
+                .ThenInclude(fc => fc.Faculty)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (course == null)
             {
                 return NotFound("Course not found");
             }
 
-            return Ok(course);
+            var facultyId = course.FacultyCourses.FirstOrDefault()?.FacultyId;
+            var response = new
+            {
+                course.Id,
+                course.Code,
+                course.Groups,
+                course.Title,
+                course.Departmeant,
+                course.Description,
+                course.FacultyCourses,
+                facultyId
+            };
+
+            return Ok(response);
         }
+
+
         [HttpGet("ByFaculty/{facultyId}", Name = "GetCoursesByFacultyId")]
         public async Task<ActionResult<object>> GetCoursesByFacultyId(int facultyId)
         {

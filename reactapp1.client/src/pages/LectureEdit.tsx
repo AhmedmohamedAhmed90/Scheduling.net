@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   Select,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
@@ -16,7 +17,7 @@ import { getLecture, Lecture, updateLecture } from "../services/lectureService";
 import {
   Course,
   getCourse,
-  getCoursesByFacultyID,
+  getCoursesByUniversityID,
 } from "../services/courseService";
 import { Group } from "../services/groupService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -70,8 +71,8 @@ export default function LectureEdit() {
   });
 
   const { data: courses } = useQuery({
-    queryKey: ["Courses By Faculty", store.state.facultyID!],
-    queryFn: () => getCoursesByFacultyID(store.state.facultyID!),
+    queryKey: ["Courses By University", store.state.universityID!],
+    queryFn: () => getCoursesByUniversityID(store.state.universityID!),
   });
   const { data: groups } = useQuery({
     queryKey: ["Groups By Course", courseID],
@@ -84,10 +85,14 @@ export default function LectureEdit() {
   });
   useEffect(() => {
     if (isLectureDataSuccess && lectureData) {
-      setTime(`${lectureData.startTime} - ${lectureData.endTime}`);
+      setTime(
+        `${lectureData.startTime.trim()} - ${lectureData.endTime.trim()}`
+      );
+      console;
       setCourseID(lectureData.group!.courseId!);
       setLecture({
         ...lectureData,
+        day: lectureData.day.trim()!,
         groupId: lectureData.group!.id!,
       } as Lecture);
     }
@@ -103,6 +108,16 @@ export default function LectureEdit() {
       bg={bgColor}
       borderColor={borderColor}
     >
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            history.back();
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
       <Heading as="h2" size="lg" mb={6} textAlign="center">
         Edit Lecture
       </Heading>

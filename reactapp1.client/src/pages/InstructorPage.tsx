@@ -65,6 +65,17 @@ function InstructorPage() {
         px={5}
         justifyContent={"space-between"}
       >
+        <Flex alignItems={"center"} justifyContent={"start"}>
+          <Button
+            mt={5}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admindashboard");
+            }}
+          >
+            Back
+          </Button>
+        </Flex>
         <Heading fontSize={20}>Instructor List</Heading>
         <Button
           mt={5}
@@ -93,16 +104,21 @@ function InstructorPage() {
                 <Td>{instructor.faculty!.name}</Td>
                 <Td>
                   <HStack gap={3}>
-                    <EditIcon
-                      color={"blue"}
-                      boxSize={22}
-                      onClick={() =>
-                        navigate(`/admin/instructor/edit/${instructor.id}`)
-                      }
-                    />
+                    <Box as="button">
+                      <EditIcon
+                        color={"blue"}
+                        boxSize={22}
+                        onClick={() =>
+                          navigate(`/admin/instructor/edit/${instructor.id}`)
+                        }
+                      />
+                    </Box>
+
                     <Popover>
                       <PopoverTrigger>
-                        <DeleteIcon color={"red"} boxSize={22} />
+                        <Box as="button">
+                          <DeleteIcon color={"red"} boxSize={22} />
+                        </Box>
                       </PopoverTrigger>
                       <PopoverContent>
                         <PopoverArrow />

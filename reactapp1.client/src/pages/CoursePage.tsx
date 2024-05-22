@@ -74,6 +74,17 @@ function CoursePage() {
         px={5}
         justifyContent={"space-between"}
       >
+        <Flex alignItems={"center"} justifyContent={"start"}>
+          <Button
+            mt={5}
+            colorScheme="blue"
+            onClick={() => {
+              navigate("/admindashboard");
+            }}
+          >
+            Back
+          </Button>
+        </Flex>
         <Heading fontSize={20}>Course List</Heading>
         <Button
           mt={5}
@@ -105,16 +116,20 @@ function CoursePage() {
                 <Td>{course.departmeant}</Td>
                 <Td>
                   <HStack gap={3}>
-                    <EditIcon
-                      color={"blue"}
-                      boxSize={22}
-                      onClick={() =>
-                        navigate(`/admin/course/edit/${course.id}`)
-                      }
-                    />
+                    <Box as="button">
+                      <EditIcon
+                        color={"blue"}
+                        boxSize={22}
+                        onClick={() =>
+                          navigate(`/admin/course/edit/${course.id}`)
+                        }
+                      />
+                    </Box>
                     <Popover>
                       <PopoverTrigger>
-                        <DeleteIcon color={"red"} boxSize={22} />
+                        <Box as="button">
+                          <DeleteIcon color={"red"} boxSize={22} />
+                        </Box>
                       </PopoverTrigger>
                       <PopoverContent>
                         <PopoverArrow />

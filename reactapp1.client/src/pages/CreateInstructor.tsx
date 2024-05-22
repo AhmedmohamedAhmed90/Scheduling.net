@@ -7,6 +7,7 @@ import {
   Heading,
   useColorModeValue,
   Select,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -16,8 +17,10 @@ import {
   Faculty,
   getFacultiesByUniversityId,
 } from "../services/facultyService";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateInstructor() {
+  const navigate = useNavigate();
   const store = useContext(Store);
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
@@ -31,12 +34,12 @@ export default function CreateInstructor() {
   });
   const { mutate } = useMutation({
     mutationFn: () => addInstructor(instructor, instructor.facultyId),
-    onSuccess: (payload) => {
+    onSuccess: () => {
       setInstructor({
         facultyId: 0,
         name: "",
       } as Instructor);
-      alert("Instructor Created Successfully with ID " + payload.data.id);
+      navigate("/admin/instructor");
     },
   });
   return (
@@ -50,8 +53,18 @@ export default function CreateInstructor() {
       bg={bgColor}
       borderColor={borderColor}
     >
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            navigate("/admin/instructor");
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Instructor Using University ID: {store.state.universityID}
+        Create Instructor
       </Heading>
 
       <FormControl id="name" isRequired>

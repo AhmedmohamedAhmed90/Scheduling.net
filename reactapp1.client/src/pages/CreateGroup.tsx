@@ -7,6 +7,7 @@ import {
   Heading,
   useColorModeValue,
   Select,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -38,13 +39,14 @@ export default function CreateGroup() {
   });
   const { mutate } = useMutation({
     mutationFn: () => addGroup(group),
-    onSuccess: (payload) => {
+    onSuccess: () => {
       setGroup({
         code: "",
         instructorid: 0,
         courseid: 0,
       } as Group);
-      alert("Group Created Successfully with ID " + payload.data.id);
+      // alert("Group Created Successfully with ID " + payload.data.id);
+      history.back();
     },
   });
   return (
@@ -58,8 +60,18 @@ export default function CreateGroup() {
       bg={bgColor}
       borderColor={borderColor}
     >
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            history.back();
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
       <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Group Using University ID: {store.state.universityID}
+        Create Group
       </Heading>
 
       <FormControl id="code" isRequired>

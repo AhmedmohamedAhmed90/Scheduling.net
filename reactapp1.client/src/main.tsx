@@ -36,15 +36,15 @@ import StudentForm from "./components/StudentForm.tsx";
 import ExceptionsSummary from "./components/ExceptionsSummary.tsx";
 axios.defaults.baseURL = "http://localhost:5261";
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnMount: false,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-      retry: 1,
-      retryDelay: 3000,
-    },
-  },
+  // defaultOptions: {
+  //   queries: {
+  //     refetchOnMount: false,
+  //     refetchOnWindowFocus: false,
+  //     refetchOnReconnect: false,
+  //     retry: 1,
+  //     retryDelay: 3000,
+  //   },
+  // },
 });
 
 const router = createBrowserRouter(
@@ -74,7 +74,6 @@ const router = createBrowserRouter(
       <Route path="/admindashboard" element={<AdminDashboard />} />
       <Route path="/addstudent" element={<StudentForm />} />
       <Route path="/studentexceptions" element={<ExceptionsSummary />} />
-
     </Route>
   )
 );

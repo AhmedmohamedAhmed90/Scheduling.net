@@ -7,6 +7,7 @@ import {
   Heading,
   useColorModeValue,
   Select,
+  Flex,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
@@ -16,8 +17,10 @@ import {
   Faculty,
   getFacultiesByUniversityId,
 } from "../services/facultyService";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateCourse() {
+  const navigate = useNavigate();
   const store = useContext(Store);
   const bgColor = useColorModeValue("gray.50", "gray.700");
   const borderColor = useColorModeValue("gray.300", "gray.600");
@@ -31,7 +34,7 @@ export default function CreateCourse() {
 
   const { mutate } = useMutation({
     mutationFn: () => addCourse(course),
-    onSuccess: (payload) => {
+    onSuccess: () => {
       setCourse({
         code: "",
         title: "",
@@ -39,7 +42,8 @@ export default function CreateCourse() {
         departmeant: "",
         facultyid: 0,
       } as Course);
-      alert("Course Created Successfully with ID " + payload.data.id);
+      // alert("Course Created Successfully with ID " + payload.data.id);
+      navigate("/admin/course");
     },
   });
   const { data: faculties } = useQuery({
@@ -57,8 +61,18 @@ export default function CreateCourse() {
       bg={bgColor}
       borderColor={borderColor}
     >
-      <Heading as="h2" size="lg" mb={6} textAlign="center">
-        Create Course Using University ID: {store.state.universityID}
+      <Flex alignItems={"center"} justifyContent={"start"}>
+        <Button
+          colorScheme="blue"
+          onClick={() => {
+            navigate("/admin/course");
+          }}
+        >
+          Back
+        </Button>
+      </Flex>
+      <Heading as="h2" size="lg" mb={6} mt={0} textAlign="center">
+        Create Course
       </Heading>
 
       <FormControl id="title" isRequired>

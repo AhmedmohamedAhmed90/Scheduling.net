@@ -11,6 +11,7 @@ export interface Course {
   faculty?: Faculty;
   conflict_count?: number;
   groups?: Group[];
+  facultyCourses?: Faculty[];
 }
 export const addCourse = async (course: Course) => {
   return await axios.post(`/api/Course/${course.facultyid}`, course);

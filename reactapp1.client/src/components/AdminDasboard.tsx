@@ -21,9 +21,9 @@ import {
   FaChalkboardTeacher,
   FaSignOutAlt,
 } from "react-icons/fa";
-import axios from 'axios';
-import { Store } from '../Store'; // Adjust the import path to your Store context
-import { BASE_URL } from '../constant'; // Adjust the import path to your constant file
+import axios from "axios";
+import { Store } from "../Store"; // Adjust the import path to your Store context
+import { BASE_URL } from "../constant"; // Adjust the import path to your constant file
 
 const AdminDashboard: React.FC = () => {
   const { toggleColorMode } = useColorMode();
@@ -35,12 +35,12 @@ const AdminDashboard: React.FC = () => {
   const handleLogout = async () => {
     try {
       await axios.post(`${BASE_URL}account/logout`);
-      dispatch({ type: 'LOGOUT', payload: undefined });
+      dispatch({ type: "LOGOUT", payload: undefined });
       localStorage.clear();
       // Redirect to login page by navigating to "/login"
-      window.location.href = '/';
+      window.location.href = "/";
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -123,6 +123,18 @@ const AdminDashboard: React.FC = () => {
               h="100px"
             >
               Courses
+            </Button>
+          </GridItem>
+          <GridItem>
+            <Button
+              as={RouterLink}
+              to="/table"
+              colorScheme="teal"
+              size="lg"
+              w="100%"
+              h="100px"
+            >
+              Table
             </Button>
           </GridItem>
           <GridItem colSpan={2}>
