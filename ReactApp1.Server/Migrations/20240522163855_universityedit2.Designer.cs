@@ -11,8 +11,8 @@ using ReactApp1.Server.Data;
 namespace ReactApp1.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240520155159_Initial")]
-    partial class Initial
+    [Migration("20240522163855_universityedit2")]
+    partial class universityedit2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,13 +50,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0e187e94-bc76-4f20-ba8f-77e07a83b8be",
+                            Id = "7c15c65e-a6ba-4746-913b-691384b3e8ff",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1ede4a82-e9b8-44b6-aaae-766238a86c62",
+                            Id = "2e46be28-7545-42a3-8471-b8bcea218588",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -368,7 +368,6 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
@@ -387,9 +386,7 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Faculty")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
@@ -398,7 +395,6 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("datetime");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -414,7 +410,8 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
@@ -433,7 +430,6 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<string>("Year")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
@@ -549,7 +545,7 @@ namespace ReactApp1.Server.Migrations
             modelBuilder.Entity("ReactApp1.Server.Models.Exception", b =>
                 {
                     b.HasOne("ReactApp1.Server.Models.Student", "Student")
-                        .WithMany("Exception")
+                        .WithMany("Exceptions")
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
@@ -677,7 +673,7 @@ namespace ReactApp1.Server.Migrations
 
             modelBuilder.Entity("ReactApp1.Server.Models.Student", b =>
                 {
-                    b.Navigation("Exception");
+                    b.Navigation("Exceptions");
                 });
 
             modelBuilder.Entity("ReactApp1.Server.Models.University", b =>

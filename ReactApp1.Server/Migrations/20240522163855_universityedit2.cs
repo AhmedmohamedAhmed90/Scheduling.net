@@ -9,7 +9,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace ReactApp1.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class universityedit2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -109,12 +109,12 @@ namespace ReactApp1.Server.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Address = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true),
                     Age = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Faculty = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
+                    Year = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true),
+                    Faculty = table.Column<string>(type: "longtext", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: true),
                     UniversityId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true),
@@ -402,8 +402,8 @@ namespace ReactApp1.Server.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0e187e94-bc76-4f20-ba8f-77e07a83b8be", null, "Admin", "ADMIN" },
-                    { "1ede4a82-e9b8-44b6-aaae-766238a86c62", null, "User", "USER" }
+                    { "2e46be28-7545-42a3-8471-b8bcea218588", null, "User", "USER" },
+                    { "7c15c65e-a6ba-4746-913b-691384b3e8ff", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
