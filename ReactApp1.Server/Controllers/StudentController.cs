@@ -12,6 +12,7 @@ using System.Text;
 using System.Net.Http;
 using Microsoft.AspNetCore.Identity;
 using ReactApp1.Server.Dtos;
+using ReactApp1.Server.Interfaces;
 //using System.Diagnostics;
 
 //using Microsoft.AspNetCore.Identity;
@@ -147,7 +148,7 @@ protected string GenerateRandomNumbers(int length)
 
             [HttpPost]
         [Route("CreateStudents")]
-        public async Task<ActionResult> CreateStudents([FromBody] StudentDto studentDto)
+        public async Task<ActionResult> CreateStudents([FromBody] StudentDto studentDto,string notificationMethod)
         {
             if (!ModelState.IsValid)
             {
@@ -189,20 +190,30 @@ protected string GenerateRandomNumbers(int length)
             // Assign the "User" role to the student
             await _userManager.AddToRoleAsync(student, "User");
 
-            // Send email to the student
-            var payload = new
-            {
-                email = studentDto.Email,
-                subject = "Your credentials for the University Account",
-                body = $"Username: {username}\nPassword: {password}"
-            };
+            // // Send email to the student
+            // var payload = new
+            // {
+            //     email = studentDto.Email,
+            //     subject = "Your credentials for the University Account",
+            //     body = $"Username: {username}\nPassword: {password}"
+            // };
 
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
-                response.EnsureSuccessStatusCode();
-                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            // using (var client = new HttpClient())
+            // {
+            //     var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
+            //     var response = await client.PostAsync("https://prod-68.westeurope.logic.azure.com:443/workflows/c13c5def438d4022b868c634ed180d89/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=qToVLIyTj0GzNMDn79DNHb0vRsW4QFu_s0KGzVWRDj8", content);
+            //     response.EnsureSuccessStatusCode();
+            //     Console.WriteLine(await response.Content.ReadAsStringAsync());
+            // }
+            if(notificationMethod=="Email"){
+               EmailNotificationFactory emailfactory=new EmailNotificationFactory();
+              INotification email=emailfactory.CreateNotification();
+            await email.NotifyAsync(username,password,studentDto.Email);
+            }
+            else{
+                WhatsAppNotificationFactory whatsappfactory=new WhatsAppNotificationFactory();
+                INotification whatsapp=whatsappfactory.CreateNotification();
+                await whatsapp.NotifyAsync(username,password,studentDto.PhoneNumber);
             }
 
             return Ok(student);
