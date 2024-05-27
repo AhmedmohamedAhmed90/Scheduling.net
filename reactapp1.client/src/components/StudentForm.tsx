@@ -13,6 +13,9 @@ import {
   Tooltip,
   Icon,
   useColorModeValue,
+  RadioGroup,
+  Stack,
+  Radio, 
 } from "@chakra-ui/react";
 import {
   FaUser,
@@ -48,6 +51,9 @@ const StudentForm: React.FC = () => {
     universityId: state.universityID,
   };
   const [student, setStudent] = useState(initialStudentState);
+
+  const [notificationMethod, setNotificationMethod] = useState("Email");
+
   const toast = useToast();
 
   useEffect(() => {
@@ -70,9 +76,15 @@ const StudentForm: React.FC = () => {
     setStudent((prevStudent) => ({ ...prevStudent, [name]: value }));
   };
 
+  const handleNotificationMethodChange = (value: string) => {
+    setNotificationMethod(value);
+  };
+
+
+
   const handleSubmit = async () => {
     try {
-      await axios.post(`/api/Student/CreateStudents`, student);
+      await axios.post(`/api/Student/CreateStudents?notificationMethod=${notificationMethod}`, student);
       toast({
         title: "Student created.",
         description: "The student has been created successfully.",
@@ -205,6 +217,17 @@ const StudentForm: React.FC = () => {
           value={student.phoneNumber}
           onChange={handleChange}
         />
+      </FormControl>
+      <FormControl id="notificationMethod" isRequired>
+        <FormLabel>
+          <Icon as={FaEnvelope} mr={2} /> Notification Method
+        </FormLabel>
+        <RadioGroup value={notificationMethod} onChange={handleNotificationMethodChange}>
+          <Stack direction="row">
+            <Radio value="Email">Email</Radio>
+            <Radio value="WhatsApp">WhatsApp</Radio>
+          </Stack>
+        </RadioGroup>
       </FormControl>
       <Input type="hidden" name="universityId" value={student.universityId} />
       <Flex>
