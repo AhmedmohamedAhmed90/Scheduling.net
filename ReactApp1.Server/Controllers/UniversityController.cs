@@ -26,27 +26,36 @@ namespace ReactApp1.Server.Controllers
             return Ok(universities);
         }
 
-        [HttpGet("{name}", Name = "GetUniversity")]
-public async Task<ActionResult<University>> GetUniversity(string name)
-{
-    var university = await _dbContext.Universities
-        .Include(u => u.Faculties) 
-        .FirstOrDefaultAsync(u => u.Name == name);
+        //         [HttpGet("{name}", Name = "GetUniversity")]
+        // public async Task<ActionResult<University>> GetUniversity(string name)
+        // {
+        //     var university = await _dbContext.Universities
+        //         .Include(u => u.Faculties) 
+        //         .FirstOrDefaultAsync(u => u.Name == name);
 
-    if (university == null)
-    {
-        return NotFound("University not found");
-    }
+        //     if (university == null)
+        //     {
+        //         return NotFound("University not found");
+        //     }
 
-    
-    var universityData = new
-    {
-        uniId = university.Id,
-        University = university
-    };
 
-    return Ok(universityData);
-}
+        //     var universityData = new
+        //     {
+        //         uniId = university.Id,
+        //         University = university
+        //     };
+
+        //     return Ok(universityData);
+        // }
+
+        [HttpGet("{id}", Name = "GetUniversity")]
+        public async Task<ActionResult<University>> GetUniversity(int id)
+        {
+            var university = await _dbContext.Universities.FindAsync(id);
+
+
+            return Ok(university);
+        }
 
 
         [HttpPut("{id}", Name = "UpdateUniversity")]

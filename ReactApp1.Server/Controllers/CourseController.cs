@@ -64,10 +64,6 @@ namespace ReactApp1.Server.Controllers
                     .ThenInclude(g => g.Instructor)
                 .ToListAsync();
 
-            if (courses.Count == 0)
-            {
-                return NotFound("Course not found");
-            }
             return Ok(courses);
         }
 
@@ -108,6 +104,10 @@ namespace ReactApp1.Server.Controllers
         {
             var courses = await _dbContext.Courses
                 .Where(course => course.FacultyCourses != null && course.FacultyCourses.Any(fc => fc.FacultyId == facultyId))
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Lectures)
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Instructor)
                 .ToListAsync();
 
             if (courses.Count == 0)
@@ -123,6 +123,10 @@ namespace ReactApp1.Server.Controllers
         {
             var courses = await _dbContext.Courses
                 .Where(course => course.FacultyCourses.Any(fc => fc.Faculty.UniversityId == universityID))
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Lectures)
+                .Include(c => c.Groups)
+                    .ThenInclude(g => g.Instructor)
                 .ToListAsync();
             return Ok(courses);
         }

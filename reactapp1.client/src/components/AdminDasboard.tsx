@@ -24,6 +24,8 @@ import {
 import axios from "axios";
 import { Store } from "../Store"; // Adjust the import path to your Store context
 import { BASE_URL } from "../constant"; // Adjust the import path to your constant file
+import { useQuery } from "@tanstack/react-query";
+import { getUniversity } from "../services/universityService";
 
 const AdminDashboard: React.FC = () => {
   const store = useContext(Store);
@@ -32,6 +34,10 @@ const AdminDashboard: React.FC = () => {
   const color = useColorModeValue("black", "white");
   const iconColor = useColorModeValue("gray.600", "gray.300");
   const { dispatch } = useContext(Store);
+  const { data } = useQuery({
+    queryKey: ["Get University", store.state.universityID!],
+    queryFn: () => getUniversity(store.state.universityID!.toString()),
+  });
 
   const handleLogout = async () => {
     try {
@@ -44,13 +50,15 @@ const AdminDashboard: React.FC = () => {
       console.error("Error logging out:", error);
     }
   };
+  const something = useColorModeValue(<FaMoon />, <FaSun />);
+  if (!data) return "Loading...";
 
   return (
     <Box p={4} bg={bg} minH="100vh">
       <Box textAlign="right">
         <IconButton
           aria-label="Toggle color mode"
-          icon={useColorModeValue(<FaMoon />, <FaSun />)}
+          icon={something}
           onClick={toggleColorMode}
           variant="ghost"
           color={iconColor}
@@ -58,7 +66,7 @@ const AdminDashboard: React.FC = () => {
       </Box>
       <VStack spacing={8}>
         <Heading as="h1" size="xl" color={color}>
-          Admin Dashboard {store.state.userName}
+          Admin Dashboard {data!.data.name}
         </Heading>
         <Grid templateColumns="repeat(2, 1fr)" gap={6}>
           <GridItem>

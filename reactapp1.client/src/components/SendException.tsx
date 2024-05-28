@@ -1,22 +1,28 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
   Select,
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { BASE_URL } from '../constant';
-import { Store } from '../Store';
+  useToast,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { BASE_URL } from "../constant";
+import { Store } from "../Store"; // Adjust the import path to your Store context
+import { useNavigate } from "react-router-dom";
 
 const SendException: React.FC = () => {
+  const navigate = useNavigate();
+  const toast = useToast();
   const { state } = useContext(Store);
-  const [studentId, setStudentId] = useState('');
-  const [reason, setReason] = useState('');
-  const [description, setDescription] = useState('');
+  const [studentId, setStudentId] = useState("");
+  const [reason, setReason] = useState("");
+  const [description, setDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [notification, setNotification] = useState<{ message: string, type: 'success' | 'error' | '' }>({ message: '', type: '' });
 
   useEffect(() => {
@@ -30,6 +36,7 @@ const SendException: React.FC = () => {
 
     try {
       setIsLoading(true);
+      setError("");
 
       const data = {
         studentId,
@@ -40,14 +47,20 @@ const SendException: React.FC = () => {
       await axios.post(`${BASE_URL}Exceptions`, data);
 
       // Clear form fields
-      setReason('');
-      setDescription('');
-
-      // Show success message
-      setNotification({ message: 'Exception submitted successfully!', type: 'success' });
+      setReason("");
+      setDescription("");
+      toast({
+        title: "Exception submitted successfully",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      navigate("/studentdashboard");
+      // Show success message or perform any other action
     } catch (error) {
       // Show error message
       setNotification({ message: 'Failed to submit exception. Please try again.', type: 'error' });
+      setError("Failed to submit exception. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -78,14 +91,20 @@ const SendException: React.FC = () => {
             </Select>
           </FormControl>
 
-          <FormControl id="description" isRequired>
-            <FormLabel>Description</FormLabel>
-            <Input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </FormControl>
+        <FormControl id="description" isRequired>
+          <FormLabel>Description</FormLabel>
+          <Input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </FormControl>
+
+        {error && (
+          <FormErrorMessage mt={2} mb={4}>
+            {error}
+          </FormErrorMessage>
+        )}
 
           <Button
             type="submit"

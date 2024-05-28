@@ -201,7 +201,7 @@ const StudentForm: React.FC = () => {
           onChange={handleChange}
         >
           {faculties.map((faculty) => (
-            <option key={faculty.name} value={faculty.name}>
+            <option key={faculty.name} value={faculty.id!}>
               {faculty.name}
             </option>
           ))}

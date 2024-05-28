@@ -10,6 +10,8 @@ namespace ReactApp1.Server.Dtos
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public string FacultyID { get; set; }
+
         public bool isAdmin { get; set; }
 
         public int UniversityID { get; set; }

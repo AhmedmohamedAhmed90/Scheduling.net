@@ -17,7 +17,7 @@ import {
   Instructor,
 } from "../services/instructorService";
 import { addGroup, Group } from "../services/groupService";
-import { Course, getCourses } from "../services/courseService";
+import { Course, getCoursesByUniversityID } from "../services/courseService";
 
 export default function CreateGroup() {
   const store = useContext(Store);
@@ -35,7 +35,7 @@ export default function CreateGroup() {
 
   const { data: courses } = useQuery({
     queryKey: ["courses By UniversityId", store.state.universityID!],
-    queryFn: () => getCourses(),
+    queryFn: () => getCoursesByUniversityID(store.state.universityID!),
   });
   const { mutate } = useMutation({
     mutationFn: () => addGroup(group),

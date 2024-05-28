@@ -1,6 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import MultiSelect from "react-select";
-import { Course, getCourses } from "../services/courseService";
+import {
+  Course,
+  getCoursesByFacultyID,
+  getCoursesByUniversityID,
+} from "../services/courseService";
 import {
   Box,
   Button,
@@ -110,8 +114,11 @@ function SuggestCoures() {
   >([]);
   const [message] = useState("");
   const { data: courses } = useQuery({
-    queryKey: ["All courses"],
-    queryFn: () => getCourses(),
+    queryKey: ["All courses By Univertyu ", store.state.universityID!],
+    queryFn: () =>
+      store.state.role === "Admin"
+        ? getCoursesByUniversityID(store.state.universityID!)
+        : getCoursesByFacultyID(store.state.facultyID!),
   });
   if (!courses) {
     return (

@@ -20,15 +20,27 @@ namespace ReactApp1.Server.Controllers
             _context = context;
         }
 
-[HttpGet]
-public async Task<IActionResult> GetExceptions()
-{
-    var exceptions = await _context.Exceptions
-        .Include(e => e.Student) // Eager loading the Student navigation property
-        .ToListAsync();
+        [HttpGet]
+        public async Task<IActionResult> GetExceptions()
+        {
+            var exceptions = await _context.Exceptions
+                .Include(e => e.Student) // Eager loading the Student navigation property
+                .ToListAsync();
 
-    return Ok(exceptions);
-}
+            return Ok(exceptions);
+        }
+        [HttpGet("ByUniversity/{universityId}")]
+        public async Task<IActionResult> GetExceptionsByUniversityId(int universityId)
+        {
+            var exceptions = await _context.Exceptions
+                .Include(e => e.Student)
+                .Where(e => e.Student.UniversityId == universityId)
+                .ToListAsync();
+
+
+            return Ok(exceptions);
+        }
+
         [HttpGet("{studentId}")]
         public async Task<IActionResult> GetExceptionsByStudentId(string studentId)
         {

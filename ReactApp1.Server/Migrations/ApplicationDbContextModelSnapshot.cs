@@ -47,13 +47,13 @@ namespace ReactApp1.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7c15c65e-a6ba-4746-913b-691384b3e8ff",
+                            Id = "ddca8291-2d5e-4fe9-9d26-6807c97c3219",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2e46be28-7545-42a3-8471-b8bcea218588",
+                            Id = "6e04d493-231a-4532-b478-56705afceb41",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -384,6 +384,7 @@ namespace ReactApp1.Server.Migrations
 
                     b.Property<string>("Faculty")
                         .HasColumnType("longtext");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
@@ -407,6 +408,8 @@ namespace ReactApp1.Server.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
                         .HasMaxLength(15)
                         .HasColumnType("varchar(15)");
 
@@ -543,6 +546,7 @@ namespace ReactApp1.Server.Migrations
                 {
                     b.HasOne("ReactApp1.Server.Models.Student", "Student")
                         .WithMany("Exceptions")
+                        .WithMany("Exceptions")
                         .HasForeignKey("StudentId");
 
                     b.Navigation("Student");
@@ -670,6 +674,7 @@ namespace ReactApp1.Server.Migrations
 
             modelBuilder.Entity("ReactApp1.Server.Models.Student", b =>
                 {
+                    b.Navigation("Exceptions");
                     b.Navigation("Exceptions");
                 });
 

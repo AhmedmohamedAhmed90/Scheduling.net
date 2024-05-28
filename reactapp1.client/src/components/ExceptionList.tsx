@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,9 +13,10 @@ import {
   Tooltip,
   Tr,
   useToast,
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { BASE_URL } from '../constant';
+} from "@chakra-ui/react";
+import axios from "axios";
+import { BASE_URL } from "../constant";
+import { Store } from "../Store";
 
 interface Student {
   studentId: string;
@@ -31,40 +32,47 @@ interface Exception {
 }
 
 const ExceptionList: React.FC = () => {
+  const store = useContext(Store);
+  const { state } = store;
   const [exceptions, setExceptions] = useState<Exception[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const toast = useToast();
 
   const getExceptions = async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
-      const response = await axios.get(`${BASE_URL}Exceptions`);
+      const response = await axios.get(
+        `${BASE_URL}Exceptions/ByUniversity/${state.universityID}`
+      );
       const data = response.data;
 
       if (!data) {
-        throw new Error('Invalid response format');
+        throw new Error("Invalid response format");
       }
 
       const exceptions: Exception[] = data;
 
       exceptions.sort((a, b) => {
         // If both are pending, sort based on exceptionId
-        if (a.status === 'pending' && b.status === 'pending') {
+        if (a.status === "pending" && b.status === "pending") {
           return a.exceptionId - b.exceptionId;
         }
         // If one is pending and the other is not, prioritize pending
-        else if (a.status === 'pending' && b.status !== 'pending') {
+        else if (a.status === "pending" && b.status !== "pending") {
           return -1;
-        } else if (a.status !== 'pending' && b.status === 'pending') {
+        } else if (a.status !== "pending" && b.status === "pending") {
           return 1;
         }
         // If both are not pending, prioritize 'case of death' reason
-        else if (a.reason === 'case of death' && b.reason !== 'case of death') {
+        else if (a.reason === "case of death" && b.reason !== "case of death") {
           return -1;
-        } else if (a.reason !== 'case of death' && b.reason === 'case of death') {
+        } else if (
+          a.reason !== "case of death" &&
+          b.reason === "case of death"
+        ) {
           return 1;
         }
         // If none of the above conditions met, maintain current order
@@ -73,21 +81,24 @@ const ExceptionList: React.FC = () => {
 
       setExceptions(exceptions);
     } catch (error) {
-      setError('Failed to fetch exceptions');
-      console.error('Failed to fetch exceptions:', error);
+      setError("Failed to fetch exceptions");
+      console.error("Failed to fetch exceptions:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleExceptionAction = async (exceptionId: number, action: 'approve' | 'reject') => {
-    const actionVerb = action === 'approve' ? 'Approved' : 'Rejected';
+  const handleExceptionAction = async (
+    exceptionId: number,
+    action: "approve" | "reject"
+  ) => {
+    const actionVerb = action === "approve" ? "Approved" : "Rejected";
     try {
       await axios.post(`${BASE_URL}Exceptions/${exceptionId}/${action}`);
       toast({
         title: `Exception ${actionVerb}`,
         description: `Exception with ID ${exceptionId} has been ${actionVerb.toLowerCase()}.`,
-        status: 'success',
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
@@ -97,7 +108,7 @@ const ExceptionList: React.FC = () => {
       toast({
         title: `Failed to ${actionVerb} Exception`,
         description: `An error occurred while ${actionVerb.toLowerCase()}ing the exception.`,
-        status: 'error',
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -143,14 +154,22 @@ const ExceptionList: React.FC = () => {
               <Td>{exception.description}</Td>
               <Td>{exception.status}</Td>
               <Td>
-                {exception.status === 'pending' && (
+                {exception.status === "pending" && (
                   <Flex gap={2}>
-                    <Tooltip label="Approve this exception" aria-label="Approve">
+                    <Tooltip
+                      label="Approve this exception"
+                      aria-label="Approve"
+                    >
                       <Button
                         colorScheme="green"
                         size="sm"
-                        onClick={() => handleExceptionAction(exception.exceptionId, 'approve')}
-                        _hover={{ bg: 'green.400' }}
+                        onClick={() =>
+                          handleExceptionAction(
+                            exception.exceptionId,
+                            "approve"
+                          )
+                        }
+                        _hover={{ bg: "green.400" }}
                       >
                         Approve
                       </Button>
@@ -159,15 +178,17 @@ const ExceptionList: React.FC = () => {
                       <Button
                         colorScheme="red"
                         size="sm"
-                        onClick={() => handleExceptionAction(exception.exceptionId, 'reject')}
-                        _hover={{ bg: 'red.400' }}
+                        onClick={() =>
+                          handleExceptionAction(exception.exceptionId, "reject")
+                        }
+                        _hover={{ bg: "red.400" }}
                       >
                         Reject
                       </Button>
                     </Tooltip>
                   </Flex>
                 )}
-                {['approved', 'rejected'].includes(exception.status) && (
+                {["approved", "rejected"].includes(exception.status) && (
                   <Text>{`Request was ${exception.status}`}</Text>
                 )}
               </Td>

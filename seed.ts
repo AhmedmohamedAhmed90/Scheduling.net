@@ -23,6 +23,11 @@ interface Lecture {
   room: string;
   groupId: number;
 }
+interface Instructor {
+  id?: number;
+  name: string;
+  facultyid: number;
+}
 const addCourse = async (course: Course) => {
   return await axios.post(`/api/Course/${course.facultyid}`, course);
 };
@@ -38,14 +43,10 @@ const addLecture = async (lecture: Lecture) => {
     &room=${lecture.room}&groupId=${lecture.groupId}`
   );
 };
-interface Instructor {
-  id?: number;
-  name: string;
-  facultyid: number;
-}
 const addInstructor = async (instructor: Instructor, facultyid: number) => {
   return await axios.post(`/api/Instructor/${facultyid}`, instructor);
 };
+
 const allSubjects = [
   {
     subject_id: 1,
@@ -3996,44 +3997,12 @@ const allSubjects = [
     ],
   },
 ];
-const subjects = [
-  {
-    subject_id: 1,
-    subject_name: "تصميم وإدارة الشبكات",
-    subject_code: "ITNT412",
-    subject_department: "قسم شبكات الحاسوب",
-    final: {
-      date: "2024-07-23",
-      period: 2,
-    },
-    groups: [
-      {
-        group_code: "A",
-        professor: "د. محمود ميلود منصور",
-        lectures: [
-          {
-            day: "Saturday",
-            start_time: "8:00",
-            end_time: "10:00",
-            room: "(قاعة ((7))- الدرسات الكلية)",
-          },
-          {
-            day: "Wednesday",
-            start_time: "8:00",
-            end_time: "10:00",
-            room: "(قاعة ((7))- الدرسات الكلية)",
-          },
-        ],
-      },
-    ],
-  },
-];
+
 // const instructorsSet: Set<string> = new Set();
 // allSubjects.forEach((subject) => {
-//   subject.groups.forEach((group) => instructorsSet.add(group.professor));
+//   subject.groups.forEach((group) => instructorsSet.add(group.professor.trim()));
 // });
 // const instructors = Array.from(instructorsSet);
-
 // instructors.forEach(async (instructor) => {
 //   await addInstructor(
 //     {
@@ -4043,96 +4012,91 @@ const subjects = [
 //     1
 //   );
 // });
-// const instructors = [
-//   { id: 1, name: "رحاب ابن عبدالله" },
-//   { id: 2, name: "أ. ناهد فتحي فرح" },
-//   { id: 3, name: "د. عبدالسلام منصور الشريف" },
-//   { id: 4, name: "د. محمود ميلود منصور" },
-//   { id: 5, name: "أينور إدريس تربح" },
-//   { id: 6, name: "أ. احمد علي الهوني" },
-//   { id: 7, name: "د. عبدالحميد الفلاح الواعر" },
-//   { id: 8, name: "أ. فاطمه علي بن الاشهر" },
-//   { id: 9, name: "أ. مروى نوري صولة" },
-//   { id: 10, name: "أ. مريم ابوعجيله مساعد" },
-//   { id: 11, name: "أ. منار سامي عريف" },
-//   { id: 12, name: "أ. ريما الشيباني سعد" },
-//   { id: 13, name: "أ. مي مفتاح البعباع" },
-//   { id: 14, name: "أ. زهرة عبدالله الاشعل" },
-//   { id: 15, name: "أ. محمد على وهيبة" },
-//   { id: 16, name: "احمد علي صمود" },
-//   { id: 17, name: "أ. مروة ابراهيم  عبدالهادي" },
-//   { id: 18, name: "د. عبدالسلام الفيتوري النويصري" },
-//   { id: 19, name: "د. رمزي حميد القانوني" },
-//   { id: 20, name: "د. محمد احمد مغيدر" },
-//   { id: 21, name: "د. عبدالسلام نوري بريون" },
-//   { id: 22, name: "د. خالد محمد بن حامد" },
-//   { id: 23, name: "أ. هديل رافت الجربي" },
-//   { id: 24, name: "أ. محمد معتوق الكوم" },
-//   { id: 25, name: "أ. فاطمة بشير القاضي" },
-//   { id: 26, name: "د. عزالدين محمد السلامي" },
-//   { id: 27, name: "د. عبدالباسط الهادي التهامي" },
-//   { id: 28, name: "أ. اريج سمير امبارك" },
-//   { id: 29, name: "د. يوسف محمد أبوستة" },
-//   { id: 30, name: "عليا مفتاح علي" },
-//   { id: 31, name: "د. فرحات امحمد زرقون" },
-//   { id: 32, name: "د. محمود غيث الجديد" },
-//   { id: 33, name: "أ. وفاء  امحمد كشريو" },
-//   { id: 34, name: "أ. وفاء حسين المصباحي" },
-//   { id: 35, name: "د. عمر عبدالمولى ابوسعدة" },
-//   { id: 36, name: "رحاب  عبدالله  بن عبدالله" },
-//   { id: 37, name: "أ. ابتسام  عبدالسلام العاشوري" },
-//   { id: 38, name: "محمد سالم الفيتورى" },
-//   { id: 39, name: "أ. مروة مسعود خليفة" },
-//   { id: 40, name: "د. عادل علي أوحيدة" },
-//   { id: 41, name: "د. محمد علي ابراهيم الطاهر" },
-//   { id: 42, name: "د. إدريس عبدالهادي غميض" },
-//   { id: 43, name: "د. عبدالناصر عبدالحميد ضياف" },
-//   { id: 44, name: "أ. علياء مفتاح علي" },
-//   { id: 45, name: "د. محمد عبدالسلام عزاقة" },
-//   { id: 46, name: "ناجية خالد بن سعود" },
-//   { id: 47, name: "د. محمد عبدالدائم محبوب" },
-//   { id: 48, name: "د. محمد مفتاح الرايس" },
-//   { id: 49, name: "د. الحرمين محمد الحرمين" },
-//   { id: 50, name: "د. حنان الطاهر الداقيز" },
-//   { id: 51, name: "د. أحمد أبورودس الكيلاني" },
-//   { id: 52, name: "أ. حمدي أحمد جابر" },
-//   { id: 53, name: "أ. بيرم علي زرتي" },
-// ];
 
-// allSubjects.forEach(async (subject) => {
-//   const courseData = await addCourse({
-//     code: subject.subject_code,
-//     description: subject.subject_name,
-//     title: subject.subject_name,
-//     departmeant: subject.subject_department,
-//     facultyid: 1,
-//   } as Course);
-//   subject.groups.forEach(async (group) => {
-//     const groupData = await addGroup({
-//       code: group.group_code,
-//       courseid: courseData.data.id!,
-//       instructorid: instructors.find(
-//         (instructor) => instructor.name === group.professor
-//       )?.id,
-//     } as Group);
-//     group.lectures.forEach(async (lecture) => {
-//       addLecture({
-//         day: lecture.day,
-//         StartTime: lecture.start_time,
-//         EndTime: lecture.end_time,
-//         room: lecture.room,
-//         groupId: groupData.data.id!,
-//       } as Lecture);
-//     });
-//   });
-// });
+const instructors = [
+  { id: 3, name: "د. عبدالسلام منصور الشريف" },
+  { id: 4, name: "د. عبدالحميد الفلاح الواعر" },
+  { id: 5, name: "أ. مروة ابراهيم  عبدالهادي" },
+  { id: 6, name: "أ. محمد على وهيبة" },
+  { id: 7, name: "د. الحرمين محمد الحرمين" },
+  { id: 8, name: "د. محمود ميلود منصور" },
+  { id: 9, name: "أ. فاطمه علي بن الاشهر" },
+  { id: 10, name: "أ. ناهد فتحي فرح" },
+  { id: 11, name: "أ. مريم ابوعجيله مساعد" },
+  { id: 12, name: "ناجية خالد بن سعود" },
+  { id: 13, name: "أ. ريما الشيباني سعد" },
+  { id: 14, name: "احمد علي صمود" },
+  { id: 15, name: "د. عبدالسلام الفيتوري النويصري" },
+  { id: 16, name: "أ. وفاء حسين المصباحي" },
+  { id: 17, name: "أ. منار سامي عريف" },
+  { id: 18, name: "رحاب  عبدالله  بن عبدالله" },
+  { id: 19, name: "أ. ابتسام  عبدالسلام العاشوري" },
+  { id: 20, name: "أ. هديل رافت الجربي" },
+  { id: 21, name: "د. عبدالسلام نوري بريون" },
+  { id: 22, name: "د. رمزي حميد القانوني" },
+  { id: 23, name: "د. حنان الطاهر الداقيز" },
+  { id: 24, name: "د. عمر عبدالمولى ابوسعدة" },
+  { id: 25, name: "أ. مروة مسعود خليفة" },
+  { id: 26, name: "د. فرحات امحمد زرقون" },
+  { id: 27, name: "د. محمد احمد مغيدر" },
+  { id: 28, name: "د. محمد عبدالسلام عزاقة" },
+  { id: 29, name: "د. إدريس عبدالهادي غميض" },
+  { id: 30, name: "أ. بيرم علي زرتي" },
+  { id: 31, name: "د. أحمد أبورودس الكيلاني" },
+  { id: 32, name: "أ. زهرة عبدالله الاشعل" },
+  { id: 33, name: "د. يوسف محمد أبوستة" },
+  { id: 34, name: "أ. وفاء  امحمد كشريو" },
+  { id: 35, name: "أ. احمد علي الهوني" },
+  { id: 36, name: "د. محمد علي ابراهيم الطاهر" },
+  { id: 37, name: "د. عزالدين محمد السلامي" },
+  { id: 38, name: "محمد سالم الفيتورى" },
+  { id: 39, name: "أ. مي مفتاح البعباع" },
+  { id: 40, name: "د. محمد عبدالدائم محبوب" },
+  { id: 41, name: "أ. محمد معتوق الكوم" },
+  { id: 42, name: "عليا مفتاح علي" },
+  { id: 43, name: "رحاب ابن عبدالله" },
+  { id: 44, name: "أينور إدريس تربح" },
+  { id: 45, name: "أ. اريج سمير امبارك" },
+  { id: 46, name: "د. محمد مفتاح الرايس" },
+  { id: 47, name: "د. محمود غيث الجديد" },
+  { id: 48, name: "د. عادل علي أوحيدة" },
+  { id: 49, name: "د. عبدالناصر عبدالحميد ضياف" },
+  { id: 50, name: "أ. علياء مفتاح علي" },
+  { id: 51, name: "أ. فاطمة بشير القاضي" },
+  { id: 52, name: "أ. مروى نوري صولة" },
+  { id: 53, name: "د. خالد محمد بن حامد" },
+  { id: 54, name: "د. عبدالباسط الهادي التهامي" },
+  { id: 55, name: "أ. حمدي أحمد جابر" },
+];
 
-
-
-
-
-
-
+allSubjects.forEach(async (subject) => {
+  const courseData = await addCourse({
+    code: subject.subject_code,
+    description: subject.subject_name,
+    title: subject.subject_name,
+    departmeant: subject.subject_department,
+    facultyid: 1,
+  } as Course);
+  subject.groups.forEach(async (group) => {
+    const groupData = await addGroup({
+      code: group.group_code,
+      courseid: courseData.data.id!,
+      instructorid: instructors.find(
+        (instructor) => instructor.name === group.professor
+      )?.id,
+    } as Group);
+    group.lectures.forEach(async (lecture) => {
+      addLecture({
+        day: lecture.day,
+        StartTime: lecture.start_time,
+        EndTime: lecture.end_time,
+        room: lecture.room,
+        groupId: groupData.data.id!,
+      } as Lecture);
+    });
+  });
+});
+/////// OptaPlanner
 // allSubjects.forEach(async (subject) => {
 //   subject.groups.forEach(async (group) => {
 //     group.lectures.forEach(async (lecture) => {

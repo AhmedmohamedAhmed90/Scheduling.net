@@ -59,6 +59,7 @@ namespace ReactApp1.Server.Controllers
                     isAdmin = roles[0] == "Admin" ? true : false,
                     Id = user.Id,
                     UniversityID = user.UniversityId,
+                    FacultyID = user.Faculty,
                     Token = await _TokenService.CreateToken(user)
                 }
             );
